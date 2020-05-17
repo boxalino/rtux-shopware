@@ -311,7 +311,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     public function useDevIndex(string $account) : bool
     {
         $config = $this->getAccountConfig($account);
-        return (bool) $config['devIndex'];
+        try{
+            return (bool)$config['devIndex'];
+        } catch (\Exception $exception)
+        {
+            return false;
+        }
     }
 
     /**

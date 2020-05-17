@@ -58,12 +58,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      */
     public function getRestApiEndpoint(string $channelId) : string
     {
-        if(isset($this->config[$channelId]))
+        try{
+            return (bool)$this->config[$channelId]['apiUrl'];
+        } catch (\Exception $exception)
         {
-            return $this->config[$channelId]['apiUrl'];
+            return "";
         }
-
-        return "https://r-st.bx-cloud.com/narrative/dana_shopware_06/api/1";
     }
 
     /**
@@ -72,9 +72,11 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      */
     public function getUsername(string $channelId) : string
     {
-        if(isset($this->config[$channelId]))
+        try{
+            return (bool)$this->config[$channelId]['account'];
+        } catch (\Exception $exception)
         {
-            return $this->config[$channelId]['account'];
+            return "";
         }
     }
 
@@ -84,12 +86,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      */
     public function getApiKey(string $channelId) : string
     {
-        if(isset($this->config[$channelId]))
+        try{
+            return (bool)$this->config[$channelId]['apiKey'];
+        } catch (\Exception $exception)
         {
-            return $this->config[$channelId]['apiKey'];
+            return "";
         }
-
-        return "";
     }
 
     /**
@@ -98,12 +100,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      */
     public function getApiSecret(string $channelId) : string
     {
-        if(isset($this->config[$channelId]))
+        try{
+            return (bool)$this->config[$channelId]['apiSecret'];
+        } catch (\Exception $exception)
         {
-            return $this->config[$channelId]['apiSecret'];
+            return "";
         }
-
-        return "";
     }
 
     /**
@@ -112,12 +114,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      */
     public function getIsDev(string $channelId) : bool
     {
-        if(isset($this->config[$channelId]))
-        {
+        try{
             return (bool)$this->config[$channelId]['devIndex'];
+        } catch (\Exception $exception)
+        {
+            return false;
         }
-
-        return false;
     }
 
     /**
@@ -126,12 +128,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      */
     public function getIsTest(string $channelId) : bool
     {
-        if(isset($this->config[$channelId]))
-        {
+        try{
             return (bool)$this->config[$channelId]['test'];
+        } catch (\Exception $exception)
+        {
+            return false;
         }
-
-        return false;
     }
 
 }
