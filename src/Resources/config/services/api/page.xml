@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Generic Page  -->
+        <service id="boxalino.api.content.page.response" class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiResponsePage"/>
+        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader">
+            <argument type="service" id="Boxalino\RealTimeUserExperience\Service\Api\ApiCallServiceInterface"/>
+            <argument type="service" id="boxalino.api.util.configurator"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <!-- Generic Api content loader on the page -->
+        <service id="boxalino.api.content.page.loader" class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiPageLoader"
+                 parent="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader" shared="false">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
+        </service>
+
+        <!-- Generic CMS loader extension with API call -->
+        <service id="boxalino.api.content.page.cms"
+                 class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader"
+                 parent="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader" shared="false">
+        </service>
+
+        <!-- Shopware6 collection EntitySearchResult service (used in layout block definition) -->
+        <service id="boxalino.api.content.collection" class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel"
+                 public="true" shared="false">
+            <argument type="service" id="sales_channel.product.repository"/>
+        </service>
+
+        <!-- Shopware6 cross-selling loader extension with API call -->
+        <service id="boxalino.api.content.page.crossselling"
+                 class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCrossSellingLoader"
+                 parent="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader" shared="false">
+            <argument type="service" id="sales_channel.product.repository"/>
+        </service>
+
+        <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
+        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiFacetModel" public="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service>
+
+        <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
+        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel" public="true"/>
+    </services>
+
+</container>

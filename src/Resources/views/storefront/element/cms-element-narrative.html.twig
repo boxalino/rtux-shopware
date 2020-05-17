@@ -1,0 +1,10 @@
+{% block boxalino_narrative_element %}
+    {%  set config = element.fieldConfig.elements %}
+    <div class="boxalino-narrative cms-element-{{ element.type }}">
+        {{ config.type.value }}
+        {% block block_narrative_content %}
+            {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" %}
+        {% endblock %}
+    </div>
+
+{% endblock %}

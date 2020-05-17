@@ -1,0 +1,79 @@
+{% block sw_cms_element_narrative_config %}
+    <div class="sw-cms-el-config-narrative">
+        {% block sw_cms_element_narrative_config_widget %}
+            <sw-field v-model="element.config.widget.value"
+                      type="text"
+                      label="Widget*"
+                      placeholder="Boxalino Widget">
+            </sw-field>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_sidebar %}
+            <sw-field type="switch"
+                      bordered
+                      label="Sidebar Layout"
+                      v-model="element.config.sidebar.value">
+            </sw-field>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_hitCount %}
+            <sw-field  type="text" v-model="element.config.hitCount.value"
+                       label="Nr of returned products*"
+                       placeholder="Hit Count Value">
+            </sw-field>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_groupBy %}
+            <sw-field type="text" v-model="element.config.groupBy.value"
+                      label="Group by (field name)*"
+                      placeholder="products_group_id">
+            </sw-field>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_applyRequestParams %}
+            <sw-boolean-radio-group v-model="element.config.applyRequestParams.value"
+                                    label="Apply Request Parameters"
+                                    labelOptionTrue="Yes, content updates on customer facet/sorting/filter select"
+                                    labelOptionFalse="No, content is independent of customer actions"
+                                    bordered>
+            </sw-boolean-radio-group>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_returnFields %}
+            <sw-field type="text" v-model="element.config.returnFields.value"
+                      label="Returned Fields (divided by comma (,))"
+                      placeholder="id, products_title, discountedPrice, products_image, ..">
+            </sw-field>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_filters %}
+            <sw-field type="text" v-model="element.config.filters.value"
+                      label="Filters (list, divided by comma (,))"
+                      placeholder="products_visibility=20">
+            </sw-field>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_categoryFilter %}
+            <sw-select-field placeholder="Category Filter Scope"
+                             v-model="element.config.categoryFilter.value"
+                             label="Category Filter">
+                <option value="root">Sales Channel Navigation Category</option>
+                <option value="navigation">Current Category</option>
+                <option value="custom">Custom category IDs</option>
+            </sw-select-field>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_categoryFilterList %}
+            <sw-field type="text" v-model="element.config.categoryFilterList.value"
+                      label="Category List for Filters (divided by comma(,))"
+                      placeholder="categoryId1,categoryId2">
+            </sw-field>
+        {% endblock %}
+
+        {% block sw_cms_element_narrative_config_facets %}
+            <sw-field type="text" v-model="element.config.facets.value"
+                      label="Facets (list, divided by comma (,))">
+            </sw-field>
+        {% endblock %}
+    </div>
+{% endblock %}

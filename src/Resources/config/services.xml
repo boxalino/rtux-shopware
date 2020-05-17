@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:monolog="http://symfony.com/schema/dic/monolog"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd http://symfony.com/schema/dic/monolog http://symfony.com/schema/dic/monolog/monolog-1.0.xsd">
+
+    <monolog:config>
+        <monolog:channel>boxalino</monolog:channel>
+        <monolog:handler name="boxalino_log"
+                         type="stream"
+                         path="%kernel.logs_dir%/boxalino-%kernel.environment%.log"
+                         level="debug">
+            <monolog:channels>
+                <monolog:channel>boxalino</monolog:channel>
+            </monolog:channels>
+        </monolog:handler>
+    </monolog:config>
+
+    <imports>
+        <import resource="services/exporter.xml"/>
+        <import resource="services/api.xml"/>
+    </imports>
+
+    <services>
+        <service id="boxalino.util.configurator" class="Boxalino\RealTimeUserExperience\Service\Util\Configuration">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="monolog.logger.boxalino"/>
+        </service>
+
+        <!-- scheduled task sample (has to be triggered in the integration layer) -->
+        <service id="Boxalino\RealTimeUserExperience\ScheduledTask\ExporterFullHandlerAbstract" abstract="true">
+            <argument type="service" id="scheduled_task.repository" />
+            <argument type="service" id="monolog.logger.boxalino"/>
+            <argument type="service" id="boxalino.exporter.full"/>
+        </service>
+    </services>
+
+</container>

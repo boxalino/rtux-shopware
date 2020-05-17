@@ -1,0 +1,29 @@
+{# Narrative template un-attached from base (ex: sample for autocomplete content, in-block children renderings, etc) #}
+{% set blocks = element.data.blocks %}
+{% if blocks is null %}
+    {% set blocks = page.blocks %}
+{% endif %}
+{% set groupBy = element.data.groupBy %}
+{% if groupBy is null %}
+    {% set groupBy = page.groupBy %}
+{% endif %}
+{% set variantUuid = element.data.variantUuid %}
+{% if variantUuid is null %}
+    {% set variantUuid = page.variantUuid %}
+{% endif %}
+{% set totalHitCount = element.data.totalHitCount %}
+{% if totalHitCount is null %}
+    {% set totalHitCount = page.totalHitCount %}
+{% endif %}
+{% set navigationId = element.data.navigationId %}
+{% if navigationId is null %}
+    {% set navigationId = page.navigationId %}
+{% endif %}
+{% block boxalino_narrative_content %}
+    {% for bxblock in blocks %}
+        {% set narrativeContent = {'block' : bxblock, 'groupBy' : groupBy, 'variantUuid': variantUuid,
+            'totalHitCount': totalHitCount, 'navigationId': navigationId
+        } %}
+        {% sw_include bxblock.template with narrativeContent %}
+    {% endfor %}
+{% endblock %}

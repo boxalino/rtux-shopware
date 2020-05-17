@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Shopware6 ProductRecommendationRequestDefinition model for autocomplete requests -->
+        <service id="Boxalino\RealTimeUserExperience\Service\Api\Request\Definition\ItemRequestDefinitionInterface"
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Request\Definition\ItemRequestDefinition"
+                 parent="Boxalino\RealTimeUserExperience\Service\Api\Request\RequestDefinitionInterface"/>
+
+        <!-- Shopware6 AutocompleteRequestDefinition model for autocomplete requests -->
+        <service id="Boxalino\RealTimeUserExperience\Service\Api\Request\Definition\AutocompleteRequestDefinitionInterface"
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Request\Definition\AutocompleteRequestDefinition"
+                 parent="Boxalino\RealTimeUserExperience\Service\Api\Request\RequestDefinitionInterface"/>
+
+        <!-- Shopware6 SearchRequestDefinition reuse for search requests -->
+        <service id="Boxalino\RealTimeUserExperience\Service\Api\Request\Definition\SearchRequestDefinitionInterface"
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Request\Definition\SearchRequestDefinition"
+                 parent="Boxalino\RealTimeUserExperience\Service\Api\Request\RequestDefinitionInterface"/>
+
+        <!-- Shopware6 ListingRequestDefinition reuse for listing requests -->
+        <service id="Boxalino\RealTimeUserExperience\Service\Api\Request\Definition\ListingRequestDefinitionInterface"
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Request\Definition\ListingRequestDefinition"
+                 parent="Boxalino\RealTimeUserExperience\Service\Api\Request\RequestDefinitionInterface"/>
+    </services>
+
+</container>

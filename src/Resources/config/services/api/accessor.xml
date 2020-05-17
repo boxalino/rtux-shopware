@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Boxalino\RealTimeUserExperience\Service\Api\Util\AccessorHandlerInterface"
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Util\AccessorHandler">
+            <call method="addAccessor">
+                <argument>bx-sort</argument>
+                <argument>sorting</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\Sort</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>facet</argument>
+                <argument>facet</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\Facet</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>facetValue</argument>
+                <argument>property</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\FacetValue</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>bx-acQuery</argument>
+                <argument>suggestion</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\AcQuery</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>bx-pagination</argument>
+                <argument>pagination</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\Pagination</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>bx-hit</argument>
+                <argument>product</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\Hit</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>blocks</argument>
+                <argument>blocks</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\Block</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>bx-hits</argument>
+                <argument>productsCollection</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\BxAccessor</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>bx-acQueries</argument>
+                <argument>suggestionsCollection</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\BxAccessor</argument>
+            </call>
+            <call method="addAccessor">
+                <argument>bx-facets</argument>
+                <argument>facetsList</argument>
+                <argument>Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\BxAccessor</argument>
+            </call>
+            <!-- set the product property ID field as used in the requests -->
+            <call method="addHitIdFieldName">
+                <argument>bx-hit</argument>
+                <argument>products_group_id</argument>
+            </call>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setLogger">
+                <argument type="service" id="monolog.logger.boxalino"/>
+            </call>
+        </service>
+
+        <service id="Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\AccessorInterface"
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\Accessor">
+            <argument type="service" id="Boxalino\RealTimeUserExperience\Service\Api\Util\AccessorHandlerInterface"/>
+        </service>
+    </services>
+
+</container>

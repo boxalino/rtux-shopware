@@ -1,0 +1,12 @@
+@import "~scss/variables";
+
+.sw-cms-preview-narrative {
+    padding: 50px;
+    display: grid;
+    justify-items: start;
+    justify-content: stretch;
+    align-items: start;
+    align-content: stretch;
+    grid-gap: 10px;
+    height: 100%;
+}
