@@ -10,10 +10,16 @@
     </imports>
 
     <services>
-        <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface" class="Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration" parent="boxalino.util.configurator" />
+        <!-- Configuration -->
+        <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface"
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration" parent="boxalino.util.configurator" />
 
-        <!-- Generic interfaces required to be mapped to already provided classes, customized and implemented -->
-        <service id="Boxalino\RealTimeUserExperience\Service\Api\Request\RequestTransformerInterface"/>
-        <service id="Boxalino\RealTimeUserExperience\Service\Api\Request\ContextInterface"/>
+        <!-- Generic Page  -->
+        <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface"
+                 class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiResponsePage"/>
+
+        <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
+        <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface"
+                 class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel" public="true"/>
     </services>
 </container>

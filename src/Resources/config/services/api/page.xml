@@ -4,10 +4,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <!-- Generic Page  -->
-        <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface"
-                 class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiResponsePage"/>
-
         <!-- Generic Api content loader on the page -->
         <service id="boxalino.shopware.content.page.loader" class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiPageLoader"
                  parent="boxalino.api.content.loader.page" shared="false">
@@ -38,10 +34,6 @@
         <service id="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiFacetModel"
                  parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiFacetModelAbstract"
                  public="true"/>
-
-        <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
-        <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface"
-                 class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel" public="true"/>
     </services>
 
 </container>

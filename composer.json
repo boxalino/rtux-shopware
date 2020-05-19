@@ -24,7 +24,7 @@
     },
     "require": {
         "php": "^7.2",
-        "boxalino/rtux-api-php": "0.0.3"
+        "boxalino/rtux-api-php": "dev-master"
     },
     "autoload": {
         "psr-4": {
