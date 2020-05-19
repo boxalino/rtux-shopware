@@ -1,76 +1,41 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
-use Boxalino\RealTimeUserExperience\Service\Api\ApiCallServiceInterface;
-use Boxalino\RealTimeUserExperience\Service\Api\Request\ContextInterface;
-use Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration;
+use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ContextInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use \Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoader as ApiLoaderBase;
 
 /**
  * Class ApiLoader
  *
  * @package Boxalino\RealTimeUserExperience\Service\Api\Content\Page
  */
-class ApiLoader
+class ApiLoader extends ApiLoaderBase
 {
-
-    /**
-     * @var ContextInterface
-     */
-    protected $apiContextInterface;
-
-    /**
-     * @var ApiCallServiceInterface
-     */
-    protected $apiCallService;
-
-    /**
-     * @var Configuration
-     */
-    protected $configuration;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $eventDispatcher;
-
-    /**
-     * @var \ArrayIterator
-     */
-    protected $apiContextInterfaceList;
-
-    public function __construct(
-        ApiCallServiceInterface $apiCallService,
-        Configuration $configuration,
-        EventDispatcherInterface $eventDispatcher
-    ) {
-        $this->configuration = $configuration;
-        $this->apiCallService = $apiCallService;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->apiContextInterfaceList = new \ArrayIterator();
-    }
+    use SalesChannelContextTrait;
 
     /**
      * Makes a call to the Boxalino API
+     * Sets the sales channel context
      *
      * @param Request $request
      * @param SalesChannelContext $salesChannelContext
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function call(Request $request, SalesChannelContext $salesChannelContext) : void
+    protected function call(Request $request) : void
     {
-        $this->apiContextInterface->setSalesChannelContext($salesChannelContext);
-        $this->apiCallService->call(
-            $this->apiContextInterface->get($request),
-            $this->configuration->getRestApiEndpoint($salesChannelContext->getSalesChannel()->getId())
-        );
+        $this->apiContextInterface->setSalesChannelContext($this->getSalesChannelContext());
+        parent::call($request);
 
         if(!$this->apiCallService->isFallback())
         {
             /** this is a required step */
-            $this->apiCallService->getApiResponse()->getAccessorHandler()->setSalesChannelContext($salesChannelContext);
+            $this->apiCallService->getApiResponse()->getAccessorHandler()->setSalesChannelContext($this->getSalesChannelContext());
         }
 
         return;
@@ -79,40 +44,9 @@ class ApiLoader
     /**
      * @return string
      */
-    protected function getGroupBy() : string
+    public function getContextId(): string
     {
-        return $this->apiCallService->getApiResponse()->getGroupBy();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getVariantUuid() : string
-    {
-        return $this->apiCallService->getApiResponse()->getVariantId();
-    }
-
-    /**
-     * @param ContextInterface $apiContextInterface
-     * @return $this
-     */
-    public function setApiContextInterface(ContextInterface $apiContextInterface)
-    {
-        $this->apiContextInterface = $apiContextInterface;
-        return $this;
-    }
-
-    /**
-     * Used to create bundle requests
-     *
-     * @param ContextInterface $apiContextInterface
-     * @param string $widget
-     * @return $this
-     */
-    public function addApiContextInterface(ContextInterface $apiContextInterface, string $widget)
-    {
-        $this->apiContextInterfaceList->offsetSet($widget, $apiContextInterface);
-        return $this;
+        return $this->getSalesChannelContext()->getSalesChannel()->getId();
     }
 
 }

@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
-use Boxalino\RealTimeUserExperience\Service\Api\ApiCallServiceInterface;
-use Boxalino\RealTimeUserExperience\Service\Api\Request\ContextInterface;
-use Boxalino\RealTimeUserExperience\Service\Api\Request\RequestDefinitionInterface;
-use Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration;
+use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ContextInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Category\Exception\CategoryNotFoundException;
 use Shopware\Core\Content\Product\SalesChannel\Search\ProductSearchGatewayInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException;
@@ -22,8 +25,9 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package Boxalino\RealTimeUserExperience\Service\Api\Content\Page
  */
-class ApiPageLoader extends ApiLoader
+class ApiPageLoader extends ApiLoaderAbstract
 {
+    use SalesChannelContextTrait;
 
     /**
      * @var GenericPageLoader
@@ -32,59 +36,44 @@ class ApiPageLoader extends ApiLoader
 
     public function __construct(
         ApiCallServiceInterface $apiCallService,
-        Configuration $configuration,
+        ConfigurationInterface $configuration,
         EventDispatcherInterface $eventDispatcher,
+        ApiResponsePageInterface $apiResponsePage,
         GenericPageLoader $genericLoader
-
     ) {
-        parent::__construct($apiCallService, $configuration, $eventDispatcher);
+        parent::__construct($apiCallService, $configuration, $eventDispatcher, $apiResponsePage);
         $this->genericLoader = $genericLoader;
     }
 
     /**
-     * Loads the content of an API Response page
-     *
-     * @param Request $request
-     * @param SalesChannelContext $salesChannelContext
-     * @return ApiResponsePage
+     * @return ApiResponsePageInterface
      * @throws CategoryNotFoundException
      * @throws InconsistentCriteriaIdsException
      * @throws MissingRequestParameterException
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function load(Request $request, SalesChannelContext $salesChannelContext): ApiResponsePage
+    public function getApiResponsePage(): ApiResponsePageInterface
     {
-        $page = $this->genericLoader->load($request, $salesChannelContext);
-        $page = ApiResponsePage::createFrom($page);
+        $page = $this->genericLoader->load($request, $this->getSalesChannelContext());
+        return ApiResponsePage::createFrom($page);
+    }
 
-        $this->call($request, $salesChannelContext);
-
-        if($this->apiCallService->isFallback())
-        {
-            throw new \Exception($this->apiCallService->getFallbackMessage());
-        }
-
-        /** set page properties */
-        $page->setBlocks($this->apiCallService->getApiResponse()->getBlocks());
-        $page->setRequestId($this->apiCallService->getApiResponse()->getRequestId());
-        $page->setGroupBy($this->getGroupBy());
-        $page->setVariantUuid($this->getVariantUuid());
-        $page->setHasSearchSubPhrases($this->apiCallService->getApiResponse()->hasSearchSubPhrases());
-        $page->setRedirectUrl($this->apiCallService->getApiResponse()->getRedirectUrl());
-        $page->setTotalHitCount($this->apiCallService->getApiResponse()->getHitCount());
-        $page->setSearchTerm(
-            (string) $request->query->get('search', "")
-        );
-        if($this->apiCallService->getApiResponse()->isCorrectedSearchQuery())
-        {
-            $page->setSearchTerm((string) $this->apiCallService->getApiResponse()->getCorrectedSearchQuery());
-        }
-
+    /**
+     * @param Request $request
+     * @param ApiResponsePageInterface $page
+     */
+    protected function dispatchEvent(Request $request, ApiResponsePageInterface $page)
+    {
         $this->eventDispatcher->dispatch(
-            new ApiPageLoadedEvent($page, $salesChannelContext, $request)
+            new ApiPageLoadedEvent($page, $this->getSalesChannelContext(), $request)
         );
+    }
 
-        return $page;
+    /**
+     * @return string
+     */
+    protected function getQueryParameter() : string
+    {
+        return "search";
     }
 
 }

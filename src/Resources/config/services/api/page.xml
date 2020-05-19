@@ -5,27 +5,26 @@
 
     <services>
         <!-- Generic Page  -->
-        <service id="boxalino.api.content.page.response" class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiResponsePage"/>
-        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader">
-            <argument type="service" id="Boxalino\RealTimeUserExperience\Service\Api\ApiCallServiceInterface"/>
-            <argument type="service" id="boxalino.api.util.configurator"/>
-            <argument type="service" id="event_dispatcher"/>
-        </service>
+        <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface"
+                 class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiResponsePage"/>
+        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader"
+                parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract"/>
 
         <!-- Generic Api content loader on the page -->
         <service id="boxalino.api.content.page.loader" class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiPageLoader"
-                 parent="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader" shared="false">
+                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiPageLoaderAbstract" shared="false">
             <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
         </service>
 
         <!-- Generic CMS loader extension with API call -->
         <service id="boxalino.api.content.page.cms"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader"
-                 parent="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader" shared="false">
+                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiCmsLoaderAbstract" shared="false">
         </service>
 
         <!-- Shopware6 collection EntitySearchResult service (used in layout block definition) -->
         <service id="boxalino.api.content.collection" class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel"
+                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiEntityCollectionModelAbstract"
                  public="true" shared="false">
             <argument type="service" id="sales_channel.product.repository"/>
         </service>
@@ -38,12 +37,13 @@
         </service>
 
         <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
-        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiFacetModel" public="true">
-            <argument type="service" id="Doctrine\DBAL\Connection"/>
-        </service>
+        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiFacetModel"
+                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiFacetModelAbstract"
+                 public="true"/>
 
         <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
-        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel" public="true"/>
+        <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface"
+                 class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel" public="true"/>
     </services>
 
 </container>

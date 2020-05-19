@@ -2,8 +2,9 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
-use Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\AccessorInterface;
-use Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\AccessorModelInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiEntityCollectionModelAbstract;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Cms\DataResolver\CriteriaCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -21,7 +22,8 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
  *
  * @package Boxalino\RealTimeUserExperience\Service\Api\Content
  */
-class ApiEntityCollectionModel implements AccessorModelInterface
+class ApiEntityCollectionModel extends ApiEntityCollectionModelAbstract
+    implements AccessorModelInterface
 {
     use SalesChannelContextTrait;
 
@@ -34,11 +36,6 @@ class ApiEntityCollectionModel implements AccessorModelInterface
      * @var null | EntitySearchResult
      */
     protected $collection = null;
-
-    /**
-     * @var array
-     */
-    protected $hitIds;
 
     public function __construct(
         SalesChannelRepositoryInterface $productRepository
@@ -67,31 +64,6 @@ class ApiEntityCollectionModel implements AccessorModelInterface
     }
 
     /**
-     * @return array
-     */
-    public function getHitIds() : array
-    {
-        return $this->hitIds;
-    }
-
-    /**
-     * @param \ArrayIterator $blocks
-     * @param string $hitAccessor
-     * @param string $idField
-     */
-    public function setHitIds(\ArrayIterator $blocks, string $hitAccessor, string $idField = "id")
-    {
-        $ids = array_map(function(AccessorInterface $block) use ($hitAccessor, $idField) {
-            if(property_exists($block, $hitAccessor))
-            {
-                return $block->get($hitAccessor)->get($idField)[0];
-            }
-        }, $blocks->getArrayCopy());
-
-        $this->hitIds = $ids;
-    }
-
-    /**
      * @param string $id
      */
     public function getItem(string $id)
@@ -115,10 +87,7 @@ class ApiEntityCollectionModel implements AccessorModelInterface
      */
     public function addAccessorContext(?AccessorInterface $context = null): AccessorModelInterface
     {
-        $this->setHitIds($context->getBlocks(),
-            $context->getAccessorHandler()->getAccessorSetter('bx-hit'),
-            $context->getAccessorHandler()->getHitIdFieldName('bx-hit')
-        );
+        parent::addAccessorContext($context);
         $this->setSalesChannelContext($context->getAccessorHandler()->getSalesChannelContext());
 
         return $this;

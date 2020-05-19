@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface;
 use Shopware\Storefront\Page\Page;
 
 /**
@@ -9,6 +10,7 @@ use Shopware\Storefront\Page\Page;
  * @package Boxalino\RealTimeUserExperience\Service\Api\Content\Page
  */
 class ApiResponsePage extends Page
+    implements ApiResponsePageInterface
 {
     /**
      * @var \ArrayIterator

@@ -6,41 +6,11 @@
     <imports>
         <import resource="api/accessor.xml"/>
         <import resource="api/context.xml"/>
-        <import resource="api/definition.xml"/>
         <import resource="api/page.xml"/>
     </imports>
 
     <services>
-        <service id="boxalino.api.util.configurator" class="Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration" parent="boxalino.util.configurator" />
-
-        <service id="boxalino.api.request.parameter.factory" class="Boxalino\RealTimeUserExperience\Service\Api\Request\ParameterFactory">
-            <argument type="service" id="Psr\Container\ContainerInterface" />
-            <argument type="service" id="monolog.logger.boxalino"/>
-        </service>
-        <service id="boxalino.api.request.parameter.definition" class="Boxalino\RealTimeUserExperience\Service\Api\Request\ParameterDefinition" public="true" shared="false">
-            <argument type="service" id="monolog.logger.boxalino"/>
-        </service>
-        <service id="boxalino.api.request.parameter.facet" class="Boxalino\RealTimeUserExperience\Service\Api\Request\Parameter\FacetDefinition" parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
-        <service id="boxalino.api.request.parameter.sort" class="Boxalino\RealTimeUserExperience\Service\Api\Request\Parameter\SortingDefinition" parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
-        <service id="boxalino.api.request.parameter.filter" class="Boxalino\RealTimeUserExperience\Service\Api\Request\Parameter\FilterDefinition" parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
-        <service id="boxalino.api.request.parameter.user" class="Boxalino\RealTimeUserExperience\Service\Api\Request\Parameter\UserParameterDefinition" parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
-        <service id="boxalino.api.request.parameter.header" class="Boxalino\RealTimeUserExperience\Service\Api\Request\Parameter\HeaderParameterDefinition" parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
-        <service id="boxalino.api.request.parameter.item" class="Boxalino\RealTimeUserExperience\Service\Api\Request\Parameter\ItemDefinition" parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
-
-        <service id="Boxalino\RealTimeUserExperience\Service\Api\Request\RequestDefinitionInterface" class="Boxalino\RealTimeUserExperience\Service\Api\Request\RequestDefinition"/>
-        <service id="Boxalino\RealTimeUserExperience\Service\Api\Response\ResponseDefinitionInterface" class="Boxalino\RealTimeUserExperience\Service\Api\Response\ResponseDefinition">
-            <argument type="service" id="monolog.logger.boxalino"/>
-            <argument type="service" id="Boxalino\RealTimeUserExperience\Service\Api\Util\AccessorHandlerInterface"/>
-        </service>
-        <service id="Boxalino\RealTimeUserExperience\Service\Api\ApiCallServiceInterface" class="Boxalino\RealTimeUserExperience\Service\Api\ApiCallService">
-            <argument type="service" id="monolog.logger.boxalino"/>
-            <argument type="service" id="Boxalino\RealTimeUserExperience\Service\Api\Response\ResponseDefinitionInterface" />
-        </service>
-
-        <!-- Setting the API cookie -->
-        <service id="Boxalino\RealTimeUserExperience\Service\Api\ApiCookieSubscriber">
-            <tag name="kernel.event_subscriber"/>
-        </service>
+        <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface" class="Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration" parent="boxalino.util.configurator" />
 
         <!-- Generic interfaces required to be mapped to already provided classes, customized and implemented -->
         <service id="Boxalino\RealTimeUserExperience\Service\Api\Request\RequestTransformerInterface"/>

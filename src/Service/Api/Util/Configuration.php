@@ -1,6 +1,7 @@
 <?php
 namespace Boxalino\RealTimeUserExperience\Service\Api\Util;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
@@ -11,6 +12,7 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
  * @package Boxalino\RealTimeUserExperience\Service\Api\Util
  */
 class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Configuration
+    implements ConfigurationInterface
 {
 
     /**
@@ -22,7 +24,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      * @param string $channelId
      * @return $this
      */
-    public function setChannelId(string $channelId) : self
+    public function setContextId(string $channelId) : self
     {
         $this->channelId = $channelId;
         $this->getPluginConfigByChannelId($channelId);

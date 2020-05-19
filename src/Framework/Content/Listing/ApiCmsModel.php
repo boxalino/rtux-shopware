@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
 use Shopware\Core\Framework\Struct\Struct;
 
 /**
@@ -10,6 +11,7 @@ use Shopware\Core\Framework\Struct\Struct;
  * @package Boxalino\RealTimeUserExperience\Framework\Content\Listing
  */
 class ApiCmsModel extends Struct
+    implements ApiCmsModelInterface
 {
     /**
      * @var \ArrayIterator

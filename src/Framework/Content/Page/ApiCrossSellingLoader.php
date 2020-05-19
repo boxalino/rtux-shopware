@@ -2,10 +2,10 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel;
-use Boxalino\RealTimeUserExperience\Service\Api\ApiCallServiceInterface;
-use Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\AccessorInterface;
-use Boxalino\RealTimeUserExperience\Service\Api\Response\Accessor\Block;
-use Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Product\Aggregate\ProductCrossSelling\ProductCrossSellingEntity;
 use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Content\Product\ProductEntity;
@@ -50,7 +50,7 @@ class ApiCrossSellingLoader extends ApiLoader
 
     public function __construct(
         ApiCallServiceInterface $apiCallService,
-        Configuration $configuration,
+        ConfigurationInterface $configuration,
         EventDispatcherInterface $eventDispatcher,
         SalesChannelRepositoryInterface $productRepository
     ){
