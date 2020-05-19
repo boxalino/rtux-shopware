@@ -21,7 +21,7 @@
         </service>
 
         <!-- Shopware6 collection EntitySearchResult service (used in layout block definition) -->
-        <service id="boxalino.api.content.collection" class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel"
+        <service id="boxalino.shopware.content.collection" class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel"
                  parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiEntityCollectionModelAbstract"
                  public="true" shared="false">
             <argument type="service" id="sales_channel.product.repository"/>
