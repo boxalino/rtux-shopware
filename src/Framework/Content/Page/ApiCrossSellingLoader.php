@@ -2,15 +2,13 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Product\Aggregate\ProductCrossSelling\ProductCrossSellingEntity;
 use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
@@ -28,8 +26,10 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
-class ApiCrossSellingLoader extends ApiLoader
+class ApiCrossSellingLoader extends ApiLoaderAbstract
 {
+
+    use ApiLoaderTrait;
 
     /**
      * @var SalesChannelRepositoryInterface
@@ -69,14 +69,16 @@ class ApiCrossSellingLoader extends ApiLoader
     public function load(Request $request, SalesChannelContext $salesChannelContext,
                          CrossSellingLoaderResult $crossSellingLoaderResult) : CrossSellingLoaderResult
     {
-        $this->setRequestInterfaceContext($request, $salesChannelContext, $crossSellingLoaderResult);
-        $this->call($request, $salesChannelContext);
-        if($this->apiCallService->isFallback())
+        $this->setSalesChannelContext($salesChannelContext);
+        $this->setRequestInterfaceContext($request, $crossSellingLoaderResult);
+        try{
+            $this->call($request);
+        } catch (\Throwable $exception)
         {
             return $crossSellingLoaderResult;
         }
 
-        $this->setCrossSellingResponseCollection($salesChannelContext);
+        $this->setCrossSellingResponseCollection();
         $result = new CrossSellingLoaderResult(); $index = 0;
         foreach ($this->apiCallService->getApiResponse()->getBlocks() as $block)
         {
@@ -109,6 +111,7 @@ class ApiCrossSellingLoader extends ApiLoader
 
         return $crossSellingLoaderResult;
     }
+
 
     /**
      * Creates a cross-selling item to be added to the cross-selling loader result
@@ -157,11 +160,10 @@ class ApiCrossSellingLoader extends ApiLoader
      *
      * $crossSellingResponseCollection is later filter to create individual widget cross-selling response elements
      *
-     * @param SalesChannelContext $salesChannelContext
      * @return EntitySearchResult|null
      * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
      */
-    protected function setCrossSellingResponseCollection(SalesChannelContext $salesChannelContext)
+    protected function setCrossSellingResponseCollection()
     {
         if(is_null($this->crossSellingResponseCollection))
         {
@@ -173,7 +175,7 @@ class ApiCrossSellingLoader extends ApiLoader
                 $productIds = array_merge($productIds, $hitIds);
                 $this->productIdsByType->offsetSet($block->getType()[0], $hitIds);
             }
-            $this->crossSellingResponseCollection = $this->productRepository->search(new Criteria($productIds), $salesChannelContext);
+            $this->crossSellingResponseCollection = $this->productRepository->search(new Criteria($productIds), $this->getSalesChannelContext());
         }
 
         return $this->crossSellingResponseCollection;
@@ -203,26 +205,24 @@ class ApiCrossSellingLoader extends ApiLoader
      * Set required request elements on the $apiContextInterface (instanceof ItemContextAbstract)
      *
      * @param Request $request
-     * @param SalesChannelContext $salesChannelContext
      * @param CrossSellingLoaderResult $crossSellingLoaderResult
      * @return self
      */
-    protected function setRequestInterfaceContext(Request $request, SalesChannelContext $salesChannelContext,
-                                                  CrossSellingLoaderResult $crossSellingLoaderResult) : self
+    protected function setRequestInterfaceContext(Request $request, CrossSellingLoaderResult $crossSellingLoaderResult) : self
     {
-        $this->apiContextInterface->setSalesChannelContext($salesChannelContext);
+        $this->getApiContextInterface()->setSalesChannelContext($this->getSalesChannelContext());
         if($request->attributes->has("mainProductId"))
         {
-            $this->apiContextInterface->setProductId($request->attributes->get("mainProductId"));
+            $this->getApiContextInterface()->setProductId($request->attributes->get("mainProductId"));
         }
-        if($this->apiContextInterface->useConfiguredProductsAsContextParameters())
+        if($this->getApiContextInterface()->useConfiguredProductsAsContextParameters())
         {
             foreach($crossSellingLoaderResult as $item)
             {
                 $name = $item->getCrossSelling()->getTranslated()['name'];
                 $type = preg_replace('/[^a-z0-9]+/', '_', strtolower($name));
                 $ids = $item->getProducts()->getIds();
-                $this->apiContextInterface->addContextParametersByType($type, $ids);
+                $this->getApiContextInterface()->addContextParametersByType($type, $ids);
             }
         }
 

@@ -2,7 +2,6 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Subscriber;
 
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\CreateFromTrait;
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModel;
 use Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Cms\Aggregate\CmsBlock\CmsBlockEntity;

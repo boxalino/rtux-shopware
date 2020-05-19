@@ -6,7 +6,7 @@
     <services>
         <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandlerInterface"
                  class="Boxalino\RealTimeUserExperience\Service\Api\Util\AccessorHandler"
-                 parent="boxalino.api.accessor.handler">
+                 parent="Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandler">
             <!-- set the product property ID field as used in the requests -->
             <call method="addHitIdFieldName">
                 <argument>bx-hit</argument>

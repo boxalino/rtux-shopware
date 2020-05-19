@@ -1,21 +1,15 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
-use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract;
+use Boxalino\RealTimeUserExperience\Framework\Request\RequestParametersTrait;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiPageLoaderAbstract;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ContextInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Category\Exception\CategoryNotFoundException;
-use Shopware\Core\Content\Product\SalesChannel\Search\ProductSearchGatewayInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
-use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Shopware\Storefront\Framework\Page\StorefrontSearchResult;
 use Shopware\Storefront\Page\GenericPageLoader;
-use Shopware\Storefront\Page\Page;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,9 +19,10 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package Boxalino\RealTimeUserExperience\Service\Api\Content\Page
  */
-class ApiPageLoader extends ApiLoaderAbstract
+class ApiPageLoader extends ApiPageLoaderAbstract
 {
-    use SalesChannelContextTrait;
+    use ApiLoaderTrait;
+    use RequestParametersTrait;
 
     /**
      * @var GenericPageLoader
@@ -38,10 +33,9 @@ class ApiPageLoader extends ApiLoaderAbstract
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
         EventDispatcherInterface $eventDispatcher,
-        ApiResponsePageInterface $apiResponsePage,
         GenericPageLoader $genericLoader
     ) {
-        parent::__construct($apiCallService, $configuration, $eventDispatcher, $apiResponsePage);
+        parent::__construct($apiCallService, $configuration, $eventDispatcher);
         $this->genericLoader = $genericLoader;
     }
 
@@ -51,7 +45,7 @@ class ApiPageLoader extends ApiLoaderAbstract
      * @throws InconsistentCriteriaIdsException
      * @throws MissingRequestParameterException
      */
-    public function getApiResponsePage(): ApiResponsePageInterface
+    public function getApiResponsePage(Request $request): ApiResponsePageInterface
     {
         $page = $this->genericLoader->load($request, $this->getSalesChannelContext());
         return ApiResponsePage::createFrom($page);
@@ -66,14 +60,6 @@ class ApiPageLoader extends ApiLoaderAbstract
         $this->eventDispatcher->dispatch(
             new ApiPageLoadedEvent($page, $this->getSalesChannelContext(), $request)
         );
-    }
-
-    /**
-     * @return string
-     */
-    protected function getQueryParameter() : string
-    {
-        return "search";
     }
 
 }

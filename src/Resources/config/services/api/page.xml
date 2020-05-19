@@ -7,19 +7,17 @@
         <!-- Generic Page  -->
         <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiResponsePage"/>
-        <service id="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader"
-                parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract"/>
 
         <!-- Generic Api content loader on the page -->
-        <service id="boxalino.api.content.page.loader" class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiPageLoader"
-                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiPageLoaderAbstract" shared="false">
+        <service id="boxalino.shopware.content.page.loader" class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiPageLoader"
+                 parent="boxalino.api.content.loader.page" shared="false">
             <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
         </service>
 
         <!-- Generic CMS loader extension with API call -->
-        <service id="boxalino.api.content.page.cms"
+        <service id="boxalino.shopware.content.page.cms"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader"
-                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiCmsLoaderAbstract" shared="false">
+                 parent="boxalino.api.content.loader.cms" shared="false">
         </service>
 
         <!-- Shopware6 collection EntitySearchResult service (used in layout block definition) -->
@@ -30,9 +28,9 @@
         </service>
 
         <!-- Shopware6 cross-selling loader extension with API call -->
-        <service id="boxalino.api.content.page.crossselling"
+        <service id="boxalino.shopware.content.page.crossselling"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCrossSellingLoader"
-                 parent="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiLoader" shared="false">
+                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract" shared="false">
             <argument type="service" id="sales_channel.product.repository"/>
         </service>
 
