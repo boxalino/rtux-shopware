@@ -2,7 +2,7 @@
     "name": "boxalino/rtux-shopware",
     "type": "shopware-platform-plugin",
     "description": "Boxalino Real Time User Experience (RTUX) Framework",
-    "license": "proprietary",
+    "license": "MIT",
     "authors": [
         {
             "name": "Boxalino AG",
@@ -24,7 +24,7 @@
     },
     "require": {
         "php": "^7.2",
-        "boxalino/rtux-api-php": "dev-master"
+        "boxalino/rtux-api-php": ">=1.0.0"
     },
     "autoload": {
         "psr-4": {
