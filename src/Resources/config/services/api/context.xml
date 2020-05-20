@@ -8,7 +8,8 @@
         <service id="Boxalino\RealTimeUserExperience\Framework\Request\ShopwareApiContextInterface"/>
         <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface"
                  class="Boxalino\RealTimeUserExperience\Framework\Request\RequestTransformer"
-                 parent="boxalino.api.request.transformer" public="true"/>
+                 parent="boxalino.api.request.transformer">
+        </service>
         <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ItemContextInterface"
                  class="Boxalino\RealTimeUserExperience\Framework\Request\ItemContextAbstract"
                  parent="boxalino.api.request.context.item"
