@@ -39,9 +39,8 @@ trait ContextTrait
 
     /**
      * @param Request $request
-     * @return RequestDefinitionInterface
      */
-    public function validate(Request $request) : RequestDefinitionInterface
+    public function validateRequest(Request $request) : void
     {
         if(!$this->salesChannelContext)
         {
@@ -55,7 +54,7 @@ trait ContextTrait
     /**
      * @return ParameterInterface
      */
-    public function getVisibilityFilter() : ParameterInterface
+    public function getVisibilityFilter(Request $request) : ParameterInterface
     {
         return $this->getParameterFactory()->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
             ->addRange("products_visibility", $this->getContextVisibility(),1000);
@@ -64,7 +63,7 @@ trait ContextTrait
     /**
      * @return ParameterInterface
      */
-    public function getCategoryFilter() : ParameterInterface
+    public function getCategoryFilter(Request $request) : ParameterInterface
     {
         return $this->getParameterFactory()->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
             ->add("category_id", $this->getContextNavigationId($request));
@@ -73,7 +72,7 @@ trait ContextTrait
     /**
      * @return ParameterInterface
      */
-    public function getActiveFilter() : ParameterInterface
+    public function getActiveFilter(Request $request) : ParameterInterface
     {
         return $this->getParameterFactory()->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
             ->add("products_active", [1]);

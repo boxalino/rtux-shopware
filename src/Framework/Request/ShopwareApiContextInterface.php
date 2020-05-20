@@ -1,7 +1,7 @@
 <?php
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
-use Boxalino\RealTimeUserExperience\Service\Api\Request\ContextInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ContextInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 /**
