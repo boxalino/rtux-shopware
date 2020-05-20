@@ -2,13 +2,7 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ListingContextInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Definition\ListingRequestDefinitionInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactory;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\WrongDependencyTypeException;
-use PhpParser\Error;
-use Symfony\Component\HttpFoundation\Request;
-
+use \Boxalino\RealTimeUserExperienceApi\Framework\Request\ListingContextAbstract as ApiListingContextAbstract;
 /**
  * Boxalino Listing Request handler
  * Allows to set the nr of subphrases and products returned on each subphrase hit
@@ -16,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package Boxalino\RealTimeUserExperience\Framework\Request
  */
 abstract class ListingContextAbstract
-    extends \Boxalino\RealTimeUserExperienceApi\Framework\Request\ListingContextAbstract
+    extends ApiListingContextAbstract
     implements ShopwareApiContextInterface, ListingContextInterface
 {
     use ContextTrait;
