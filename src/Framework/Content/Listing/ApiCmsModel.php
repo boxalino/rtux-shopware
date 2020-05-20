@@ -75,7 +75,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $blocks
      * @return ApiCmsModel
      */
-    public function setBlocks(\ArrayIterator $blocks): ApiCmsModel
+    public function setBlocks(\ArrayIterator $blocks): ApiCmsModelInterface
     {
         $this->blocks = $blocks;
         return $this;
@@ -93,7 +93,7 @@ class ApiCmsModel extends Struct
      * @param string $requestId
      * @return ApiCmsModel
      */
-    public function setRequestId(string $requestId): ApiCmsModel
+    public function setRequestId(string $requestId): ApiCmsModelInterface
     {
         $this->requestId = $requestId;
         return $this;
@@ -111,7 +111,7 @@ class ApiCmsModel extends Struct
      * @param string $groupBy
      * @return ApiCmsModel
      */
-    public function setGroupBy(string $groupBy): ApiCmsModel
+    public function setGroupBy(string $groupBy): ApiCmsModelInterface
     {
         $this->groupBy = $groupBy;
         return $this;
@@ -129,7 +129,7 @@ class ApiCmsModel extends Struct
      * @param string $variantUuid
      * @return ApiCmsModel
      */
-    public function setVariantUuid(string $variantUuid): ApiCmsModel
+    public function setVariantUuid(string $variantUuid): ApiCmsModelInterface
     {
         $this->variantUuid = $variantUuid;
         return $this;
@@ -147,7 +147,7 @@ class ApiCmsModel extends Struct
      * @param int $totalHitCount
      * @return ApiCmsModel
      */
-    public function setTotalHitCount(int $totalHitCount): ApiCmsModel
+    public function setTotalHitCount(int $totalHitCount): ApiCmsModelInterface
     {
         $this->totalHitCount = $totalHitCount;
         return $this;
@@ -165,7 +165,7 @@ class ApiCmsModel extends Struct
      * @param string|null $navigationId
      * @return ApiCmsModel
      */
-    public function setNavigationId(?string $navigationId): ApiCmsModel
+    public function setNavigationId(?string $navigationId): ApiCmsModelInterface
     {
         $this->navigationId = $navigationId;
         return $this;
@@ -183,7 +183,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $left
      * @return ApiCmsModel
      */
-    public function setLeft(\ArrayIterator $left): ApiCmsModel
+    public function setLeft(\ArrayIterator $left): ApiCmsModelInterface
     {
         $this->left = $left;
         return $this;
@@ -201,7 +201,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $right
      * @return ApiCmsModel
      */
-    public function setRight(\ArrayIterator $right): ApiCmsModel
+    public function setRight(\ArrayIterator $right): ApiCmsModelInterface
     {
         $this->right = $right;
         return $this;
@@ -219,7 +219,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $bottom
      * @return ApiCmsModel
      */
-    public function setBottom(\ArrayIterator $bottom): ApiCmsModel
+    public function setBottom(\ArrayIterator $bottom): ApiCmsModelInterface
     {
         $this->bottom = $bottom;
         return $this;
@@ -237,7 +237,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $top
      * @return ApiCmsModel
      */
-    public function setTop(\ArrayIterator $top): ApiCmsModel
+    public function setTop(\ArrayIterator $top): ApiCmsModelInterface
     {
         $this->top = $top;
         return $this;

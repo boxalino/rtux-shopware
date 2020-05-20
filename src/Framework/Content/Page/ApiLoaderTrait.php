@@ -2,7 +2,7 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
-use Boxalino\RealTimeUserExperience\Service\Api\Request\ContextInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ContextInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
 
 /**
