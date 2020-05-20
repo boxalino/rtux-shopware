@@ -67,8 +67,6 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      */
     public function addApiCmsContent(CmsPageLoadedEvent $event) : void
     {
-        $this->apiCmsLoader->setSalesChannelContext($event->getSalesChannelContext());
-
         /** @var CmsPageEntity $element */
         foreach($event->getResult() as $element)
         {
@@ -82,6 +80,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                         if($block->getType() == 'narrative')
                         {
                             $slot = $block->getSlots()->first();
+                            $this->apiCmsLoader->setSalesChannelContext($event->getSalesChannelContext());
                             $this->apiCmsLoader->setCmsConfig($slot->getConfig());
                             $narrativeResponse = $this->apiCmsLoader->load($event->getRequest());
                             $block->getSlots()->first()->setData($narrativeResponse);

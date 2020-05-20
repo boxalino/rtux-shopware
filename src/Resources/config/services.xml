@@ -22,7 +22,7 @@
     </imports>
 
     <services>
-        <service id="boxalino.util.configurator" class="Boxalino\RealTimeUserExperience\Service\Util\Configuration">
+        <service id="boxalino.shopware.util.configurator" class="Boxalino\RealTimeUserExperience\Service\Util\Configuration">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="monolog.logger.boxalino"/>
         </service>

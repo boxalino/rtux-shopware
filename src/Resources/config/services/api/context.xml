@@ -30,7 +30,7 @@
                  parent="boxalino.api.request.context.search"
                  abstract="true">
         </service>
-        <service id="boxalino.request.context.cms"
+        <service id="boxalino.shopware.request.context.cms"
                  class="Boxalino\RealTimeUserExperience\Framework\Request\CmsContextAbstract"
                  parent="boxalino.api.request.context.cms"
                  abstract="true">

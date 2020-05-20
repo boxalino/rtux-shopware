@@ -16,24 +16,25 @@
                  parent="boxalino.api.content.loader.cms" shared="false">
         </service>
 
-        <!-- Shopware6 collection EntitySearchResult service (used in layout block definition) -->
-        <service id="boxalino.shopware.content.collection" class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel"
-                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiEntityCollectionModelAbstract"
-                 public="true" shared="false">
-            <argument type="service" id="sales_channel.product.repository"/>
-        </service>
-
         <!-- Shopware6 cross-selling loader extension with API call -->
         <service id="boxalino.shopware.content.page.crossselling"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCrossSellingLoader"
-                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract" shared="false">
+                 parent="boxalino.api.content.loader" shared="false">
+            <argument type="service" id="sales_channel.product.repository"/>
+        </service>
+
+        <!-- Shopware6 collection EntitySearchResult service (used in layout block definition) -->
+        <service id="boxalino.shopware.content.collection" class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel"
+                 parent="boxalino.api.content.listing.collection"
+                 public="true" shared="false">
             <argument type="service" id="sales_channel.product.repository"/>
         </service>
 
         <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
         <service id="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiFacetModel"
-                 parent="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiFacetModelAbstract"
+                 parent="boxalino.api.content.listing.facet"
                  public="true"/>
+
     </services>
 
 </container>

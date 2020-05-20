@@ -12,7 +12,7 @@
     <services>
         <!-- Configuration -->
         <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface"
-                 class="Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration" parent="boxalino.util.configurator" />
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Util\Configuration" parent="boxalino.shopware.util.configurator" />
 
         <!-- Generic Page  -->
         <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface"

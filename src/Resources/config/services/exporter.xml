@@ -6,7 +6,7 @@
     <services>
         <service id="boxalino.exporter.util.file-handler" class="Boxalino\RealTimeUserExperience\Service\Exporter\Util\FileHandler" />
         <service id="boxalino.exporter.util.library" class="Boxalino\RealTimeUserExperience\Service\Exporter\Util\ContentLibrary" />
-        <service id="boxalino.exporter.util.configurator" class="Boxalino\RealTimeUserExperience\Service\Exporter\Util\Configuration" parent="boxalino.util.configurator" >
+        <service id="boxalino.exporter.util.configurator" class="Boxalino\RealTimeUserExperience\Service\Exporter\Util\Configuration" parent="boxalino.shopware.util.configurator" >
             <argument type="service" id="Doctrine\DBAL\Connection"/>
         </service>
 
