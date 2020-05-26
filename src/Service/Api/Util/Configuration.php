@@ -61,7 +61,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     public function getRestApiEndpoint(string $channelId) : string
     {
         try{
-            return (bool)$this->config[$channelId]['apiUrl'];
+            return $this->config[$channelId]['apiUrl'];
         } catch (\Exception $exception)
         {
             return "";
@@ -75,7 +75,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     public function getUsername(string $channelId) : string
     {
         try{
-            return (bool)$this->config[$channelId]['account'];
+            return $this->config[$channelId]['account'];
         } catch (\Exception $exception)
         {
             return "";
@@ -89,7 +89,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     public function getApiKey(string $channelId) : string
     {
         try{
-            return (bool)$this->config[$channelId]['apiKey'];
+            return $this->config[$channelId]['apiKey'];
         } catch (\Exception $exception)
         {
             return "";
@@ -103,7 +103,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     public function getApiSecret(string $channelId) : string
     {
         try{
-            return (bool)$this->config[$channelId]['apiSecret'];
+            return $this->config[$channelId]['apiSecret'];
         } catch (\Exception $exception)
         {
             return "";

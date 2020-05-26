@@ -2,8 +2,10 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
+use Boxalino\RealTimeUserExperience\Service\Util\Configuration;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ContextInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 
 /**
  * Trait ApiLoaderTrait
@@ -43,6 +45,15 @@ trait ApiLoaderTrait
      */
     protected function prepareContext(ContextInterface $context) : void
     {
+        $this->getConfiguration()->setContextId($this->getContextId());
         $context->setSalesChannelContext($this->getSalesChannelContext());
+    }
+
+    /**
+     * @return ConfigurationInterface
+     */
+    public function getConfiguration() : ConfigurationInterface
+    {
+        return $this->configuration;
     }
 }

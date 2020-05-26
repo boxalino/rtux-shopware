@@ -40,7 +40,6 @@ class ApiSortingModel extends ApiSortingModelAbstract
         $this->productListingSortingRegistry = $productListingSortingRegistry;
     }
 
-
     /**
      * Accessing the sorting declared for a key on ProductListingSortingRegistry
      * (Shopware6 standard)
@@ -108,6 +107,16 @@ class ApiSortingModel extends ApiSortingModelAbstract
         }
 
         return $this->get(self::BOXALINO_DEFAULT_SORT_FIELD)->getKey();
+    }
+
+    /**
+     * @param null | AccessorInterface $context
+     * @return AccessorModelInterface
+     */
+    public function addAccessorContext(?AccessorInterface $context = null): AccessorModelInterface
+    {
+        $this->setActiveSorting($context->getSorting());
+        return $this;
     }
 
 }
