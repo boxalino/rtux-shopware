@@ -68,6 +68,11 @@ abstract class ExporterComponentAbstract implements ExporterComponentInterface
      */
     protected $resource;
 
+    /**
+     * @var array
+     */
+    protected $headerFields = [];
+
 
     /**
      * ExporterComponentAbstract constructor.
@@ -279,6 +284,24 @@ abstract class ExporterComponentAbstract implements ExporterComponentInterface
     public function getIsDelta() : bool
     {
         return $this->delta;
+    }
+
+    /**
+     * @param array $fields
+     * @return $this
+     */
+    public function setHeaderFields(array $fields) : self
+    {
+        $this->headerFields = $fields;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaderFields() : array
+    {
+        return $this->headerFields;
     }
 
     /**

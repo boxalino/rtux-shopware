@@ -199,7 +199,7 @@ class Product extends ExporterComponentAbstract
                 $row['immediate_delivery'] = $this->getProductImmediateDeliveryValue($row);
                 if($header)
                 {
-                    $exportFields = array_keys($row); $data[] = $exportFields; $header = false;
+                    $exportFields = array_keys($row); $this->setHeaderFields($exportFields); $data[] = $exportFields; $header = false;
                 }
                 $data[] = $row;
                 if(count($data) > self::EXPORTER_DATA_SAVE_STEP)

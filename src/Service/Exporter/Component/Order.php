@@ -135,6 +135,7 @@ class Order extends ExporterComponentAbstract
                 if($header)
                 {
                     $exportFields = array_keys($row);
+                    $this->setHeaderFields($exportFields);
                     $data[] = $exportFields;
                     $header = false;
                 }
