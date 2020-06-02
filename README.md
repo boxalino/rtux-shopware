@@ -16,6 +16,11 @@ https://github.com/boxalino/rtux-integration-shopware
 
 The latest documentation is available upon request.
 
+## Setup
+The Shopware6 plugin has a dependency on the Boxalino API repository (https://github.com/boxalino/rtux-api-php).
+In order to activate the bundle, add it to the list of project bundles in config/bundles.php
+>Boxalino\RealTimeUserExperienceApi\BoxalinoRealTimeUserExperienceApi::class=>['all'=>true]
+
 ## Contact us!
 
 If you have any question, just contact us at support@boxalino.com
