@@ -11,11 +11,13 @@ namespace Boxalino\RealTimeUserExperience\Framework\Request;
 trait RequestParametersTrait
 {
     /**
+     * As set in platform/src/Core/Content/Product/SalesChannel/Listing/ProductListingFeaturesSubscriber.php
+     * function getCurrentSorting()
      * @return string
      */
     public function getSortParameter() : string
     {
-        return "sort";
+        return "order";
     }
 
     /**
@@ -28,6 +30,7 @@ trait RequestParametersTrait
 
     /**
      * As set in platform/src/Core/Content/Product/SalesChannel/Listing/ProductListingFeaturesSubscriber.php
+     * function getPage()
      * @return string
      */
     public function getPageNumberParameter() : string
@@ -36,6 +39,8 @@ trait RequestParametersTrait
     }
 
     /**
+     * As set in platform/src/Core/Content/Product/SalesChannel/Listing/ProductListingFeaturesSubscriber.php,
+     * function getLimit()
      * @return string
      */
     public function getPageLimitParameter() : string

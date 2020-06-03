@@ -1,6 +1,8 @@
 <?php
 namespace Boxalino\RealTimeUserExperience;
 
+use Boxalino\RealTimeUserExperienceApi\BoxalinoRealTimeUserExperienceApi;
+use Shopware\Core\Framework\Parameter\AdditionalBundleParameters;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Plugin\Context\ActivateContext;
@@ -24,6 +26,16 @@ class BoxalinoRealTimeUserExperience extends Plugin
     {
     }
 
+    /**
+     * Adding the Boxalino API bundle
+     *
+     * @param AdditionalBundleParameters $parameters
+     * @return array
+     */
+    public function getAdditionalBundles(AdditionalBundleParameters $parameters): array
+    {
+        return array_merge(parent::getAdditionalBundles($parameters), [ new BoxalinoRealTimeUserExperienceApi()]);
+    }
 
     public function activate(ActivateContext $context) : void
     {

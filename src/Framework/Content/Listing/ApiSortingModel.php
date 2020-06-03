@@ -6,6 +6,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInt
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiSortingModelAbstract;
+use Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingFeaturesSubscriber;
 use Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingSorting;
 use Shopware\Core\Content\Product\SalesChannel\Listing\ProductListingSortingRegistry;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
@@ -17,7 +18,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 class ApiSortingModel extends ApiSortingModelAbstract
     implements ApiSortingModelInterface
 {
-    const BOXALINO_DEFAULT_SORT_FIELD = "score";
 
     /**
      * @var ProductListingSorting[]
@@ -80,7 +80,7 @@ class ApiSortingModel extends ApiSortingModelAbstract
      */
     public function getDefaultSortField(): string
     {
-        return self::BOXALINO_DEFAULT_SORT_FIELD;
+        return ProductListingFeaturesSubscriber::DEFAULT_SEARCH_SORT;
     }
 
     /**
@@ -106,7 +106,7 @@ class ApiSortingModel extends ApiSortingModelAbstract
             }
         }
 
-        return $this->get(self::BOXALINO_DEFAULT_SORT_FIELD)->getKey();
+        return $this->get(ProductListingFeaturesSubscriber::DEFAULT_SEARCH_SORT)->getKey();
     }
 
     /**
