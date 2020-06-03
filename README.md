@@ -17,9 +17,27 @@ https://github.com/boxalino/rtux-integration-shopware
 The latest documentation is available upon request.
 
 ## Setup
-The Shopware6 plugin has a dependency on the Boxalino API repository (https://github.com/boxalino/rtux-api-php).
-In order to activate the bundle, add it to the list of project bundles in config/bundles.php
->Boxalino\RealTimeUserExperienceApi\BoxalinoRealTimeUserExperienceApi::class=>['all'=>true]
+1. Add the plugin to your project via composer
+``composer require boxalino/rtux-shopware``
+
+2. The Shopware6 plugin has a dependency on the Boxalino API repository (https://github.com/boxalino/rtux-api-php).
+   In order to activate the bundle, add it to the list of project bundles in config/bundles.php
+``Boxalino\RealTimeUserExperienceApi\BoxalinoRealTimeUserExperienceApi::class=>['all'=>true]``
+
+3. Activate the plugin per Shopware use
+``./bin/console plugin:refresh``
+``./bin/console plugin:install --activate --clearCache BoxalinoRealTimeUserExperience``
+  
+4. Log in your Shopware admin and configure the plugin with the configurations provided for your setup
+Shopware Admin >> Settings >> System >> Plugins >> Boxalino RTUX Framework for Shopware v6
+
+5. In order to kick off your account, a full export is required
+``./bin/console boxalino:exporter:run full``
+
+The exporter will create a _boxalino_ directory in your project where the temporary CSV files will be stored before the export;
+The exporter will log it`s process in a dedicated log _./var/log/boxalino-<env>.log_ 
+
+6. Proceed with the integration features available in our guidelines suggestions https://github.com/boxalino/rtux-integration-shopware
 
 ## Contact us!
 
