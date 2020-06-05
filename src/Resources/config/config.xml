@@ -51,9 +51,9 @@
         <title>Tracker</title>
         <title lang="de-DE">Tracker</title>
         <input-field type="bool">
-            <name>trackingStatus</name>
+            <name>trackerActive</name>
             <defaultValue>0</defaultValue>
-            <label>Tracker Status</label>
+            <label>Enable Tracker</label>
             <helpText>Is the JavaScript tracker enabled?</helpText>
         </input-field>
     </card>

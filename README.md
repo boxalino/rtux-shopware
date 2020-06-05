@@ -31,13 +31,17 @@ The latest documentation is available upon request.
 4. Log in your Shopware admin and configure the plugin with the configurations provided for your setup
 Shopware Admin >> Settings >> System >> Plugins >> Boxalino RTUX Framework for Shopware v6
 
-5. In order to kick off your account, a full export is required
+5. Due to the JS files in the plugin (tracker, Shopware6 CMS blocks, etc), a theme compilation might be required:
+``./psh.phar administration:build ``
+``./psh.phar storefront:build``
+
+6. In order to kick off your account, a full export is required
 ``./bin/console boxalino:exporter:run full``
 
 The exporter will create a _boxalino_ directory in your project where the temporary CSV files will be stored before the export;
 The exporter will log it`s process in a dedicated log _./var/log/boxalino-<env>.log_ 
 
-6. Proceed with the integration features available in our guidelines suggestions https://github.com/boxalino/rtux-integration-shopware
+7. Proceed with the integration features available in our guidelines suggestions https://github.com/boxalino/rtux-integration-shopware
 
 ## Contact us!
 
