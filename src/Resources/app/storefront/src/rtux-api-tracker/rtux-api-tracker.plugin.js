@@ -3,7 +3,7 @@ import Plugin from 'src/plugin-system/plugin.class';
 import AddToCartEvent from './events/add-to-cart.event';
 import AddToCartByNumberEvent from './events/add-to-cart-by-number.event';
 import LoginEvent from './events/login.event';
-import PurchaseEvent from './events/purchase.event';
+import RemoveFromCart from './events/remove-from-cart.event';
 import ViewItemEvent from './events/view-item.event';
 import ViewSearchEvent from './events/view-search.event';
 import ViewNavigationEvent from './events/view-navigation.event';
@@ -37,7 +37,7 @@ export default class RtuxApiTrackerPlugin extends Plugin
         this.registerEvent(AddToCartEvent);
         this.registerEvent(AddToCartByNumberEvent);
         this.registerEvent(LoginEvent);
-        this.registerEvent(PurchaseEvent);
+        this.registerEvent(RemoveFromCart);
         this.registerEvent(ViewItemEvent);
         this.registerEvent(ViewSearchEvent);
         this.registerEvent(ViewNavigationEvent);

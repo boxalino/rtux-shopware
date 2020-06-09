@@ -31,7 +31,7 @@ export default class RemoveFromCart extends RtuxApiTrackerEvent
         bxq([
             'trackAddToBasket',
             removedProduct['id'],
-            parseInt(-removedProduct['quantity']),
+            0,
             removedProduct['price'],
             window.currentCurrency
         ]);

@@ -15,10 +15,10 @@ export default class LineItemHelper
 
         lineItemDataElements.forEach(itemEl => {
             lineItems.push({
-                'id': DomAccessHelper.getDataAttribute(itemEl, 'id'),
-                'name': DomAccessHelper.getDataAttribute(itemEl, 'name'),
-                'quantity': DomAccessHelper.getDataAttribute(itemEl, 'quantity'),
-                'price': DomAccessHelper.getDataAttribute(itemEl, 'price').toFixed(2)
+                id: DomAccessHelper.getDataAttribute(itemEl, 'id'),
+                name: DomAccessHelper.getDataAttribute(itemEl, 'name'),
+                quantity: DomAccessHelper.getDataAttribute(itemEl, 'quantity'),
+                price: DomAccessHelper.getDataAttribute(itemEl, 'price').toFixed(2)
             });
         });
 
@@ -35,10 +35,10 @@ export default class LineItemHelper
             if(elementId === id)
             {
                 lineItem = {
-                    'id': DomAccessHelper.getDataAttribute(itemEl, 'id'),
-                    'name': DomAccessHelper.getDataAttribute(itemEl, 'name'),
-                    'quantity': DomAccessHelper.getDataAttribute(itemEl, 'quantity'),
-                    'price': DomAccessHelper.getDataAttribute(itemEl, 'price').toFixed(2)
+                    id: DomAccessHelper.getDataAttribute(itemEl, 'id'),
+                    name: DomAccessHelper.getDataAttribute(itemEl, 'name'),
+                    quantity: DomAccessHelper.getDataAttribute(itemEl, 'quantity'),
+                    price: DomAccessHelper.getDataAttribute(itemEl, 'price').toFixed(2)
                 };
             }
         });

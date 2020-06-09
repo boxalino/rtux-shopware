@@ -46,7 +46,6 @@ class TrackerSubscriber implements EventSubscriberInterface
         try{
             if($context->hasExtension("rtuxApiTracker"))
             {
-                $this->logger->info("has extension");
                 return;
             }
             $context->addExtension("rtuxApiTracker", $this->trackerHandler->getTracker($context));

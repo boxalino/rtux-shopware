@@ -2,6 +2,9 @@ import RtuxApiTrackerEvent from '../rtux-api-tracker-event';
 import DomAccessHelper from 'src/helper/dom-access.helper';
 import LineItemHelper from '../line-item.helper';
 
+/**
+ * @deprecated the event is sent server-side
+ */
 export default class PurchaseEvent extends RtuxApiTrackerEvent
 {
     supports(controllerName, actionName) {

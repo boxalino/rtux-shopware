@@ -1,6 +1,9 @@
 <?php
 namespace Boxalino\RealTimeUserExperience\Service\Util;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
+use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Psr\Log\LoggerInterface;
 
@@ -25,6 +28,11 @@ class Configuration
     protected $logger;
 
     /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
      * @var array
      */
     protected $config = [];
@@ -35,9 +43,11 @@ class Configuration
      */
     public function __construct(
         SystemConfigService $systemConfigService,
+        Connection $connection,
         LoggerInterface $boxalinoLogger
     ) {
         $this->systemConfigService = $systemConfigService;
+        $this->connection = $connection;
         $this->logger = $boxalinoLogger;
     }
 
@@ -50,6 +60,30 @@ class Configuration
         }
 
         return $this->config[$id];
+    }
+
+    /**
+     * @param string $languageId
+     * @return string
+     */
+    public function getLanguageCode(string $languageId) : string
+    {
+        $query = $this->connection->createQueryBuilder();
+        $query->select(["locale.code AS 'code'"])
+            ->from('language')
+            ->leftJoin(
+                'language',
+                'locale',
+                'locale',
+                'language.locale_id = locale.id'
+            )
+            ->addGroupBy('language.locale_id')
+            ->andWhere('language.id = :languageId')
+            ->setParameter('languageId', Uuid::fromHexToBytes($languageId), ParameterType::BINARY);
+
+        $code = $query->execute()->fetchColumn();
+
+        return substr($code, 0, 2);
     }
 
 }

@@ -24,6 +24,7 @@
     <services>
         <service id="boxalino.shopware.util.configurator" class="Boxalino\RealTimeUserExperience\Service\Util\Configuration">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="monolog.logger.boxalino"/>
         </service>
 
@@ -38,9 +39,15 @@
         <service id="boxalino.shopware.tracker.handler" class="Boxalino\RealTimeUserExperience\Service\Tracker\TrackerHandler">
             <argument type="service" id="boxalino.shopware.util.configurator"/>
             <argument type="service" id="cache.object"/>
+            <argument type="service" id="monolog.logger.boxalino"/>
         </service>
         <service id="Boxalino\RealTimeUserExperience\Service\Tracker\TrackerSubscriber">
             <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="boxalino.shopware.tracker.handler"/>
+        </service>
+        <service id="boxalino.shopware.tracker.order" class="Boxalino\RealTimeUserExperience\Framework\Tracker\OrderTracker">
+            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
             <argument type="service" id="boxalino.shopware.tracker.handler"/>
         </service>
     </services>

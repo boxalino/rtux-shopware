@@ -43,11 +43,6 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     ];
 
     /**
-     * @var Connection
-     */
-    protected $connection;
-
-    /**
      * @var array
      */
     protected $indexConfig = array();
@@ -60,11 +55,10 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      */
     public function __construct(
         SystemConfigService $systemConfigService,
-        LoggerInterface $boxalinoLogger,
-        Connection $connection
+        Connection $connection,
+        LoggerInterface $boxalinoLogger
     ) {
-        parent::__construct($systemConfigService, $boxalinoLogger);
-        $this->connection = $connection;
+        parent::__construct($systemConfigService, $connection, $boxalinoLogger);
         $this->init();
     }
 
