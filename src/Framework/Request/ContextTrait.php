@@ -57,7 +57,7 @@ trait ContextTrait
     public function getVisibilityFilter(Request $request) : ParameterInterface
     {
         return $this->getParameterFactory()->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
-            ->addRange("products_visibility", $this->getContextVisibility(),1000);
+            ->addRange("products_visibility", $this->getContextVisibility()[0],1000);
     }
 
     /**
