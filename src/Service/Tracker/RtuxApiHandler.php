@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Service\Tracker;
 
-use Boxalino\RealTimeUserExperience\Service\Tracker\ApiTracker;
 use GuzzleHttp\Psr7\Request;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -11,13 +10,13 @@ use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use GuzzleHttp\Client;
 
 /**
- * Class TrackerHandler
+ * Class RtuxApiHandler
  * Prepares the tracker information used on page
  * Caches the tracker configurations
  *
  * @package Boxalino\RealTimeUserExperience\Service\Tracker
  */
-class TrackerHandler
+class RtuxApiHandler
 {
     public const BOXALINO_API_TRACKING_PRODUCTION="//track.bx-cloud.com/static/bav2.min.js";
     public const BOXALINO_API_TRACKING_STAGE="//r-st.bx-cloud.com/static/bav2.min.js";
@@ -59,13 +58,13 @@ class TrackerHandler
 
     /**
      * @param SalesChannelContext $salesChannelContext
-     * @return ApiTracker
+     * @return RtuxApi
      */
-    public function getTracker(SalesChannelContext $salesChannelContext) : Tracker
+    public function getRtuxApi(SalesChannelContext $salesChannelContext) : RtuxApi
     {
         $trackerConfiguration = $this->getConfigurationFromCache($salesChannelContext);
-        $tracker = new Tracker($trackerConfiguration);
-        $tracker->setUrl($this->getTrackerUrl($tracker->isDev()))
+        $tracker = new RtuxApi($trackerConfiguration);
+        $tracker->setTrackerUrl($this->getTrackerUrl($tracker->isDev()))
             ->setCustomerContext($this->getEncodedCustomer($salesChannelContext));
 
         return $tracker;
@@ -75,11 +74,15 @@ class TrackerHandler
      * @param string $event
      * @param array $params
      * @param SalesChannelContext $salesChannelContext
-     * @return mixed
+     * @return void
      */
-    public function track(string $event, array $params, SalesChannelContext $salesChannelContext)
+    public function track(string $event, array $params, SalesChannelContext $salesChannelContext) : void
     {
-        $tracker = $this->getTracker($salesChannelContext);
+        $tracker = $this->getRtuxApi($salesChannelContext);
+        if(!$tracker->isActive())
+        {
+            return;
+        }
 
         $params['_a'] = $tracker->getAccount();
         $params['_ev'] = $event;
@@ -124,6 +127,8 @@ class TrackerHandler
         $trackerConfigurations = [
             "account" => $configurations['account'] ?? null,
             "apiKey" => $configurations['apiKey'] ?? null,
+            "serverUrl" =>  $configurations['apiUrl'] ?? null,
+            "apiServerKey" => $configurations['apiServerKey'] ?? null,
             "apiSecret" => $configurations['apiSecret'] ?? null,
             "isActive" => (bool) $configurations['trackerActive'] ?? false,
             "isTest" => (bool) $configurations['test'] ?? false,

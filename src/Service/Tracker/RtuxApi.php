@@ -6,7 +6,7 @@ use Shopware\Core\Framework\Struct\Struct;
 /**
  * @package Boxalino\RealTimeUserExperience\Service\Tracker
  */
-class Tracker extends Struct
+class RtuxApi extends Struct
 {
 
     /**
@@ -18,6 +18,11 @@ class Tracker extends Struct
      * @var string | null
      */
     protected $apiKey;
+
+    /**
+     * @var string | null
+     */
+    protected $apiServerKey;
 
     /**
      * @var string | null
@@ -42,7 +47,12 @@ class Tracker extends Struct
     /**
      * @var string
      */
-    protected $url;
+    protected $trackerUrl;
+
+    /**
+     * @var string
+     */
+    protected $serverUrl;
 
     /**
      * @var string | null
@@ -71,9 +81,9 @@ class Tracker extends Struct
 
     /**
      * @param string $account
-     * @return ApiTracker
+     * @return self
      */
-    public function setAccount(string $account): Tracker
+    public function setAccount(string $account): self
     {
         $this->account = $account;
         return $this;
@@ -89,11 +99,29 @@ class Tracker extends Struct
 
     /**
      * @param string|null $apiKey
-     * @return Tracker
+     * @return self
      */
-    public function setApiKey(?string $apiKey): Tracker
+    public function setApiKey(?string $apiKey): self
     {
         $this->apiKey = $apiKey;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getApiServerKey(): ?string
+    {
+        return $this->apiServerKey;
+    }
+
+    /**
+     * @param string|null $serverKey
+     * @return self
+     */
+    public function setApiServerKey(?string $serverKey): self
+    {
+        $this->apiServerKey = $serverKey;
         return $this;
     }
 
@@ -107,9 +135,9 @@ class Tracker extends Struct
 
     /**
      * @param string|null $apiSecret
-     * @return Tracker
+     * @return self
      */
-    public function setApiSecret(?string $apiSecret): Tracker
+    public function setApiSecret(?string $apiSecret): self
     {
         $this->apiSecret = $apiSecret;
         return $this;
@@ -125,9 +153,9 @@ class Tracker extends Struct
 
     /**
      * @param bool $isActive
-     * @return ApiTracker
+     * @return self
      */
-    public function setIsActive(bool $isActive): Tracker
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
         return $this;
@@ -143,9 +171,9 @@ class Tracker extends Struct
 
     /**
      * @param bool $isTest
-     * @return ApiTracker
+     * @return self
      */
-    public function setIsTest(bool $isTest): Tracker
+    public function setIsTest(bool $isTest): self
     {
         $this->isTest = $isTest;
         return $this;
@@ -161,9 +189,9 @@ class Tracker extends Struct
 
     /**
      * @param bool $isDev
-     * @return Tracker
+     * @return self
      */
-    public function setIsDev(bool $isDev): Tracker
+    public function setIsDev(bool $isDev): self
     {
         $this->isDev = $isDev;
         return $this;
@@ -172,18 +200,36 @@ class Tracker extends Struct
     /**
      * @return string
      */
-    public function getUrl(): string
+    public function getTrackerUrl(): string
     {
         return $this->url;
     }
 
     /**
      * @param string $url
-     * @return ApiTracker
+     * @return self
      */
-    public function setUrl(string $url): Tracker
+    public function setTrackerUrl(string $url): self
     {
         $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServerUrl(): string
+    {
+        return $this->serverUrl;
+    }
+
+    /**
+     * @param string $serverUrl
+     * @return self
+     */
+    public function setServerUrl(string $serverUrl): self
+    {
+        $this->serverUrl = $serverUrl;
         return $this;
     }
 
@@ -197,9 +243,9 @@ class Tracker extends Struct
 
     /**
      * @param string|null $customerContext
-     * @return ApiTracker
+     * @return self
      */
-    public function setCustomerContext(?string $customerContext): Tracker
+    public function setCustomerContext(?string $customerContext): self
     {
         $this->customerContext = $customerContext;
         return $this;

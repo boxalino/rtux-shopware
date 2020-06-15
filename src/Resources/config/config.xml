@@ -46,6 +46,11 @@
             <label>Test mode</label>
             <helpText>The request will use test=false by default; The test property refers to the Boxalino Optimization configurations used (narratives, scenario, facets, etc)</helpText>
         </input-field>
+        <input-field type="text">
+            <name>apiServerKey</name>
+            <label>JS API Server Key</label>
+            <helpText>The API server key which can be used for JS events (does not require a secret)</helpText>
+        </input-field>
     </card>
     <card>
         <title>Tracker</title>

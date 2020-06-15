@@ -36,19 +36,20 @@
         </service>
 
         <!-- Setting the API tracker -->
-        <service id="boxalino.shopware.tracker.handler" class="Boxalino\RealTimeUserExperience\Service\Tracker\TrackerHandler">
+        <service id="boxalino.shopware.rtux.handler" class="Boxalino\RealTimeUserExperience\Service\Tracker\RtuxApiHandler">
             <argument type="service" id="boxalino.shopware.util.configurator"/>
             <argument type="service" id="cache.object"/>
             <argument type="service" id="monolog.logger.boxalino"/>
         </service>
-        <service id="Boxalino\RealTimeUserExperience\Service\Tracker\TrackerSubscriber">
+        <service id="Boxalino\RealTimeUserExperience\Service\Tracker\RtuxApiSubscriber">
             <tag name="kernel.event_subscriber"/>
-            <argument type="service" id="boxalino.shopware.tracker.handler"/>
+            <argument type="service" id="boxalino.shopware.rtux.handler"/>
+            <argument type="service" id="monolog.logger.boxalino"/>
         </service>
         <service id="boxalino.shopware.tracker.order" class="Boxalino\RealTimeUserExperience\Framework\Tracker\OrderTracker">
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
-            <argument type="service" id="boxalino.shopware.tracker.handler"/>
+            <argument type="service" id="boxalino.shopware.rtux.handler"/>
         </service>
     </services>
 

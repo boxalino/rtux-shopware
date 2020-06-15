@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Service\Tracker;
 
-use Boxalino\RealTimeUserExperience\Service\Tracker\Util\Configuration;
 use Psr\Log\LoggerInterface;
 use Shopware\Storefront\Event\StorefrontRenderEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -10,29 +9,35 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Class TrackerSubscriber
+ * Class RtuxApiSubscriber
  * Sets the API tracker details on the page
  *
  * @package Boxalino\RealTimeUserExperience\Service\Tracker
  */
-class TrackerSubscriber implements EventSubscriberInterface
+class RtuxApiSubscriber implements EventSubscriberInterface
 {
 
     /**
-     * @var TrackerHandler
+     * @var RtuxApiHandler
      */
-    protected $trackerHandler;
+    protected $rtuxApiHandler;
 
-    public function __construct(TrackerHandler $trackerHandler)
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(RtuxApiHandler $rtuxApiHandler, LoggerInterface $logger)
     {
-        $this->trackerHandler = $trackerHandler;
+        $this->rtuxApiHandler = $rtuxApiHandler;
+        $this->logger = $logger;
     }
 
     public static function getSubscribedEvents()
     {
         return [
             StorefrontRenderEvent::class => [
-                ['addRtuxApiTracker']
+                ['addRtuxApi']
             ],
         ];
     }
@@ -40,15 +45,15 @@ class TrackerSubscriber implements EventSubscriberInterface
     /**
      * @param StorefrontRenderEvent $event
      */
-    public function addRtuxApiTracker(StorefrontRenderEvent $event): void
+    public function addRtuxApi(StorefrontRenderEvent $event): void
     {
         $context = $event->getSalesChannelContext();
         try{
-            if($context->hasExtension("rtuxApiTracker"))
+            if($context->hasExtension("rtuxApi"))
             {
                 return;
             }
-            $context->addExtension("rtuxApiTracker", $this->trackerHandler->getTracker($context));
+            $context->addExtension("rtuxApi", $this->rtuxApiHandler->getRtuxApi($context));
         } catch (\Throwable $exception)
         {
             $this->logger->warning($exception->getMessage());

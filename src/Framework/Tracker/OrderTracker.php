@@ -1,7 +1,7 @@
 <?php
 namespace Boxalino\RealTimeUserExperience\Framework\Tracker;
 
-use Boxalino\RealTimeUserExperience\Service\Tracker\TrackerHandler;
+use Boxalino\RealTimeUserExperience\Service\Tracker\RtuxApiHandler;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Shopware\Core\Checkout\Order\Aggregate\OrderLineItem\OrderLineItemEntity;
@@ -24,9 +24,9 @@ class OrderTracker implements EventSubscriberInterface
     public const RTUX_API_TRACKER_PURCHASE_EVENT = "purchase";
 
     /**
-     * @var TrackerHandler
+     * @var RtuxApiHandler
      */
-    protected $trackHandler;
+    protected $rtuxApiHandler;
 
     /**
      * @var SalesChannelContextService
@@ -35,10 +35,10 @@ class OrderTracker implements EventSubscriberInterface
 
     public function __construct(
         SalesChannelContextServiceProfiler $salesChannelContextService,
-        TrackerHandler $trackerHandler
+        RtuxApiHandler $rtuxApiHandler
     ){
         $this->salesChannelContextService = $salesChannelContextService;
-        $this->trackHandler = $trackerHandler;
+        $this->rtuxApiHandler = $rtuxApiHandler;
     }
 
     /**
@@ -59,7 +59,7 @@ class OrderTracker implements EventSubscriberInterface
     public function addApiTracker(CheckoutOrderPlacedEvent $event)
     {
         try{
-            $this->trackHandler->track(
+            $this->rtuxApiHandler->track(
                 self::RTUX_API_TRACKER_PURCHASE_EVENT,
                 $this->getEventParameters($event->getOrder()),
                 $this->getSalesChannelContext($event->getSalesChannelId(), $event->getOrder()->getLanguageId())

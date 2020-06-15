@@ -2,14 +2,14 @@
 {% block component_head_analytics %}
     {{ parent() }}
 
-    {% set rtuxApiTracker = null %}
-    {% if context.getExtension("rtuxApiTracker") is defined %}
-        {% set rtuxApiTracker = context.getExtension("rtuxApiTracker") %}
+    {% set rtuxApi = null %}
+    {% if context.getExtension("rtuxApi") is defined %}
+        {% set rtuxApi = context.getExtension("rtuxApi") %}
     {% endif %}
 
-    {% if rtuxApiTracker and rtuxApiTracker.isActive() %}
+    {% if rtuxApi and rtuxApi.isActive() %}
         {% block component_boxalino_api_tracker_js %}
-            <script async src="{{ rtuxApiTracker.getUrl() }}"></script>
+            <script async src="{{ rtuxApi.getTrackerUrl() }}"></script>
             <script>
                 window.rtuxApiTrackerActive = true;
                 window.controllerName = '{{ controllerName|lower }}';
@@ -17,14 +17,14 @@
                 window.activeNavigationId = '{{ page.header.navigation.active.id }}';
                 window.currentCurrency = '{{ page.header.activeCurrency.translated.shortName }}';
                 window._bxq = window._bxq || [];
-                window.preferentialLog = '{{ rtuxApiTracker.getCustomerContext() }}';
+                window.preferentialLog = '{{ rtuxApi.getCustomerContext() }}';
 
                 function bxq(arguments) { _bxq.push(arguments); }
 
                 window.bxqCallback = () => {
-                    bxq(['setAccount', '{{ rtuxApiTracker.getAccount() }}']);
+                    bxq(['setAccount', '{{ rtuxApi.getAccount() }}']);
                     bxq(['trackPageView']);
-                    {% if rtuxApiTracker.isTest() %}
+                    {% if rtuxApi.isTest() %}
                     bxq(['debugCookie', true]);
                     {% endif %}
                 };
