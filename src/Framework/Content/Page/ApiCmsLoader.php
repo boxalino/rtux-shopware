@@ -47,4 +47,27 @@ class ApiCmsLoader extends ApiCmsLoaderAbstract
         return $this;
     }
 
+    /**
+     * Replicates the narrative content in order to generate the top/bottom/right/left slots
+     *
+     * @param Struct $apiCmsModel
+     * @return Struct
+     */
+    public function createSectionFrom(Struct $apiCmsModel, string $position) : Struct
+    {
+        if(in_array($position, $this->apiCallService->getApiResponse()->getResponseSegments()) && $apiCmsModel instanceof ApiCmsModelInterface)
+        {
+            /** @var ApiCmsModelInterface $segmentNarrativeBlock */
+            $segmentNarrativeBlock = $this->createFromObject($apiCmsModel, ['blocks', $position]);
+            $getterFunction = "get".ucfirst($position);
+            $setterFunction = "set".ucfirst($position);
+            $segmentNarrativeBlock->setBlocks($apiCmsModel->$getterFunction());
+            $segmentNarrativeBlock->$setterFunction(new \ArrayIterator());
+
+            return $segmentNarrativeBlock;
+        }
+
+        return $this->getCmsPage();
+    }
+
 }
