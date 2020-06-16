@@ -1,14 +1,18 @@
+import Plugin from 'src/plugin-system/plugin.class';
 import CookieStorageHelper from 'src/helper/storage/cookie-storage.helper';
 
 /**
  * Helper class assisting in making requests to Boxalino API from front-end
  */
-export default class RtuxApiHelper {
+export default class RtuxApiHelper extends Plugin {
+
+    init() { }
 
     /**
      * additional parameters to be set: returnFields, filters, facets, sort
      * for more details, check the Narrative Api Technical Integration manual provided by Boxalino
      *
+     * @public
      * @param string account
      * @param string apiKey
      * @param string widget
@@ -49,7 +53,7 @@ export default class RtuxApiHelper {
      * @returns {string}
      */
     getApiRequestUrl(url) {
-        return url + '?profileId=' + encodeURIComponent(this._getApiProfileId());
+        return url + '?profileId=' + encodeURIComponent(this.getApiProfileId());
     }
 
     /**
@@ -62,7 +66,7 @@ export default class RtuxApiHelper {
             return atob(customerId);
         }
 
-        return this._getApiProfileId();
+        return this.getApiProfileId();
     }
 
     /**
