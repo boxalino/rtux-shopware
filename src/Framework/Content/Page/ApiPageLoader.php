@@ -29,13 +29,19 @@ class ApiPageLoader extends ApiPageLoaderAbstract
      */
     protected $genericLoader;
 
+    /**
+     * @var EventDispatcherInterface 
+     */
+    protected $eventDispatcher;
+
     public function __construct(
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
         EventDispatcherInterface $eventDispatcher,
         GenericPageLoader $genericLoader
     ) {
-        parent::__construct($apiCallService, $configuration, $eventDispatcher);
+        parent::__construct($apiCallService, $configuration);
+        $this->eventDispatcher = $eventDispatcher;
         $this->genericLoader = $genericLoader;
     }
 

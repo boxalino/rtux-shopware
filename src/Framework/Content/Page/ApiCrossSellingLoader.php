@@ -15,7 +15,6 @@ use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Storefront\Page\Product\CrossSelling\CrossSellingElement;
 use Shopware\Storefront\Page\Product\CrossSelling\CrossSellingLoaderResult;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -51,10 +50,9 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
     public function __construct(
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
-        EventDispatcherInterface $eventDispatcher,
         SalesChannelRepositoryInterface $productRepository
     ){
-        parent::__construct($apiCallService, $configuration, $eventDispatcher);
+        parent::__construct($apiCallService, $configuration);
         $this->productRepository = $productRepository;
         $this->productIdsByType = new \ArrayIterator();
     }
