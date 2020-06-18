@@ -28,6 +28,17 @@ class ApiFacetModel extends ApiFacetModelAbstract
     use SalesChannelContextTrait;
 
     /**
+     * @var Connection 
+     */
+    protected $connection;
+    
+    public function __construct(Connection $connection)
+    {
+        parent::__construct();
+        $this->connection = $connection;
+    }
+
+    /**
      * Sets the facets
      * Sets the accesor handler to be able to run toObject construct
      *

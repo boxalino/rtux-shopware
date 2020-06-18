@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
-use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiSortingModel;
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCookieSubscriber;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactory;
@@ -9,8 +8,6 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInte
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;

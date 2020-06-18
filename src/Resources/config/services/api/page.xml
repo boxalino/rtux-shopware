@@ -34,7 +34,9 @@
         <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
         <service id="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiFacetModel"
                  parent="boxalino.api.content.listing.facet"
-                 public="true"/>
+                 public="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service>
 
     </services>
 
