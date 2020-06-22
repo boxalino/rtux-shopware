@@ -3,7 +3,10 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Product\Aggregate\ProductCrossSelling\ProductCrossSellingEntity;
 use Shopware\Core\Content\Product\ProductCollection;
@@ -47,6 +50,7 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
      */
     private $crossSellingResponseCollection = null;
 
+
     public function __construct(
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
@@ -57,20 +61,25 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
         $this->productIdsByType = new \ArrayIterator();
     }
 
+    public function load() : ApiLoaderInterface
+    {
+        return $this;
+    }
+
+    public function getApiResponsePage(): ?ApiResponseViewInterface
+    {
+        return null;
+    }
+
     /**
-     * @param Request $request
-     * @param SalesChannelContext $salesChannelContext
-     * @param CrossSellingLoaderResult $crossSellingLoaderResult
-     * @return bool
+     * @return CrossSellingLoaderResult
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function load(Request $request, SalesChannelContext $salesChannelContext,
-                         CrossSellingLoaderResult $crossSellingLoaderResult) : CrossSellingLoaderResult
+    public function getResult(CrossSellingLoaderResult $crossSellingLoaderResult) : CrossSellingLoaderResult
     {
-        $this->setSalesChannelContext($salesChannelContext);
-        $this->setRequestInterfaceContext($request, $crossSellingLoaderResult);
+        $this->setRequestInterfaceContext($crossSellingLoaderResult);
         try{
-            $this->call($request);
+            $this->call();
         } catch (\Throwable $exception)
         {
             return $crossSellingLoaderResult;
@@ -202,25 +211,25 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
     /**
      * Set required request elements on the $apiContextInterface (instanceof ItemContextAbstract)
      *
-     * @param Request $request
      * @param CrossSellingLoaderResult $crossSellingLoaderResult
      * @return self
      */
-    protected function setRequestInterfaceContext(Request $request, CrossSellingLoaderResult $crossSellingLoaderResult) : self
+    public function setRequestInterfaceContext(CrossSellingLoaderResult $crossSellingLoaderResult) : self
     {
-        $this->getApiContextInterface()->setSalesChannelContext($this->getSalesChannelContext());
-        if($request->attributes->has("mainProductId"))
+        /** @var Request $request */
+        $request = $this->getRequest();
+        if($request->getRequest()->attributes->has("mainProductId"))
         {
-            $this->getApiContextInterface()->setProductId($request->attributes->get("mainProductId"));
+            $this->getApiContext()->setProductId($request->getRequest()->attributes->get("mainProductId"));
         }
-        if($this->getApiContextInterface()->useConfiguredProductsAsContextParameters())
+        if($this->getApiContext()->useConfiguredProductsAsContextParameters())
         {
             foreach($crossSellingLoaderResult as $item)
             {
                 $name = $item->getCrossSelling()->getTranslated()['name'];
                 $type = preg_replace('/[^a-z0-9]+/', '_', strtolower($name));
                 $ids = $item->getProducts()->getIds();
-                $this->getApiContextInterface()->addContextParametersByType($type, $ids);
+                $this->getApiContext()->addContextParametersByType($type, $ids);
             }
         }
 

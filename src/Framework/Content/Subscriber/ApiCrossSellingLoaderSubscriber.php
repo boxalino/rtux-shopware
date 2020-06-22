@@ -2,6 +2,7 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Subscriber;
 
 use Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCrossSellingLoader;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Shopware\Storefront\Page\Product\ProductPageLoadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -21,10 +22,16 @@ class ApiCrossSellingLoaderSubscriber implements EventSubscriberInterface
      */
     private $apiCrossSellingLoader;
 
+    /**
+     * @var RequestInterface
+     */
+    private $requestWrapper;
 
     public function __construct(
-        ApiCrossSellingLoader $apiCrossSellingLoader
+        ApiCrossSellingLoader $apiCrossSellingLoader,
+        RequestInterface $requestWrapper
     ){
+        $this->requestWrapper = $requestWrapper;
         $this->apiCrossSellingLoader = $apiCrossSellingLoader;
     }
 
@@ -53,8 +60,13 @@ class ApiCrossSellingLoaderSubscriber implements EventSubscriberInterface
         $page = $event->getPage();
         $request = $event->getRequest();
         $request->attributes->set("mainProductId", $page->getProduct()->getId());
+        $this->requestWrapper->setRequest($request);
 
-        $result = $this->apiCrossSellingLoader->load($request, $event->getSalesChannelContext(), $page->getCrossSellings());
+        $this->apiCrossSellingLoader->setRequest($this->requestWrapper)
+            ->setSalesChannelContext($event->getSalesChannelContext())
+            ->load();
+
+        $result = $this->apiCrossSellingLoader->getResult($page->getCrossSellings());
         $page->setCrossSellings($result);
     }
 

@@ -4,33 +4,39 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiCmsLoaderAbstract;
-use Symfony\Component\HttpFoundation\Request;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 
 /**
  * Class ApiCmsLoader
  * Sample based on a familiar ShopwarePageLoader component
  *
- * @package Boxalino\RealTimeUserExperience\Service\Api\Content\Page
+ * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
 class ApiCmsLoader extends ApiCmsLoaderAbstract
 {
     use ApiLoaderTrait;
 
     /**
-     * @return ApiCmsModelInterface
+     * @return ApiResponseViewInterface
      */
-    public function getCmsPage(): ApiCmsModelInterface
+    public function getApiResponsePage(): ?ApiResponseViewInterface
     {
-        return new ApiCmsModel();
+        if(!$this->apiResponsePage) 
+        {
+            $this->apiResponsePage = new ApiCmsModel();
+        }
+        
+        return $this->apiResponsePage;
     }
 
     /**
-     * @param Request $request
+     * @param RequestInterface $request
      * @return string
      */
-    protected function getNavigationId(Request $request): string
+    protected function getNavigationId(RequestInterface $request): string
     {
-        return $request->get("navigationId", $this->getSalesChannelContext()->getSalesChannel()->getNavigationCategoryId());
+        return $request->getParam("navigationId", $this->getSalesChannelContext()->getSalesChannel()->getNavigationCategoryId());
     }
 
     /**
@@ -53,7 +59,7 @@ class ApiCmsLoader extends ApiCmsLoaderAbstract
      * @param Struct $apiCmsModel
      * @return Struct
      */
-    public function createSectionFrom(Struct $apiCmsModel, string $position) : Struct
+    public function createSectionFrom(Struct $apiCmsModel, string $position) : ?Struct
     {
         if(in_array($position, $this->apiCallService->getApiResponse()->getResponseSegments()) && $apiCmsModel instanceof ApiCmsModelInterface)
         {
@@ -67,7 +73,7 @@ class ApiCmsLoader extends ApiCmsLoaderAbstract
             return $segmentNarrativeBlock;
         }
 
-        return $this->getCmsPage();
+        return $this->getApiResponsePage();
     }
 
 }

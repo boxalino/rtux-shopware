@@ -2,14 +2,14 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactory;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterInterface;
 use GuzzleHttp\Client;
 use JsonSerializable;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Trait ContextTrait
@@ -33,14 +33,14 @@ trait ContextTrait
     protected $requestTransformer;
 
     /**
-     * @var ParameterFactory
+     * @var ParameterFactoryInterface
      */
     protected $parameterFactory;
 
     /**
-     * @param Request $request
+     * @param RequestInterface $request
      */
-    public function validateRequest(Request $request) : void
+    public function validateRequest(RequestInterface $request) : void
     {
         if(!$this->salesChannelContext)
         {
@@ -54,27 +54,27 @@ trait ContextTrait
     /**
      * @return ParameterInterface
      */
-    public function getVisibilityFilter(Request $request) : ParameterInterface
+    public function getVisibilityFilter(RequestInterface $request) : ParameterInterface
     {
-        return $this->getParameterFactory()->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
+        return $this->getParameterFactory()->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
             ->addRange("products_visibility", $this->getContextVisibility()[0],1000);
     }
 
     /**
      * @return ParameterInterface
      */
-    public function getCategoryFilter(Request $request) : ParameterInterface
+    public function getCategoryFilter(RequestInterface $request) : ParameterInterface
     {
-        return $this->getParameterFactory()->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
+        return $this->getParameterFactory()->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
             ->add("category_id", $this->getContextNavigationId($request));
     }
 
     /**
      * @return ParameterInterface
      */
-    public function getActiveFilter(Request $request) : ParameterInterface
+    public function getActiveFilter(RequestInterface $request) : ParameterInterface
     {
-        return $this->getParameterFactory()->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
+        return $this->getParameterFactory()->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
             ->add("products_active", [1]);
     }
 
@@ -87,9 +87,9 @@ trait ContextTrait
     }
 
     /**
-     * @return ParameterFactory
+     * @return ParameterFactoryInterface
      */
-    public function getParameterFactory() : ParameterFactory
+    public function getParameterFactory() : ParameterFactoryInterface
     {
         return $this->parameterFactory;
     }

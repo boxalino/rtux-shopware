@@ -5,19 +5,20 @@ use Boxalino\RealTimeUserExperience\Framework\Request\RequestParametersTrait;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiPageLoaderAbstract;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Category\Exception\CategoryNotFoundException;
 use Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Storefront\Page\GenericPageLoader;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class AutocompletePageLoader
  * Sample based on a familiar ShopwarePageLoader component
  *
- * @package Boxalino\RealTimeUserExperience\Service\Api\Content\Page
+ * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
 class ApiPageLoader extends ApiPageLoaderAbstract
 {
@@ -30,7 +31,7 @@ class ApiPageLoader extends ApiPageLoaderAbstract
     protected $genericLoader;
 
     /**
-     * @var EventDispatcherInterface 
+     * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
 
@@ -51,20 +52,25 @@ class ApiPageLoader extends ApiPageLoaderAbstract
      * @throws InconsistentCriteriaIdsException
      * @throws MissingRequestParameterException
      */
-    public function getApiResponsePage(Request $request): ApiResponsePageInterface
+    public function getApiResponsePage(): ?ApiResponseViewInterface
     {
-        $page = $this->genericLoader->load($request, $this->getSalesChannelContext());
-        return ApiResponsePage::createFrom($page);
+        if(!$this->apiResponsePage)
+        {
+            $page = $this->genericLoader->load($this->getRequest()->getRequest(), $this->getSalesChannelContext());
+            $this->apiResponsePage = ApiResponsePage::createFrom($page);
+        }
+
+        return $this->apiResponsePage;
     }
 
     /**
-     * @param Request $request
+     * @param RequestInterface $request
      * @param ApiResponsePageInterface $page
      */
-    protected function dispatchEvent(Request $request, ApiResponsePageInterface $page)
+    protected function dispatchEvent(RequestInterface $request, ApiResponsePageInterface $page)
     {
         $this->eventDispatcher->dispatch(
-            new ApiPageLoadedEvent($page, $this->getSalesChannelContext(), $request)
+            new ApiPageLoadedEvent($page, $this->getSalesChannelContext(), $request->getRequest())
         );
     }
 

@@ -20,7 +20,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
  * The integrator can decide to either use all data as provided by the Narrative API,
  * or to design custom data layers to represent the fetched content
  *
- * @package Boxalino\RealTimeUserExperience\Service\Api\Content
+ * @package Boxalino\RealTimeUserExperience\Framework\Content\Listing
  */
 class ApiFacetModel extends ApiFacetModelAbstract
     implements AccessorFacetModelInterface

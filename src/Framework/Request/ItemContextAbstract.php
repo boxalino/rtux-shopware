@@ -18,7 +18,6 @@ abstract class ItemContextAbstract
     extends \Boxalino\RealTimeUserExperienceApi\Framework\Request\ItemContextAbstract
     implements ItemContextInterface, ShopwareApiContextInterface
 {
-
     use ContextTrait;
 
 }

@@ -2,12 +2,13 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Shopware\Storefront\Page\Page;
 
 /**
  * Class AutocompletePageLoader
  *
- * @package Boxalino\RealTimeUserExperience\Service\Api\Content\Page
+ * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
 class ApiResponsePage extends Page
     implements ApiResponsePageInterface
@@ -85,7 +86,7 @@ class ApiResponsePage extends Page
      * @param \ArrayIterator $blocks
      * @return $this
      */
-    public function setBlocks(\ArrayIterator $blocks) : self
+    public function setBlocks(\ArrayIterator $blocks) : ApiResponseViewInterface
     {
         $this->blocks = $blocks;
         return $this;
@@ -95,7 +96,7 @@ class ApiResponsePage extends Page
      * @param string $groupBy
      * @return $this
      */
-    public function setGroupBy(string $groupBy) : self
+    public function setGroupBy(string $groupBy) : ApiResponseViewInterface
     {
         $this->groupBy = $groupBy;
         return $this;
@@ -105,7 +106,7 @@ class ApiResponsePage extends Page
      * @param string $requestId
      * @return $this
      */
-    public function setRequestId(string $requestId) : self
+    public function setRequestId(string $requestId) : ApiResponsePageInterface
     {
         $this->requestId = $requestId;
         return $this;
@@ -123,7 +124,7 @@ class ApiResponsePage extends Page
      * @param bool $fallback
      * @return ApiResponsePage
      */
-    public function setFallback(bool $fallback): ApiResponsePage
+    public function setFallback(bool $fallback): ApiResponseViewInterface
     {
         $this->fallback = $fallback;
         return $this;
@@ -141,7 +142,7 @@ class ApiResponsePage extends Page
      * @param string $variantUuid
      * @return ApiResponsePage
      */
-    public function setVariantUuid(string $variantUuid): ApiResponsePage
+    public function setVariantUuid(string $variantUuid): ApiResponseViewInterface
     {
         $this->variantUuid = $variantUuid;
         return $this;

@@ -3,9 +3,9 @@ namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ListingContextInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactory;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Boxalino Cms Request handler
@@ -22,10 +22,10 @@ abstract class CmsContextAbstract
     use ContextTrait;
 
     /**
-     * @param Request $request
+     * @param RequestInterface $request
      * @return void
      */
-    protected function addContextParameters(Request $request) : void
+    protected function addContextParameters(RequestInterface $request) : void
     {
         parent::addContextParameters($request);
 
@@ -33,7 +33,7 @@ abstract class CmsContextAbstract
         if(isset($params['navigationId']))
         {
             $this->getApiRequest()->addHeaderParameters(
-                $this->parameterFactory->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
+                $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
                     ->add("navigationId", $params['navigationId'])
             );
         }
@@ -41,7 +41,7 @@ abstract class CmsContextAbstract
         if($this->getProperty("sidebar"))
         {
             $this->getApiRequest()->addHeaderParameters(
-                $this->parameterFactory->get(ParameterFactory::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
+                $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
                     ->add("position", "sidebar")
             );
         }
@@ -53,10 +53,10 @@ abstract class CmsContextAbstract
      * - navigation (use the category the CMS element is on)
      * - custom (will use the category ID configured in the categoryFilterList)
      *
-     * @param Request $request
+     * @param RequestInterface $request
      * @return string
      */
-    public function getContextNavigationId(Request $request): array
+    public function getContextNavigationId(RequestInterface $request): array
     {
         if($this->has('categoryFilter'))
         {
@@ -67,7 +67,7 @@ abstract class CmsContextAbstract
 
             if($this->getProperty('categoryFilter') == 'navigation')
             {
-                $params = $request->attributes->get('_route_params');
+                $params = $request->getRequest()->attributes->get('_route_params');
                 if ($params && isset($params['navigationId']))
                 {
                     return [$params['navigationId']];

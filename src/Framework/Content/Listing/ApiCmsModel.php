@@ -2,6 +2,7 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Shopware\Core\Framework\Struct\Struct;
 
 /**
@@ -64,6 +65,11 @@ class ApiCmsModel extends Struct
     protected $top;
 
     /**
+     * @var bool
+     */
+    protected $fallback = false;
+
+    /**
      * @return \ArrayIterator
      */
     public function getBlocks(): \ArrayIterator
@@ -75,7 +81,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $blocks
      * @return ApiCmsModel
      */
-    public function setBlocks(\ArrayIterator $blocks): ApiCmsModelInterface
+    public function setBlocks(\ArrayIterator $blocks): ApiResponseViewInterface
     {
         $this->blocks = $blocks;
         return $this;
@@ -93,7 +99,7 @@ class ApiCmsModel extends Struct
      * @param string $requestId
      * @return ApiCmsModel
      */
-    public function setRequestId(string $requestId): ApiCmsModelInterface
+    public function setRequestId(string $requestId): ApiResponseViewInterface
     {
         $this->requestId = $requestId;
         return $this;
@@ -111,7 +117,7 @@ class ApiCmsModel extends Struct
      * @param string $groupBy
      * @return ApiCmsModel
      */
-    public function setGroupBy(string $groupBy): ApiCmsModelInterface
+    public function setGroupBy(string $groupBy): ApiResponseViewInterface
     {
         $this->groupBy = $groupBy;
         return $this;
@@ -129,10 +135,28 @@ class ApiCmsModel extends Struct
      * @param string $variantUuid
      * @return ApiCmsModel
      */
-    public function setVariantUuid(string $variantUuid): ApiCmsModelInterface
+    public function setVariantUuid(string $variantUuid): ApiResponseViewInterface
     {
         $this->variantUuid = $variantUuid;
         return $this;
+    }
+
+    /**
+     * @param bool $fallback
+     * @return $this|ApiResponseViewInterface
+     */
+    public function setFallback(bool $fallback): ApiResponseViewInterface
+    {
+        $this->fallback = $fallback;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFallback(): bool
+    {
+        return $this->fallback;
     }
 
     /**

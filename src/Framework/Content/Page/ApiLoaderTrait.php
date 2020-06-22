@@ -29,24 +29,21 @@ trait ApiLoaderTrait
      * Setting the active sales channel context on the handler of the response
      * @return mixed
      */
-    protected function validateCall(ApiCallServiceInterface $apiCallService) : void
+    protected function _afterApiCallService() : void
     {
-        if($apiCallService->isFallback())
-        {
-            throw new \Exception($apiCallService->getFallbackMessage());
-        }
+        parent::_afterApiCallService();
 
         /** this is a required step */
-        $apiCallService->getApiResponse()->getAccessorHandler()->setSalesChannelContext($this->getSalesChannelContext());
+        $this->apiCallService->getApiResponse()->getAccessorHandler()->setSalesChannelContext($this->getSalesChannelContext());
     }
 
     /**
      * Prepare the context : adding the sales channel context
      */
-    protected function prepareContext(ContextInterface $context) : void
+    protected function _beforeApiCallService() : void
     {
         $this->getConfiguration()->setContextId($this->getContextId());
-        $context->setSalesChannelContext($this->getSalesChannelContext());
+        $this->getApiContext()->setSalesChannelContext($this->getSalesChannelContext());
     }
 
     /**

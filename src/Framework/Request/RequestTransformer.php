@@ -3,8 +3,9 @@ namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCookieSubscriber;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactory;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
@@ -13,7 +14,6 @@ use Ramsey\Uuid\Uuid;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\SalesChannelRequest;
-use Symfony\Component\HttpFoundation\Request;
 use Boxalino\RealTimeUserExperienceApi\Framework\Request\RequestTransformerAbstract as ApiRequestTransformer;
 
 /**
@@ -23,7 +23,7 @@ use Boxalino\RealTimeUserExperienceApi\Framework\Request\RequestTransformerAbstr
  * Sets request variables dependent on the channel
  * (account, credentials, environment details -- language, dev, test, session, header parameters, etc)
  *
- * @package Boxalino\RealTimeUserExperience\Service\Api
+ * @package Boxalino\RealTimeUserExperience\Framework\Request
  */
 class RequestTransformer extends ApiRequestTransformer
     implements RequestTransformerInterface
@@ -35,10 +35,10 @@ class RequestTransformer extends ApiRequestTransformer
      * Sets context parameters (credentials, server, etc)
      * Adds parameters per request query elements
      *
-     * @param Request $request
+     * @param RequestInterface $request
      * @return RequestDefinitionInterface
      */
-    public function transform(Request $request): RequestDefinitionInterface
+    public function transform(RequestInterface $request): RequestDefinitionInterface
     {
         if(!$this->salesChannelContext)
         {
@@ -51,10 +51,10 @@ class RequestTransformer extends ApiRequestTransformer
     }
 
     /**
-     * @param Request $request
+     * @param RequestInterface $request
      * @return string
      */
-    public function getCustomerId(Request $request) : string
+    public function getCustomerId(RequestInterface $request) : string
     {
         if(is_null($this->getSalesChannelContext()->getCustomer()))
         {

@@ -21,5 +21,10 @@
         <!-- Shopware6 - Boxalino facet handler model (used in layout block definition) -->
         <service id="Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel" public="true"/>
+
+        <!-- Shopware 6 - Boxalino request handler adapter -->
+        <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface"
+                 class="Boxalino\RealTimeUserExperience\Service\Api\Request\Request" public="true"/>
+
     </services>
 </container>

@@ -3,6 +3,7 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Subscriber;
 
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Cms\Aggregate\CmsBlock\CmsBlockEntity;
 use Shopware\Core\Content\Cms\Aggregate\CmsSection\CmsSectionEntity;
@@ -40,13 +41,20 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      */
     private $logger;
 
+    /**
+     * @var RequestInterface
+     */
+    private $requestWrapper;
+
 
     public function __construct(
         ApiCmsLoader $apiCmsLoader,
+        RequestInterface $requestWrapper,
         LoggerInterface $logger
     ){
         $this->logger = $logger;
         $this->apiCmsLoader = $apiCmsLoader;
+        $this->requestWrapper = $requestWrapper;
     }
 
     /**
@@ -67,6 +75,8 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      */
     public function addApiCmsContent(CmsPageLoadedEvent $event) : void
     {
+        $this->requestWrapper->setRequest($event->getRequest());
+        $this->apiCmsLoader->setRequest($this->requestWrapper);
         /** @var CmsPageEntity $element */
         foreach($event->getResult() as $element)
         {
@@ -82,7 +92,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                             $slot = $block->getSlots()->first();
                             $this->apiCmsLoader->setSalesChannelContext($event->getSalesChannelContext());
                             $this->apiCmsLoader->setCmsConfig($slot->getConfig());
-                            $narrativeResponse = $this->apiCmsLoader->load($event->getRequest());
+                            $narrativeResponse = $this->apiCmsLoader->load()->getApiResponsePage();
                             $block->getSlots()->first()->setData($narrativeResponse);
                             if($slot->getConfig()['sidebar']['value'])
                             {
@@ -91,7 +101,9 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                         }
                     } catch (\Throwable $exception)
                     {
-                        $this->logger->warning("Boxalino ApiCmsLoaderSubscriber: " . $exception->getMessage());
+                        $this->logger->warning("Boxalino ApiCmsLoaderSubscriber: " . $exception->getMessage() . 
+                            "\n" . $exception->getTraceAsString()
+                        );
                         continue;
                     }
                 }
