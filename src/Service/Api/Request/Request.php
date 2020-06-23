@@ -60,6 +60,7 @@ class Request implements RequestInterface
     public function setCookie(string $key, $value) : RequestInterface
     {
         $this->request->cookies->set($key, $value);
+        return $this;
     }
 
     /**
