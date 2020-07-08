@@ -20,19 +20,9 @@ class ApiSortingModel extends ApiSortingModelAbstract
 {
 
     /**
-     * @var ProductListingSorting[]
-     */
-    protected $sortings = [];
-
-    /**
      * @var ProductListingSortingRegistry
      */
     protected $productListingSortingRegistry;
-
-    /**
-     * @var AccessorInterface
-     */
-    protected $activeSorting;
 
     public function __construct(ProductListingSortingRegistry $productListingSortingRegistry)
     {
@@ -84,15 +74,49 @@ class ApiSortingModel extends ApiSortingModelAbstract
     }
 
     /**
+     * Default sorting order (asc,desc)
+     *
+     * @return string
+     */
+    public function getDefaultSortDirection() : string
+    {
+        return ApiSortingModelInterface::SORT_ASCENDING;
+    }
+
+    /**
+     * Transform a request key to a valid API sort
+     * @param string $key
+     * @return array
+     */
+    public function getRequestSorting(string $key) : array
+    {
+        if($this->has($key))
+        {
+            $sorting = $this->get($key);
+            $mapping = [];
+            foreach($sorting->getFields() as $field => $direction)
+            {
+                $reverse = mb_strtolower($direction) === ApiSortingModelInterface::SORT_DESCENDING ?? false;
+                $mapping[] = ["field" => $this->getRequestField($field), "reverse" => $reverse];
+            }
+
+            return $mapping;
+        }
+
+        return [];
+    }
+
+    /**
      * Based on the response, transform the response field+direction into a e-shop valid sorting
+     *
+     * @return string
      */
     public function getCurrent() : string
     {
-        $responseField = $this->activeSorting->getField();
+        $responseField = $this->getCurrentApiSortField();
         if(!empty($responseField))
         {
-            $direction = $this->activeSorting->getReverse() === true ? mb_strtolower(self::SORT_DESCENDING)
-                : mb_strtolower(self::SORT_ASCENDING);
+            $direction = $this->getCurrentSortDirection();
             $field = $this->getResponseField($responseField);
             foreach($this->getSortings() as $sorting)
             {
