@@ -65,9 +65,9 @@ class ApiFacetModel extends ApiFacetModelAbstract
         $propertyId = $this->getPropertyIdByFieldName($propertyName);
         if(!$propertyId)
         {
-            if(strpos($propertyName, self::BOXALINO_STORE_FACET_PREFIX)===0)
+            if(strpos($propertyName, AccessorFacetModelInterface::BOXALINO_STORE_FACET_PREFIX)===0)
             {
-                $propertyName = substr($propertyName, strlen(self::BOXALINO_STORE_FACET_PREFIX), strlen($propertyName));
+                $propertyName = substr($propertyName, strlen(AccessorFacetModelInterface::BOXALINO_STORE_FACET_PREFIX), strlen($propertyName));
             }
             return ucwords(str_replace("_", " ", $propertyName));
         }
@@ -97,7 +97,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
      */
     protected function getPropertyIdByFieldName(string $propertyName)
     {
-        $prefix = self::BOXALINO_STORE_FACET_PREFIX;
+        $prefix = AccessorFacetModelInterface::BOXALINO_STORE_FACET_PREFIX;
         $propertyIdQuery = $this->connection->createQueryBuilder()
             ->select(["LOWER(HEX(property_group_id))"])
             ->from("property_group_translation")
