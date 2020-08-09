@@ -16,4 +16,9 @@ interface ShopwareApiContextInterface extends ContextInterface
      */
     public function setSalesChannelContext(SalesChannelContext $salesChannelContext);
 
+    /**
+     * @return string
+     */
+    public function getContextId() : string;
+
 }

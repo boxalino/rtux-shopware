@@ -51,6 +51,20 @@ class RequestTransformer extends ApiRequestTransformer
     }
 
     /**
+     * Processing the RequestInterface parameters
+     *
+     * @param RequestInterface $request
+     */
+    public function addParameters(RequestInterface $request) : void
+    {
+        parent::addParameters($request);
+        $this->requestDefinition->addHeaderParameters(
+            $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
+                ->add("contextId", $this->getContextId())
+        );
+    }
+
+    /**
      * @param RequestInterface $request
      * @return string
      */
@@ -62,14 +76,6 @@ class RequestTransformer extends ApiRequestTransformer
         }
 
         return $this->getSalesChannelContext()->getCustomer()->getId();
-    }
-
-    /**
-     * @return string
-     */
-    public function getContextId() : string
-    {
-        return $this->getSalesChannelContext()->getSalesChannel()->getId();
     }
 
 }

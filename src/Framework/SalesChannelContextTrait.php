@@ -34,4 +34,11 @@ trait SalesChannelContextTrait
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getContextId() : string
+    {
+        return $this->getSalesChannelContext()->getSalesChannel()->getId();
+    }
 }

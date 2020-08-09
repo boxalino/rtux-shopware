@@ -55,13 +55,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
 
     /**
      * The API endpoint depends on the testing conditionals and on the data index
-     * @param string $channelId
      * @return string
      */
-    public function getRestApiEndpoint(string $channelId) : string
+    public function getRestApiEndpoint() : string
     {
         try{
-            return $this->config[$channelId]['apiUrl'];
+            return $this->config[$this->channelId]['apiUrl'];
         } catch (\Exception $exception)
         {
             return "";
@@ -69,13 +68,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     }
 
     /**
-     * @param string $channelId
      * @return string
      */
-    public function getUsername(string $channelId) : string
+    public function getUsername() : string
     {
         try{
-            return $this->config[$channelId]['account'];
+            return $this->config[$this->channelId]['account'];
         } catch (\Exception $exception)
         {
             return "";
@@ -83,13 +81,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     }
 
     /**
-     * @param string $channelId
      * @return string
      */
-    public function getApiKey(string $channelId) : string
+    public function getApiKey() : string
     {
         try{
-            return $this->config[$channelId]['apiKey'];
+            return $this->config[$this->channelId]['apiKey'];
         } catch (\Exception $exception)
         {
             return "";
@@ -97,13 +94,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     }
 
     /**
-     * @param string $channelId
      * @return string
      */
-    public function getApiSecret(string $channelId) : string
+    public function getApiSecret() : string
     {
         try{
-            return $this->config[$channelId]['apiSecret'];
+            return $this->config[$this->channelId]['apiSecret'];
         } catch (\Exception $exception)
         {
             return "";
@@ -111,13 +107,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     }
 
     /**
-     * @param string $channelId
      * @return bool
      */
-    public function getIsDev(string $channelId) : bool
+    public function getIsDev() : bool
     {
         try{
-            return (bool)$this->config[$channelId]['devIndex'];
+            return (bool)$this->config[$this->channelId]['devIndex'];
         } catch (\Exception $exception)
         {
             return false;
@@ -125,13 +120,12 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     }
 
     /**
-     * @param string $channelId
      * @return bool
      */
-    public function getIsTest(string $channelId) : bool
+    public function getIsTest() : bool
     {
         try{
-            return (bool)$this->config[$channelId]['test'];
+            return (bool)$this->config[$this->channelId]['test'];
         } catch (\Exception $exception)
         {
             return false;
