@@ -99,10 +99,12 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
                 && property_exists($block, "productsCollection")
             ){
                 $index++;
+                $name = $block->getName(); if(is_array($name)) { $name = $name[0];}
+                $type = $block->getType(); if(is_array($type)) { $type = $type[0];}
                 $crossSelling = $this->createCrossSellingEntity(
-                    $index, $block->getName()[0], $block->getType()[0], (bool) $index==1
+                    $index, $name, $type, (bool) $index==1
                 );
-                $productCollection = $this->getCrossSellCollectionByType($block->getType()[0]);
+                $productCollection = $this->getCrossSellCollectionByType($type);
                 if($productCollection->count() > 0)
                 {
                     $element = $this->loadCrossSellingElement($crossSelling, $productCollection);
@@ -180,7 +182,8 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
             {
                 $hitIds = $block->getModel()->getHitIds();
                 $productIds = array_merge($productIds, $hitIds);
-                $this->productIdsByType->offsetSet($block->getType()[0], $hitIds);
+                $type = $block->getType(); if(is_array($type)) { $type = $type[0];}
+                $this->productIdsByType->offsetSet($type, $hitIds);
             }
             $this->crossSellingResponseCollection = $this->productRepository->search(new Criteria($productIds), $this->getSalesChannelContext());
         }
