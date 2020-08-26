@@ -1,11 +1,9 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
-use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ListingContextInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
-use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 /**
  * Boxalino Cms Request handler
@@ -29,7 +27,7 @@ abstract class CmsContextAbstract
     {
         parent::addContextParameters($request);
 
-        $params=$request->attributes->get('_route_params');
+        $params = $request->getRequest()->attributes->get('_route_params');
         if(isset($params['navigationId']))
         {
             $this->getApiRequest()->addHeaderParameters(

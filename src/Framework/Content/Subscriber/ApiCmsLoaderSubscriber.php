@@ -101,7 +101,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                         }
                     } catch (\Throwable $exception)
                     {
-                        $this->logger->warning("Boxalino ApiCmsLoaderSubscriber: " . $exception->getMessage() . 
+                        $this->logger->warning("Boxalino ApiCmsLoaderSubscriber: " . $exception->getMessage() .
                             "\n" . $exception->getTraceAsString()
                         );
                         continue;
@@ -157,15 +157,17 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
 
     /**
      * @param CmsBlockEntity $originalBlock
+     * @param CmsSlotCollection $slots
+     * @param string $sectionPosition
      * @param int $position
-     * @return Struct
+     * @return CmsBlockEntity
      */
-    protected function createCmsBlockEntity(CmsBlockEntity $originalBlock, CmsSlotCollection $slots, string $sectionPosition, int $position=0) : CmsBlockEntity
+    protected function createCmsBlockEntity(CmsBlockEntity $originalBlock, CmsSlotCollection $slots, string $sectionPosition, int $position = 0) : CmsBlockEntity
     {
         /** @var CmsBlockEntity $block */
         $block = $this->createFromObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id']);
         $block->setSectionPosition($sectionPosition);
-        $block->setUniqueIdentifier(uniqid("boxalino_$sectionPosition_"));
+        $block->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
         $block->setSectionId(uniqid());
         $block->setId(uniqid("boxalino_block_"));
         $block->setPosition($position);

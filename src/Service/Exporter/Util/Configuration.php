@@ -70,6 +70,8 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
         foreach($this->getShops() as $shopData)
         {
             $pluginConfig = $this->getPluginConfigByChannelId($shopData['sales_channel_id']);
+            if(!$pluginConfig['status']) {continue;}
+
             $config = $this->validateChannelConfig($pluginConfig, $shopData['sales_channel_name']);
             if(!isset($this->indexConfig[$config['account']]))
             {
@@ -85,14 +87,9 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
      */
     public function validateChannelConfig($config, $channel)
     {
-        if(!(bool)$config['status'])
-        {
-            return [];
-        }
-
         if (empty($config['account']) || empty($config['password']))
         {
-            $this->logger->info("BoxalinoRealTimeUserExperience:: Account not found on channel $channel; Plugin Configurations skipped.");
+            $this->logger->info("BoxalinoRealTimeUserExperience:: Account or exporter password not found on channel $channel; Plugin Configurations skipped.");
             return [];
         }
 
