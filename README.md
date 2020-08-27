@@ -20,7 +20,7 @@ The latest documentation is available upon request.
 1. Add the plugin to your project via composer
 ``composer require boxalino/rtux-shopware``
 
-2. The Shopware6 plugin has a dependency on the Boxalino API repository (https://github.com/boxalino/rtux-api-php).
+2. (obsolete) The Shopware6 plugin has a dependency on the Boxalino API repository (https://github.com/boxalino/rtux-api-php).
    In order to activate the bundle, add it to the list of project bundles in config/bundles.php
 ``Boxalino\RealTimeUserExperienceApi\BoxalinoRealTimeUserExperienceApi::class=>['all'=>true]``
 
@@ -35,7 +35,7 @@ Shopware Admin >> Settings >> System >> Plugins >> Boxalino RTUX Framework for S
 ``./psh.phar administration:build ``
 ``./psh.phar storefront:build``
 
-6. In order to kick off your account, a full export is required
+6. In order to kick off your account, a full export is required. For this, please set the exporter configuration per Sales Channel and disable the plugin where it is not in use.
 ``./bin/console boxalino:exporter:run full``
 
 The exporter will create a _boxalino_ directory in your project where the temporary CSV files will be stored before the export;
