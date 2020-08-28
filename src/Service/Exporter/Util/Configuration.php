@@ -70,9 +70,10 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
         foreach($this->getShops() as $shopData)
         {
             $pluginConfig = $this->getPluginConfigByChannelId($shopData['sales_channel_id']);
-            if(!$pluginConfig['status']) {continue;}
+            if(!$pluginConfig['status']) { continue; }
 
             $config = $this->validateChannelConfig($pluginConfig, $shopData['sales_channel_name']);
+            if(empty($config)) { continue; }
             if(!isset($this->indexConfig[$config['account']]))
             {
                 $this->indexConfig[$config['account']] = array_merge($shopData, $config);
