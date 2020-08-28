@@ -157,7 +157,7 @@ class Product extends ExporterComponentAbstract
 
         while (self::EXPORTER_LIMIT > $totalCount + self::EXPORTER_STEP)
         {
-            $this->logger->info("BxIndexLog: Export products - OFFSET " . $totalCount);
+            $this->logger->info("BxIndexLog: Products export - OFFSET " . $totalCount);
             $query = $this->connection->createQueryBuilder();
             $query->select($properties)
                 ->from('product', 'p')
