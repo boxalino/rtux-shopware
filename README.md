@@ -32,10 +32,12 @@ The latest documentation is available upon request.
 Shopware Admin >> Settings >> System >> Plugins >> Boxalino RTUX Framework for Shopware v6
 
 5. Due to the JS files in the plugin (tracker, Shopware6 CMS blocks, etc), a theme compilation might be required:
-``./psh.phar administration:build ``
-``./psh.phar storefront:build``
+``./psh.phar administration:build `` or ``./bin/build-administration.sh ``
+``./psh.phar storefront:build`` or `./bin/build-storefront.sh ``
 
-6. In order to kick off your account, a full export is required. For this, please set the exporter configuration per Sales Channel and disable the plugin where it is not in use.
+6. In order to kick off your account, a full export is required. 
+For this, please set the exporter configuration per Sales Channel and disable the plugin where it is not in use.
+The Headless channel must have the plugin disabled.
 ``./bin/console boxalino:exporter:run full``
 
 The exporter will create a _boxalino_ directory in your project where the temporary CSV files will be stored before the export;
