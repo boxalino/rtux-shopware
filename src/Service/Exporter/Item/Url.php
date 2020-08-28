@@ -45,7 +45,7 @@ class Url extends ItemsAbstract
             }
 
             $data = []; $page++;
-            if ($totalCount < Product::EXPORTER_STEP - 1) { break; }
+            if ($count < Product::EXPORTER_STEP - 1) { break; }
         }
 
         $this->setFilesDefinitions();

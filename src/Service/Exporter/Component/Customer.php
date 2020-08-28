@@ -142,7 +142,7 @@ class Customer extends ExporterComponentAbstract
             $this->getFiles()->savePartToCsv($this->getComponentMainFile(), $data);
             $this->logger->info("BxIndexLog: Customer export - Current page: {$page}, data count: {$totalCount}");
             $data=[]; $page++;
-            if($totalCount < self::EXPORTER_STEP - 1)
+            if($count < self::EXPORTER_STEP - 1)
             {
                 $this->setSuccessOnComponentExport(true);
                 break;

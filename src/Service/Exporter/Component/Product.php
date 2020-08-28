@@ -157,6 +157,7 @@ class Product extends ExporterComponentAbstract
 
         while (self::EXPORTER_LIMIT > $totalCount + self::EXPORTER_STEP)
         {
+            $this->logger->info("BxIndexLog: Export products - OFFSET " . $totalCount);
             $query = $this->connection->createQueryBuilder();
             $query->select($properties)
                 ->from('product', 'p')
@@ -211,7 +212,7 @@ class Product extends ExporterComponentAbstract
 
             $this->getFiles()->savePartToCsv($this->getComponentMainFile(), $data);
             $data = []; $page++;
-            if($totalCount < self::EXPORTER_STEP - 1) { break;}
+            if($count < self::EXPORTER_STEP - 1) { break;}
         }
 
         $endExport =  (microtime(true) - $startExport) * 1000;
