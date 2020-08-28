@@ -40,6 +40,9 @@ For this, please set the exporter configuration per Sales Channel and disable th
 The Headless channel must have the plugin disabled.
 ``./bin/console boxalino:exporter:run full``
 
+7*. If the plugin configurations are not displayed, they can be accessed via direct link:
+``admin#/sw/plugin/settings/BoxalinoRealTimeUserExperience``
+
 The exporter will create a _boxalino_ directory in your project where the temporary CSV files will be stored before the export;
 The exporter will log it`s process in a dedicated log _./var/log/boxalino-<env>.log_ 
 
