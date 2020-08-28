@@ -73,7 +73,7 @@ abstract class PropertyTranslation extends ItemsAbstract
     public function getRequiredFields(): array
     {
         return array_merge($this->getLanguageHeaderColumns(),
-            ["LOWER(HEX(property_group_option.id)) AS {$this->getPropertyIdField()}"]
+            ["LOWER(HEX(property_group_option.id)) AS '{$this->getPropertyIdField()}'"]
         );
     }
 

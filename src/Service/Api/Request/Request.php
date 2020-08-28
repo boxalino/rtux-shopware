@@ -101,7 +101,7 @@ class Request implements RequestInterface
      */
     public function getUserReferer(): string
     {
-        return $this->request->headers->get('referer');
+        return $this->request->headers->get('referer') ?? $this->getUserUrl();
     }
 
     /**
