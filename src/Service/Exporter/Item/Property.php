@@ -87,7 +87,7 @@ class Property extends PropertyTranslation
         $query = $this->connection->createQueryBuilder();
         $query->select([
             "LOWER(HEX(product_property.product_id)) AS product_id",
-            "LOWER(HEX(product_property.property_group_option_id)) AS {$this->getPropertyIdField()}"])
+            "LOWER(HEX(product_property.property_group_option_id)) AS '{$this->getPropertyIdField()}'"])
             ->from("product_property")
             ->leftJoin("product_property", "property_group_option", "property_group_option",
                 "product_property.property_group_option_id = property_group_option.id")
@@ -97,19 +97,6 @@ class Property extends PropertyTranslation
             ->setMaxResults(Product::EXPORTER_STEP);
 
         return $query;
-    }
-
-    /**
-     * All translation fields from the product_group_option* table
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function getRequiredFields(): array
-    {
-        return array_merge($this->getLanguageHeaderColumns(),
-            ["LOWER(HEX(property_group_option.id)) AS {$this->getPropertyIdField()}"]
-        );
     }
 
     /**
