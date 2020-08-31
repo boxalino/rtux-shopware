@@ -7,6 +7,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Media\DataAbstractionLayer\MediaRepositoryDecorator;
+use Shopware\Core\Content\Media\Exception\EmptyMediaFilenameException;
+use Shopware\Core\Content\Media\Exception\EmptyMediaIdException;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Content\Media\MediaEntity;
@@ -65,7 +67,7 @@ class Media extends ItemsAbstract
     public function export()
     {
         $this->logger->info("BxIndexLog: Preparing products - START PRODUCT IMAGES EXPORT.");
-        $totalCount = 0; $page = 1; $header = true;
+        $totalCount = 0; $page = 1; $header = true; $data=[];
         while (Product::EXPORTER_LIMIT > $totalCount + Product::EXPORTER_STEP)
         {
             $query = $this->getItemRelationQuery($page);
@@ -73,6 +75,7 @@ class Media extends ItemsAbstract
             $totalCount += $count;
             if ($totalCount == 0) {
                 if($page==1) {
+                    $this->logger->info("BxIndexLog: PRODUCTS EXPORT: No data found for images");
                     $headers = $this->getItemRelationHeaderColumns();
                     $this->getFiles()->savePartToCsv($this->getItemRelationFile(), $headers);
                 }
@@ -81,27 +84,38 @@ class Media extends ItemsAbstract
             $results = $this->processExport($query);
             foreach($results as $row)
             {
-                if($header) {
-                    $data[] = array_keys($row);
-                    $header = false;
-                }
                 $images = explode('|', $row[$this->getPropertyIdField()]);
                 foreach ($images as $index => $image)
                 {
-                    /** @var MediaEntity $media */
-                    $media = $this->mediaRepository->search(new Criteria([$image]), $this->context)->get($image);
-                    $images[$index] = $this->mediaUrlGenerator->getAbsoluteMediaUrl($media);
+                    try{
+                        /** @var MediaEntity $media */
+                        $media = $this->mediaRepository->search(new Criteria([$image]), $this->context)->get($image);
+                        $images[$index] = $this->mediaUrlGenerator->getAbsoluteMediaUrl($media);
+                    } catch(EmptyMediaFilenameException $exception)
+                    {
+                        $this->logger->info("Shopware: Export failed for $image: " . $exception->getMessage());
+                    } catch(EmptyMediaIdException $exception)
+                    {
+                        $this->logger->info("Shopware: Export failed for $image: " . $exception->getMessage());
+                    } catch(\Exception $exception)
+                    {
+                        $this->logger->warning("Shopware: Export failed for $image: " . $exception->getMessage());
+                    }
                 }
                 $row[$this->getPropertyIdField()] = implode('|', $images);
                 $data[] = $row;
-                if(count($data) > Product::EXPORTER_DATA_SAVE_STEP)
-                {
-                    $this->getFiles()->savePartToCsv($this->getItemRelationFile(), $data);
-                    $data = [];
-                }
             }
 
-            $this->getFiles()->savePartToCsv($this->getItemRelationFile(), $data);
+            if ($header) {
+                $header = false;
+                $data = array_merge($this->getItemRelationHeaderColumns(), $data);
+            }
+
+            foreach(array_chunk($data, Product::EXPORTER_DATA_SAVE_STEP) as $dataSegment)
+            {
+                $this->getFiles()->savePartToCsv($this->getItemRelationFile(), $dataSegment);
+            }
+
             $data = []; $page++;
             if($count < Product::EXPORTER_STEP - 1) { break;}
         }
@@ -142,7 +156,8 @@ class Media extends ItemsAbstract
      */
     public function getRequiredFields(): array
     {
-        return ["GROUP_CONCAT(LOWER(HEX(product_media.media_id)) ORDER BY product_media.position SEPARATOR '|') AS {$this->getPropertyIdField()}",
+        return [
+            "GROUP_CONCAT(LOWER(HEX(product_media.media_id)) ORDER BY product_media.position SEPARATOR '|') AS {$this->getPropertyIdField()}",
             "LOWER(HEX(product_media.product_id)) AS product_id"
         ];
     }

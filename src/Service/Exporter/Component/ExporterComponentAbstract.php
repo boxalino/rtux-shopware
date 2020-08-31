@@ -16,7 +16,7 @@ abstract class ExporterComponentAbstract implements ExporterComponentInterface
 {
     CONST EXPORTER_COMPONENT_ID_FIELD = "";
     CONST EXPORTER_COMPONENT_MAIN_FILE = "";
-    const EXPORTER_COMPONENT_TYPE = "";
+    CONST EXPORTER_COMPONENT_TYPE = "";
 
     /**
      * @var bool

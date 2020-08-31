@@ -121,7 +121,7 @@ class Property extends PropertyTranslation
      */
     protected function setProperty(string $property)
     {
-        $this->property =  strtolower(str_replace(" ", "_", $property));
+        $this->property = strtolower(preg_replace("/[\W]+/", '_', iconv('utf-8', 'ascii//TRANSLIT',$property)));
         return $this;
     }
 

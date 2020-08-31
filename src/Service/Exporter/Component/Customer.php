@@ -27,7 +27,7 @@ class Customer extends ExporterComponentAbstract
     {
         if (!$this->config->isCustomersExportEnabled($this->getAccount()))
         {
-            $this->logger->info("BxIndexLog: the customers export is disabled.");
+            $this->logger->info("BxIndexLog: Customers export is disabled.");
             return true;
         }
 
@@ -141,7 +141,7 @@ class Customer extends ExporterComponentAbstract
             }
 
             $this->getFiles()->savePartToCsv($this->getComponentMainFile(), $data);
-            $this->logger->info("BxIndexLog: Customer export - Current page: {$page}, data count: {$totalCount}");
+            $this->logger->info("BxIndexLog: Customers export - Current page: {$page}, data count: {$totalCount}");
             $data=[]; $page++;
             if($count < self::EXPORTER_STEP - 1)
             {
@@ -187,7 +187,7 @@ class Customer extends ExporterComponentAbstract
      */
     public function getFields() : array
     {
-        $this->logger->info('BxIndexLog: get all customer attributes for account: ' . $this->getAccount());
+        $this->logger->info('BxIndexLog: Customers export - get all attributes for account: ' . $this->getAccount());
 
         $attributesList = [];
         $attributes = $this->getPropertiesByTableList(['customer', 'customer_address']);
