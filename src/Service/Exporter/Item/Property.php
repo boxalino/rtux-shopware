@@ -112,7 +112,7 @@ class Property extends PropertyTranslation
      */
     public function getItemMainFile() : string
     {
-        return "$this->property.csv";
+        return "{$this->property}.csv";
     }
 
     /**
@@ -121,7 +121,7 @@ class Property extends PropertyTranslation
      */
     protected function setProperty(string $property)
     {
-        $this->property =  strtolower(str_replace("", "_", $property));
+        $this->property =  strtolower(str_replace(" ", "_", $property));
         return $this;
     }
 
@@ -130,7 +130,7 @@ class Property extends PropertyTranslation
      */
     public function getItemRelationFile() : string
     {
-        return "property_$this->property.csv";
+        return "property_{$this->property}.csv";
     }
 
 }

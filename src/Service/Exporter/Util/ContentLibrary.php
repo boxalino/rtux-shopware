@@ -26,11 +26,15 @@ class ContentLibrary
     private $isDelta;
 
     private $delimiter = ',';
-    private $sources = array();
+    private $sources = [];
 
     private $host = 'http://di1.bx-cloud.com';
 
     private $owner = 'bx_client_data_api';
+
+    private $httpSources = [];
+    private $ftpSources = [];
+    private $globalValidate = true;
 
     public function setAccount($value)
     {
@@ -112,7 +116,7 @@ class ContentLibrary
     }
 
     public function addCSVItemFile($filePath, $itemIdColumn, $encoding = 'UTF-8', $delimiter = ',', $enclosure = "\&", $escape = "\\\\", $lineSeparator = "\\n", $sourceId = null, $container = 'products', $validate=true, $maxLength=23) {
-        $params = array('itemIdColumn'=>$itemIdColumn, 'encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator);
+        $params = ['itemIdColumn'=>$itemIdColumn, 'encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator];
         if($sourceId == null) {
             $sourceId = $this->getSourceIdFromFileNameFromPath($filePath, $container, $maxLength, true);
         }
@@ -120,14 +124,14 @@ class ContentLibrary
     }
 
     public function addXMLItemFile($filePath, $itemIdColumn, $xPath, $encoding = 'UTF-8', $sourceId = null, $container = 'products', $validate=true, $maxLength=23){
-        $params = array('itemIdColumn'=>$itemIdColumn, 'encoding'=>$encoding, 'baseXPath'=>$xPath);
+        $params = ['itemIdColumn'=>$itemIdColumn, 'encoding'=>$encoding, 'baseXPath'=>$xPath];
         if($sourceId == null) {
             $sourceId = $this->getSourceIdFromFileNameFromPath($filePath, $container, $maxLength, true);
         }
         return $this->addSourceFile($filePath, $sourceId, $container, 'item_data_file', 'XML', $params, $validate);
     }
     public function addCSVCustomerFile($filePath, $itemIdColumn, $encoding = 'UTF-8', $delimiter = ',', $enclosure = "\&", $escape = "\\\\", $lineSeparator = "\\n", $sourceId = null, $container = 'customers', $validate=true, $maxLength=23) {
-        $params = array('itemIdColumn'=>$itemIdColumn, 'encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator);
+        $params = ['itemIdColumn'=>$itemIdColumn, 'encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator];
         if($sourceId == null) {
             $sourceId = $this->getSourceIdFromFileNameFromPath($filePath, $container, $maxLength, true);
         }
@@ -135,12 +139,12 @@ class ContentLibrary
     }
 
     public function addCategoryFile($filePath, $categoryIdColumn, $parentIdColumn, $categoryLabelColumns, $encoding = 'UTF-8', $delimiter = ',', $enclosure = "\&", $escape = "\\\\", $lineSeparator = "\\n", $sourceId = 'resource_categories', $container = 'products', $validate=true) {
-        $params = array('referenceIdColumn'=>$categoryIdColumn, 'parentIdColumn'=>$parentIdColumn, 'labelColumns'=>$categoryLabelColumns, 'encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator);
+        $params = ['referenceIdColumn'=>$categoryIdColumn, 'parentIdColumn'=>$parentIdColumn, 'labelColumns'=>$categoryLabelColumns, 'encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator];
         return $this->addSourceFile($filePath, $sourceId, $container, 'hierarchical', 'CSV', $params, $validate);
     }
 
     public function addResourceFile($filePath, $categoryIdColumn, $labelColumns, $encoding = 'UTF-8', $delimiter = ',', $enclosure = "\&", $escape = "\\\\", $lineSeparator = "\\n", $sourceId = null, $container = 'products', $validate=true, $maxLength=23) {
-        $params = array('referenceIdColumn'=>$categoryIdColumn, 'labelColumns'=>$labelColumns, 'encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator);
+        $params = ['referenceIdColumn'=>$categoryIdColumn, 'labelColumns'=>$labelColumns, 'encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator];
         if($sourceId == null) {
             $sourceId = 'resource_' . $this->getSourceIdFromFileNameFromPath($filePath, $container, $maxLength, true);
         }
@@ -149,7 +153,7 @@ class ContentLibrary
 
     public function setCSVTransactionFile($filePath, $orderIdColumn, $productIdColumn, $customerIdColumn, $orderDateIdColumn, $totalOrderValueColumn, $productListPriceColumn, $productDiscountedPriceColumn, $currencyColumn, $emailColumn, $productIdField='bx_item_id', $customerIdField='bx_customer_id', $productsContainer = 'products', $customersContainer = 'customers', $format = 'CSV', $encoding = 'UTF-8', $delimiter = ',', $enclosure = '"', $escape = "\\\\", $lineSeparator = "\\n",$container = 'transactions', $sourceId = 'transactions', $validate=true)
     {
-        $params = array('encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator);
+        $params = ['encoding'=>$encoding, 'delimiter'=>$delimiter, 'enclosure'=>$enclosure, 'escape'=>$escape, 'lineSeparator'=>$lineSeparator];
 
         $params['file'] = $this->getFileNameFromPath($filePath);
         $params['orderIdColumn'] = $orderIdColumn;
@@ -187,7 +191,7 @@ class ContentLibrary
             throw new \Exception("BoxalinoLibraryError: trying to add a source before having declared the languages with method setLanguages");
         }
         if(!isset($this->sources[$container])) {
-            $this->sources[$container] = array();
+            $this->sources[$container] = [];
         }
         $params['filePath'] = $filePath;
         $params['format'] = $format;
@@ -201,7 +205,9 @@ class ContentLibrary
     }
 
     public function decodeSourceKey($sourceKey) {
-        return explode('-', $sourceKey);
+        $container = substr($sourceKey, 0, strpos($sourceKey, '-'));
+        $sourceId = substr($sourceKey, strlen($container)+1);
+        return [$container, $sourceId];
     }
 
     public function encodesourceKey($container, $sourceId) {
@@ -212,7 +218,7 @@ class ContentLibrary
         if(!isset($this->sources[$container][$sourceId]['rows'])) {
             if (($handle = @fopen($this->sources[$container][$sourceId]['filePath'], "r")) !== FALSE) {
                 $count = 1;
-                $this->sources[$container][$sourceId]['rows'] = array();
+                $this->sources[$container][$sourceId]['rows'] = [];
                 while (($data = fgetcsv($handle, 2000, $this->delimiter)) !== FALSE) {
                     $this->sources[$container][$sourceId]['rows'][] = $data;
                     if($count++>=$maxRow) {
@@ -228,7 +234,6 @@ class ContentLibrary
         return null;
     }
 
-    private $globalValidate = true;
     public function setGlobalValidate($globalValidate) {
         $this->globalValidate = $globalValidate;
     }
@@ -299,9 +304,9 @@ class ContentLibrary
     public function addSourceField($sourceKey, $fieldName, $type, $localized, $colMap, $referenceSourceKey=null, $validate=true) {
         list($container, $sourceId) = $this->decodeSourceKey($sourceKey);
         if(!isset($this->sources[$container][$sourceId]['fields'])) {
-            $this->sources[$container][$sourceId]['fields'] = array();
+            $this->sources[$container][$sourceId]['fields'] = [];
         }
-        $this->sources[$container][$sourceId]['fields'][$fieldName] = array('type'=>$type, 'localized'=>$localized, 'map'=>$colMap, 'referenceSourceKey'=>$referenceSourceKey);
+        $this->sources[$container][$sourceId]['fields'][$fieldName] = ['type'=>$type, 'localized'=>$localized, 'map'=>$colMap, 'referenceSourceKey'=>$referenceSourceKey];
         if($this->sources[$container][$sourceId]['format'] == 'CSV') {
             if($localized && $referenceSourceKey == null) {
                 if(!is_array($colMap)) {
@@ -361,12 +366,11 @@ class ContentLibrary
             throw new \Exception("BoxalinoLibraryError: trying to add a field parameter on sourceId '$sourceId', container '$container', fieldName '$fieldName' while this field doesn't exist");
         }
         if(!isset($this->sources[$container][$sourceId]['fields'][$fieldName]['fieldParameters'])) {
-            $this->sources[$container][$sourceId]['fields'][$fieldName]['fieldParameters'] = array();
+            $this->sources[$container][$sourceId]['fields'][$fieldName]['fieldParameters'] = [];
         }
         $this->sources[$container][$sourceId]['fields'][$fieldName]['fieldParameters'][$parameterName] = $parameterValue;
     }
 
-    private $ftpSources = array();
     public function setFtpSource($sourceKey, $host="di1.bx-cloud.com", $port=21, $user=null, $password=null, $remoteDir = '/sources/production', $protocol=0, $type=0, $logontype=1,
                                  $timezoneoffset=0, $pasvMode='MODE_DEFAULT', $maximumMultipeConnections=0, $encodingType='Auto', $bypassProxy=0, $syncBrowsing=0)
     {
@@ -378,27 +382,15 @@ class ContentLibrary
             $password = $this->getPassword();
         }
 
-        $params = array();
-        $params['Host'] = $host;
-        $params['Port'] = $port;
-        $params['User'] = $user;
-        $params['Pass'] = $password;
-        $params['Protocol'] = $protocol;
-        $params['Type'] = $type;
-        $params['Logontype'] = $logontype;
-        $params['TimezoneOffset'] = $timezoneoffset;
-        $params['PasvMode'] = $pasvMode;
-        $params['MaximumMultipleConnections'] = $maximumMultipeConnections;
-        $params['EncodingType'] = $encodingType;
-        $params['BypassProxy'] = $bypassProxy;
-        $params['Name'] = $user . " at " . $host;
-        $params['RemoteDir'] = $remoteDir;
-        $params['SyncBrowsing'] = $syncBrowsing;
+        $params = [
+            'Host'=>$host, 'Port' => $port, 'User' => $user, 'Pass' => $password, 'Protocol' => $protocol, 'Type' => $type,
+            'Logontype'=>$logontype, 'TimezoneOffset'=>$timezoneoffset, 'PasvMode'=>$pasvMode,
+            'MaximumMultipleConnections'=>$maximumMultipeConnections, 'EncodingType' => $encodingType,
+            'BypassProxy' => $bypassProxy, 'Name'=>$user . " at " . $host, 'RemoteDir'=>$remoteDir, 'SyncBrowsing'=>$syncBrowsing];
         list($container, $sourceId) = $this->decodeSourceKey($sourceKey);
         $this->ftpSources[$sourceId] = $params;
     }
 
-    private $httpSources = array();
     public function setHttpSource($sourceKey, $webDirectory, $user=null, $password=null, $header='User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox/41.0') {
 
         if($user===null){
@@ -409,7 +401,7 @@ class ContentLibrary
             $password = $this->getPassword();
         }
 
-        $params = array();
+        $params = [];
         $params['WebDirectory'] = $webDirectory;
         $params['User'] = $user;
         $params['Pass'] = $password;

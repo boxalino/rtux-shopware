@@ -81,6 +81,7 @@ abstract class ItemsAbstract implements ExporterInterface
             $totalCount += $count;
             if ($totalCount == 0) {
                 if($page==1) {
+                    $this->logger->info("BxIndexLog: ITEM RELATIONS NOT FOUND FOR " . $this->getPropertyName());
                     $headers = $this->getItemRelationHeaderColumns();
                     $this->getFiles()->savePartToCsv($this->getItemRelationFile(), $headers);
                 }
