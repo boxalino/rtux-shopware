@@ -93,13 +93,13 @@ class Media extends ItemsAbstract
                         $images[$index] = $this->mediaUrlGenerator->getAbsoluteMediaUrl($media);
                     } catch(EmptyMediaFilenameException $exception)
                     {
-                        $this->logger->info("Shopware: Export failed for $image: " . $exception->getMessage());
+                        $this->logger->info("Shopware: Media Path Export failed for $image: " . $exception->getMessage());
                     } catch(EmptyMediaIdException $exception)
                     {
-                        $this->logger->info("Shopware: Export failed for $image: " . $exception->getMessage());
+                        $this->logger->info("Shopware: Media Path Export failed for $image: " . $exception->getMessage());
                     } catch(\Exception $exception)
                     {
-                        $this->logger->warning("Shopware: Export failed for $image: " . $exception->getMessage());
+                        $this->logger->warning("Shopware: Media Path Export failed for $image: " . $exception->getMessage());
                     }
                 }
                 $row[$this->getPropertyIdField()] = implode('|', $images);
