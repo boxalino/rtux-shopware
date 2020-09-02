@@ -1,7 +1,7 @@
 <?php
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Subscriber;
 
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\CreateFromTrait;
+use Boxalino\RealTimeUserExperience\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Psr\Log\LoggerInterface;
@@ -165,7 +165,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     protected function createCmsBlockEntity(CmsBlockEntity $originalBlock, CmsSlotCollection $slots, string $sectionPosition, int $position = 0) : CmsBlockEntity
     {
         /** @var CmsBlockEntity $block */
-        $block = $this->createFromObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id']);
+        $block = $this->createFromObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
         $block->setSectionPosition($sectionPosition);
         $block->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
         $block->setSectionId(uniqid());

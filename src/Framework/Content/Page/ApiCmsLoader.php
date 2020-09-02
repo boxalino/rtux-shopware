@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
+use Boxalino\RealTimeUserExperience\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiCmsLoaderAbstract;
@@ -16,6 +17,7 @@ use Shopware\Core\Framework\Struct\Struct;
  */
 class ApiCmsLoader extends ApiCmsLoaderAbstract
 {
+    use CreateFromTrait;
     use ApiLoaderTrait;
 
     /**
