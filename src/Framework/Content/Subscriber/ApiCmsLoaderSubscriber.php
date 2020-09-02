@@ -136,7 +136,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     protected function createCmsSlotEntity(CmsBlockEntity $blockEntity, Struct $slotData) : CmsSlotEntity
     {
         /** @var CmsSlotEntity $slot */
-        $slot = $this->createFromObject($blockEntity->getSlots()->first(), ['data', '_uniqueIdentifier']);
+        $slot = $this->createFromObject($blockEntity->getSlots()->first(), ['data', '_uniqueIdentifier', '_entityName']);
         $slot->setUniqueIdentifier(uniqid("boxalino_narrative_"));
         $slot->setData($this->apiCmsLoader->createSectionFrom($slotData, 'left'));
 
