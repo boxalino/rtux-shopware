@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
+use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Shopware\Storefront\Page\Page;
@@ -57,6 +58,26 @@ class ApiResponsePage extends Page
      * @var string
      */
     protected $searchTerm;
+
+    /**
+     * @var \ArrayIterator
+     */
+    protected $left;
+
+    /**
+     * @var \ArrayIterator
+     */
+    protected $right;
+
+    /**
+     * @var \ArrayIterator
+     */
+    protected $bottom;
+
+    /**
+     * @var \ArrayIterator
+     */
+    protected $top;
 
     /**
      * @return \ArrayIterator
@@ -219,4 +240,77 @@ class ApiResponsePage extends Page
     {
         return $this->searchTerm;
     }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getLeft(): \ArrayIterator
+    {
+        return $this->left;
+    }
+
+    /**
+     * @param \ArrayIterator $left
+     * @return ApiCmsModel
+     */
+    public function setLeft(\ArrayIterator $left): ApiResponseViewInterface
+    {
+        $this->left = $left;
+        return $this;
+    }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getRight(): \ArrayIterator
+    {
+        return $this->right;
+    }
+
+    /**
+     * @param \ArrayIterator $right
+     * @return ApiCmsModel
+     */
+    public function setRight(\ArrayIterator $right): ApiResponseViewInterface
+    {
+        $this->right = $right;
+        return $this;
+    }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getBottom(): \ArrayIterator
+    {
+        return $this->bottom;
+    }
+
+    /**
+     * @param \ArrayIterator $bottom
+     * @return ApiCmsModel
+     */
+    public function setBottom(\ArrayIterator $bottom): ApiResponseViewInterface
+    {
+        $this->bottom = $bottom;
+        return $this;
+    }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getTop(): \ArrayIterator
+    {
+        return $this->top;
+    }
+
+    /**
+     * @param \ArrayIterator $top
+     * @return ApiCmsModel
+     */
+    public function setTop(\ArrayIterator $top): ApiResponseViewInterface
+    {
+        $this->top = $top;
+        return $this;
+    }
+    
 }

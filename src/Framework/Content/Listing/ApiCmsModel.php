@@ -207,7 +207,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $left
      * @return ApiCmsModel
      */
-    public function setLeft(\ArrayIterator $left): ApiCmsModelInterface
+    public function setLeft(\ArrayIterator $left): ApiResponseViewInterface
     {
         $this->left = $left;
         return $this;
@@ -225,7 +225,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $right
      * @return ApiCmsModel
      */
-    public function setRight(\ArrayIterator $right): ApiCmsModelInterface
+    public function setRight(\ArrayIterator $right): ApiResponseViewInterface
     {
         $this->right = $right;
         return $this;
@@ -243,7 +243,7 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $bottom
      * @return ApiCmsModel
      */
-    public function setBottom(\ArrayIterator $bottom): ApiCmsModelInterface
+    public function setBottom(\ArrayIterator $bottom): ApiResponseViewInterface
     {
         $this->bottom = $bottom;
         return $this;
@@ -261,11 +261,10 @@ class ApiCmsModel extends Struct
      * @param \ArrayIterator $top
      * @return ApiCmsModel
      */
-    public function setTop(\ArrayIterator $top): ApiCmsModelInterface
+    public function setTop(\ArrayIterator $top): ApiResponseViewInterface
     {
         $this->top = $top;
         return $this;
     }
-
 
 }

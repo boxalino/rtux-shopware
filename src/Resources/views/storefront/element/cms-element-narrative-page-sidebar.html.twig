@@ -1,0 +1,45 @@
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{% block base_content %}
+    {% set sectionMobileBehaviorClass = 'cms-section-sidebar-mobile-wrap'%}
+    {% set layout = 'boxed' %}
+
+    {% block narrative_section_top_content %}
+        <div class="cms-section-sidebar-top-content">
+            {% block narrative_section_top_content_block %}
+                {% set contentParameters = {"blocks":page.top} %}
+                {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" with contentParameters %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+
+    <div class="cms-section-sidebar {{ sectionMobileBehaviorClass }} {{ layout }} row">
+
+        {% block narrative_section_sidebar_content %}
+            <div class="cms-section-sidebar-sidebar-content col-lg-4 col-xl-3">
+                {% block narrative_section_sidebar_content_block %}
+                    {% set contentParameters = {"blocks":page.left} %}
+                    {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" with contentParameters %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+
+        {% block narrative_section_main_content %}
+            <div class="cms-section-sidebar-main-content col-lg-8 col-xl-9">
+                {% block narrative_section_main_content_block %}
+                    {% set contentParameters = {"blocks":page.blocks} %}
+                    {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" with contentParameters %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </div>
+
+    {% block narrative_section_bottom_content %}
+        <div class="cms-section-sidebar-bottom-content">
+            {% block narrative_section_bottom_content_block %}
+                {% set contentParameters = {"blocks":page.bottom} %}
+                {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" with contentParameters %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+{% endblock %}

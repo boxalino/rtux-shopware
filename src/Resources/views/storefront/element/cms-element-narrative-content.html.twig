@@ -1,5 +1,7 @@
 {# Narrative template un-attached from base (ex: sample for autocomplete content, in-block children renderings, etc) #}
-{% set blocks = element.data.blocks %}
+{% if blocks is not defined %}
+    {% set blocks = element.data.blocks %}
+{% endif %}
 {% if blocks is null %}
     {% set blocks = page.blocks %}
 {% endif %}
