@@ -32,6 +32,11 @@ class RequestTransformer extends ApiRequestTransformer
     use RequestParametersTrait;
 
     /**
+     * @var array
+     */
+    protected $requestParameters = [];
+
+    /**
      * Sets context parameters (credentials, server, etc)
      * Adds parameters per request query elements
      *
@@ -62,6 +67,37 @@ class RequestTransformer extends ApiRequestTransformer
             $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
                 ->add("contextId", $this->getContextId())
         );
+
+        foreach($this->requestParameters as $parameter)
+        {
+            $value = $request->getParam($parameter, null);
+            if(is_null($value))
+            {
+                continue;
+            }
+            if(is_array($value))
+            {
+                $this->requestDefinition->addParameters(
+                    $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_USER)
+                        ->add($parameter, $value)
+                );
+                continue;
+            }
+            $this->requestDefinition->addHeaderParameters(
+                $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
+                    ->add($parameter, $value)
+            );
+        }
+    }
+
+    /**
+     * @param array $parameters
+     * @return $this
+     */
+    public function addRequestParameters(array $parameters)
+    {
+        $this->requestParameters = $parameters;
+        return $this;
     }
 
     /**
