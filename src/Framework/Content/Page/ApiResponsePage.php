@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
-use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiResponsePageInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Shopware\Storefront\Page\Page;
@@ -251,7 +250,7 @@ class ApiResponsePage extends Page
 
     /**
      * @param \ArrayIterator $left
-     * @return ApiCmsModel
+     * @return ApiResponseViewInterface
      */
     public function setLeft(\ArrayIterator $left): ApiResponseViewInterface
     {
@@ -269,7 +268,7 @@ class ApiResponsePage extends Page
 
     /**
      * @param \ArrayIterator $right
-     * @return ApiCmsModel
+     * @return ApiResponseViewInterface
      */
     public function setRight(\ArrayIterator $right): ApiResponseViewInterface
     {
@@ -287,7 +286,7 @@ class ApiResponsePage extends Page
 
     /**
      * @param \ArrayIterator $bottom
-     * @return ApiCmsModel
+     * @return ApiResponseViewInterface
      */
     public function setBottom(\ArrayIterator $bottom): ApiResponseViewInterface
     {
@@ -305,7 +304,7 @@ class ApiResponsePage extends Page
 
     /**
      * @param \ArrayIterator $top
-     * @return ApiCmsModel
+     * @return ApiResponseViewInterface
      */
     public function setTop(\ArrayIterator $top): ApiResponseViewInterface
     {
