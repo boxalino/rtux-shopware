@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
  */
 class Configuration
 {
-    CONST BOXALINO_FRAMEWORK_CONFIG_KEY = "BoxalinoRealTimeUserExperience";
+    CONST BOXALINO_CONFIG_KEY = "BoxalinoRealTimeUserExperience";
 
     /**
      * @var SystemConfigService
@@ -51,12 +51,12 @@ class Configuration
         $this->logger = $boxalinoLogger;
     }
 
-    public function getPluginConfigByChannelId($id)
+    public function getPluginConfigByChannelId($id) : array
     {
         if(empty($this->config) || !isset($this->config[$id]))
         {
             $allConfig = $this->systemConfigService->all($id);
-            $this->config[$id] = $allConfig[self::BOXALINO_FRAMEWORK_CONFIG_KEY]['config'];
+            $this->config[$id] = $allConfig[$this->getConfigurationKey()]['config'];
         }
 
         return $this->config[$id];
@@ -84,6 +84,15 @@ class Configuration
         $code = $query->execute()->fetchColumn();
 
         return substr($code, 0, 2);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfigurationKey() : string
+    {
+        $callingClass = get_called_class();
+        return $callingClass::BOXALINO_CONFIG_KEY;
     }
 
 }
