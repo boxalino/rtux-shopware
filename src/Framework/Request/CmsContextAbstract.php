@@ -75,7 +75,8 @@ abstract class CmsContextAbstract
 
         if($this->has("categoryFilterList"))
         {
-            return $this->getProperty('categoryFilterList');
+            $configuredCategoryIds = $this->getProperty('categoryFilterList');
+            return explode(",", $configuredCategoryIds);
         }
 
         return [];
