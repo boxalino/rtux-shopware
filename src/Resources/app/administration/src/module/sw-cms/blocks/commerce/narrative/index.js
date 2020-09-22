@@ -9,7 +9,6 @@ Shopware.Service('cmsService').registerCmsBlock({
     label: 'Boxalino Narrative',
     category: 'commerce',
     hidden: false,
-    removable: false,
     component: 'sw-cms-block-narrative',
     previewComponent: 'sw-cms-preview-narrative',
     defaultConfig: {
