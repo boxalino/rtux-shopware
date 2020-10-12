@@ -2,12 +2,10 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Tracker;
 
 use Boxalino\RealTimeUserExperience\Service\Tracker\RtuxApiHandler;
-use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Shopware\Core\Checkout\Order\Aggregate\OrderLineItem\OrderLineItemEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
-use Shopware\Core\Profiling\Checkout\SalesChannelContextServiceProfiler;
-use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
+use Shopware\Core\System\SalesChannel\Context\SalesChannelContextServiceInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -29,12 +27,12 @@ class OrderTracker implements EventSubscriberInterface
     protected $rtuxApiHandler;
 
     /**
-     * @var SalesChannelContextService
+     * @var SalesChannelContextServiceInterface
      */
     protected $salesChannelContextService;
 
     public function __construct(
-        SalesChannelContextServiceProfiler $salesChannelContextService,
+        SalesChannelContextServiceInterface $salesChannelContextService,
         RtuxApiHandler $rtuxApiHandler
     ){
         $this->salesChannelContextService = $salesChannelContextService;
