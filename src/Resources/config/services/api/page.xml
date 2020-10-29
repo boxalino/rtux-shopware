@@ -14,7 +14,7 @@
         <!-- Generic CMS loader extension with API call -->
         <service id="boxalino.shopware.content.page.cms"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader"
-                 parent="boxalino.api.content.loader.cms" shared="false">
+                 parent="boxalino.api.content.loader.base" shared="false">
         </service>
 
         <!-- Shopware6 cross-selling loader extension with API call -->
