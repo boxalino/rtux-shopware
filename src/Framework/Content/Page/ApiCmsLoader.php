@@ -4,7 +4,8 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 use Boxalino\RealTimeUserExperience\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiCmsLoaderAbstract;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiBaseLoaderAbstract;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Shopware\Core\Framework\Struct\Struct;
@@ -15,10 +16,25 @@ use Shopware\Core\Framework\Struct\Struct;
  *
  * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
-class ApiCmsLoader extends ApiCmsLoaderAbstract
+class ApiCmsLoader extends ApiBaseLoaderAbstract
 {
     use CreateFromTrait;
     use ApiLoaderTrait;
+
+    /**
+     * @var array
+     */
+    protected $cmsConfig = [];
+
+    /**
+     * Loads the content of an API Response page
+     */
+    public function load() : ApiLoaderInterface
+    {
+        $this->addProperties();
+        parent::load();
+        $this->getApiResponsePage()->setNavigationId($this->getNavigationId($this->getRequest()));
+    }
 
     /**
      * @return ApiResponseViewInterface | Struct
@@ -54,6 +70,44 @@ class ApiCmsLoader extends ApiCmsLoaderAbstract
         }
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCmsConfig() : array
+    {
+        return $this->cmsConfig;
+    }
+
+    /**
+     * Adds properties to the CmsContextAbstract
+     */
+    protected function addProperties()
+    {
+        foreach($this->getCmsConfig() as $key => $value)
+        {
+            if($key == 'widget')
+            {
+                $this->getApiContext()->setWidget($value);
+                continue;
+            }
+            if($key == 'hitCount')
+            {
+                $this->getApiContext()->setHitCount((int) $value);
+                continue;
+            }
+            if($key == 'groupBy')
+            {
+                $this->getApiContext()->setGroupBy($value);
+                continue;
+            }
+
+            if(!is_null($value) && !empty($value))
+            {
+                $this->getApiContext()->set($key, $value);
+            }
+        }
     }
 
     /**

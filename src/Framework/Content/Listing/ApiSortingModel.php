@@ -2,6 +2,7 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiSortingModelInterface;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiSortingOption;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
@@ -35,7 +36,7 @@ class ApiSortingModel extends ApiSortingModelAbstract
      * (Shopware6 standard)
      *
      * @param string $key
-     * @return ProductListingSorting|null
+     * @return ProductListingSorting|null | ApiSortingOption
      */
     public function get(string $key): ?ProductListingSorting
     {
@@ -131,16 +132,6 @@ class ApiSortingModel extends ApiSortingModelAbstract
         }
 
         return $this->get(ProductListingFeaturesSubscriber::DEFAULT_SEARCH_SORT)->getKey();
-    }
-
-    /**
-     * @param null | AccessorInterface $context
-     * @return AccessorModelInterface
-     */
-    public function addAccessorContext(?AccessorInterface $context = null): AccessorModelInterface
-    {
-        $this->setActiveSorting($context->getSorting());
-        return $this;
     }
 
 }

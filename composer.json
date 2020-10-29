@@ -24,7 +24,9 @@
     },
     "require": {
         "php": "^7.2",
-        "boxalino/rtux-api-php": ">=1.0.0"
+        "boxalino/rtux-api-php": ">=2.6.0",
+        "symfony/service-contracts": "^1.1 || ^2",
+        "doctrine/dbal": "~2.10"
     },
     "autoload": {
         "psr-4": {
