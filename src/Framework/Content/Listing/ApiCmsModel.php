@@ -70,6 +70,31 @@ class ApiCmsModel extends Struct
     protected $fallback = false;
 
     /**
+     * @var \ArrayIterator | null
+     */
+    protected $seoProperties;
+
+    /**
+     * @var \ArrayIterator | null
+     */
+    protected $seoMetaTagsProperties;
+
+    /**
+     * @var string | null
+     */
+    protected $seoPageTitle;
+
+    /**
+     * @var string | null
+     */
+    protected $seoPageMetaTitle;
+
+    /**
+     * @var array | null
+     */
+    protected $seoBreadcrumbs;
+
+    /**
      * @return \ArrayIterator
      */
     public function getBlocks(): \ArrayIterator
@@ -264,6 +289,96 @@ class ApiCmsModel extends Struct
     public function setTop(\ArrayIterator $top): ApiResponseViewInterface
     {
         $this->top = $top;
+        return $this;
+    }
+
+    /**
+     * @return \ArrayIterator|null
+     */
+    public function getSeoProperties(): ?\ArrayIterator
+    {
+        return $this->seoProperties;
+    }
+
+    /**
+     * @param \ArrayIterator|null $seoProperties
+     * @return ApiResponseViewInterface
+     */
+    public function setSeoProperties(?\ArrayIterator $seoProperties): ApiResponseViewInterface
+    {
+        $this->seoProperties = $seoProperties;
+        return $this;
+    }
+
+    /**
+     * @return \ArrayIterator|null
+     */
+    public function getSeoMetaTagsProperties(): ?\ArrayIterator
+    {
+        return $this->seoMetaTagsProperties;
+    }
+
+    /**
+     * @param \ArrayIterator|null $seoMetaTagsProperties
+     * @return ApiResponseViewInterface
+     */
+    public function setSeoMetaTagsProperties(?\ArrayIterator $seoMetaTagsProperties): ApiResponseViewInterface
+    {
+        $this->seoMetaTagsProperties = $seoMetaTagsProperties;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSeoPageTitle(): ?string
+    {
+        return $this->seoPageTitle;
+    }
+
+    /**
+     * @param string|null $seoPageTitle
+     * @return ApiResponseViewInterface
+     */
+    public function setSeoPageTitle(?string $seoPageTitle): ApiResponseViewInterface
+    {
+        $this->seoPageTitle = $seoPageTitle;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSeoPageMetaTitle(): ?string
+    {
+        return $this->seoPageMetaTitle;
+    }
+
+    /**
+     * @param string|null $seoPageMetaTitle
+     * @return ApiResponseViewInterface
+     */
+    public function setSeoPageMetaTitle(?string $seoPageMetaTitle): ApiResponseViewInterface
+    {
+        $this->seoPageMetaTitle = $seoPageMetaTitle;
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getSeoBreadcrumbs(): ?array
+    {
+        return $this->seoBreadcrumbs;
+    }
+
+    /**
+     * @param array|null $seoBreadcrumbs
+     * @return ApiResponseViewInterface
+     */
+    public function setSeoBreadcrumbs(?array $seoBreadcrumbs): ApiResponseViewInterface
+    {
+        $this->seoBreadcrumbs = $seoBreadcrumbs;
         return $this;
     }
 
