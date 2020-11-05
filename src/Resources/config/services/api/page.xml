@@ -15,6 +15,7 @@
         <service id="boxalino.shopware.content.page.cms"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader"
                  parent="boxalino.api.content.loader.base" shared="false">
+            <argument type="service" id="sales_channel.category.repository"/>
         </service>
 
         <!-- Shopware6 cross-selling loader extension with API call -->

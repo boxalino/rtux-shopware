@@ -5,10 +5,14 @@ use Boxalino\RealTimeUserExperience\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiBaseLoaderAbstract;
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
+use Shopware\Core\Content\Category\CategoryEntity;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Struct\Struct;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
 
 /**
  * Class ApiCmsLoader
@@ -27,6 +31,20 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     protected $cmsConfig = [];
 
     /**
+     * @var SalesChannelRepositoryInterface
+     */
+    private $categoryRepository;
+
+    public function __construct(
+        ApiCallServiceInterface $apiCallService,
+        ConfigurationInterface $configuration,
+        SalesChannelRepositoryInterface $repository
+    ){
+        parent::__construct($apiCallService, $configuration);
+        $this->categoryRepository = $repository;
+    }
+
+    /**
      * Loads the content of an API Response page
      */
     public function load()
@@ -34,8 +52,27 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
         $this->addProperties();
         parent::load();
         $this->getApiResponsePage()->setNavigationId($this->getNavigationId($this->getRequest()));
+        $this->getApiResponsePage()->setCategory($this->loadCategory());
 
         return $this;
+    }
+
+    /**
+     * Sets category content on the CMS page
+     *
+     * @return \Shopware\Core\Content\Category\CategoryEntity
+     */
+    protected function loadCategory() : ?CategoryEntity
+    {
+        $criteria = new Criteria();
+        $criteria->setIds([$this->getNavigationId($this->getRequest())]);
+        $criteria->addAssociation('media');
+        $criteria->setTotalCountMode(Criteria::TOTAL_COUNT_MODE_NONE);
+
+        /** @var CategoryEntity $category */
+        $category = $this->categoryRepository->search($criteria, $this->getSalesChannelContext())->getEntities()->first();
+
+        return $category;
     }
 
     /**

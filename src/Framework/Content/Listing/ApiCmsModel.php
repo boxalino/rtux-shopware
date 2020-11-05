@@ -3,6 +3,7 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
+use Shopware\Core\Content\Category\CategoryEntity;
 use Shopware\Core\Framework\Struct\Struct;
 
 /**
@@ -93,6 +94,11 @@ class ApiCmsModel extends Struct
      * @var array | null
      */
     protected $seoBreadcrumbs;
+
+    /**
+     * @var CategoryEntity | null
+     */
+    protected $category;
 
     /**
      * @return \ArrayIterator
@@ -381,5 +387,24 @@ class ApiCmsModel extends Struct
         $this->seoBreadcrumbs = $seoBreadcrumbs;
         return $this;
     }
+
+    /**
+     * @return CategoryEntity | null
+     */
+    public function getCategory(): ?CategoryEntity
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param CategoryEntity | null $category
+     * @return ApiCmsModel
+     */
+    public function setCategory(?CategoryEntity $category): ApiResponseViewInterface
+    {
+        $this->category = $category;
+        return $this;
+    }
+    
 
 }
