@@ -1,0 +1,64 @@
+{# Narrative template un-attached from base (ex: sample for autocomplete content, in-block children renderings, etc) #}
+{% if blocks is not defined %}
+    {% set blocks = element.data.blocks %}
+{% endif %}
+{% if blocks is null %}
+    {% set blocks = page.blocks %}
+{% endif %}
+{% set groupBy = element.data.groupBy %}
+{% if groupBy is null %}
+    {% set groupBy = page.groupBy %}
+{% endif %}
+{% set variantUuid = element.data.variantUuid %}
+{% if variantUuid is null %}
+    {% set variantUuid = page.variantUuid %}
+{% endif %}
+{% set totalHitCount = element.data.totalHitCount %}
+{% if totalHitCount is null %}
+    {% set totalHitCount = page.totalHitCount %}
+{% endif %}
+{% set navigationId = element.data.navigationId %}
+{% if navigationId is null %}
+    {% set navigationId = page.navigationId %}
+{% endif %}
+{% set sectionMobileBehaviorClass = 'cms-section-sidebar-mobile-wrap'%}
+{% set layout = 'boxed' %}
+
+{% block narrative_section_top_content %}
+    <div class="cms-section-sidebar-top-content">
+        {% block narrative_section_top_content_block %}
+            {% set contentParameters = {"blocks":page.top} %}
+            {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" with contentParameters %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+<div class="cms-section-sidebar {{ sectionMobileBehaviorClass }} {{ layout }} row">
+
+    {% block narrative_section_sidebar_content %}
+        <div class="cms-section-sidebar-sidebar-content col-lg-4 col-xl-3">
+            {% block narrative_section_sidebar_content_block %}
+                {% set contentParameters = {"blocks":page.left, "position":"left"} %}
+                {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" with contentParameters %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+
+    {% block narrative_section_main_content %}
+        <div class="cms-section-sidebar-main-content col-lg-8 col-xl-9">
+            {% block narrative_section_main_content_block %}
+                {% set contentParameters = {"blocks":page.blocks, "position":""} %}
+                {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" with contentParameters %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+</div>
+
+{% block narrative_section_bottom_content %}
+    <div class="cms-section-sidebar-bottom-content">
+        {% block narrative_section_bottom_content_block %}
+            {% set contentParameters = {"blocks":page.bottom, "position":"bottom"} %}
+            {% sw_include "@BoxalinoRealTimeUserExperience/storefront/element/cms-element-narrative-content.html.twig" with contentParameters %}
+        {% endblock %}
+    </div>
+{% endblock %}
