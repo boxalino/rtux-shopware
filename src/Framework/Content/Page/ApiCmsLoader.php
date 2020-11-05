@@ -29,11 +29,13 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     /**
      * Loads the content of an API Response page
      */
-    public function load() : ApiLoaderInterface
+    public function load()
     {
         $this->addProperties();
         parent::load();
         $this->getApiResponsePage()->setNavigationId($this->getNavigationId($this->getRequest()));
+
+        return $this;
     }
 
     /**
