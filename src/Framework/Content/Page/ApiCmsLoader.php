@@ -5,6 +5,7 @@ use Boxalino\RealTimeUserExperience\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiCmsModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiBaseLoaderAbstract;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
@@ -21,6 +22,7 @@ use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
  * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
 class ApiCmsLoader extends ApiBaseLoaderAbstract
+    implements ApiLoaderInterface
 {
     use CreateFromTrait;
     use ApiLoaderTrait;

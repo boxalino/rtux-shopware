@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
 class ApiCrossSellingLoader extends ApiLoaderAbstract
+    implements ApiLoaderInterface
 {
 
     use ApiLoaderTrait;
