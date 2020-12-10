@@ -1,11 +1,13 @@
 <?php
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
+use Boxalino\RealTimeUserExperience\Framework\Content\BxAttributeElement;
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Product\Aggregate\ProductCrossSelling\ProductCrossSellingEntity;
@@ -95,6 +97,7 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
              * if the cross-selling narrative is properly structured - the ProductsCollection and Model with Entities
              * will be valid content
              */
+            /** @var Block $block */
             if(property_exists($block, "model")
                 && $block->getModel() instanceof ApiEntityCollectionModel
                 && property_exists($block, "productsCollection")
@@ -108,7 +111,15 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
                 $productCollection = $this->getCrossSellCollectionByType($type);
                 if($productCollection->count() > 0)
                 {
+                    /** @var CrossSellingElement $element */
                     $element = $this->loadCrossSellingElement($crossSelling, $productCollection);
+                    try{
+                        $element->addExtension("bxAttributes", new BxAttributeElement($block->getBxAttributes()));
+                    } catch (\Throwable $exception)
+                    {
+                        $element->addExtension("bxAttributes", new BxAttributeElement());
+                    }
+
                     $result->add($element);
                 }
             }
