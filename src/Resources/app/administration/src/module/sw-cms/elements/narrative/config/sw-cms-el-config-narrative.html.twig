@@ -75,5 +75,11 @@
                       label="Facets (list, divided by comma (,))">
             </sw-field>
         {% endblock %}
+
+        {% block sw_cms_element_narrative_config_contextParametersList %}
+            <sw-field type="text" v-model="element.config.contextParametersList.value"
+                      label="Context Parameters (list, divided by comma (,))">
+            </sw-field>
+        {% endblock %}
     </div>
 {% endblock %}

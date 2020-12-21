@@ -43,6 +43,35 @@ abstract class CmsContextAbstract
                     ->add("position", "sidebar")
             );
         }
+
+        if($this->has("contextParametersList"))
+        {
+            $configuredContextParameters = explode(",", $this->getProperty("contextParametersList"));
+            foreach($configuredContextParameters as $contextParameter)
+            {
+                $params = explode("=", $contextParameter);
+                $values = $params[1];
+                if(strpos($params[1], "|"))
+                {
+                    $values = array_map("html_entity_decode",  explode("|", $params[1]));
+                }
+                
+                if(is_array($values))
+                {
+                    $this->getApiRequest()->addParameters(
+                        $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_USER)
+                            ->add($params[0], $values)
+                    );
+
+                    continue;
+                }
+
+                $this->getApiRequest()->addHeaderParameters(
+                    $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
+                        ->add($params[0], $values)
+                );
+            }
+        }
     }
 
     /**

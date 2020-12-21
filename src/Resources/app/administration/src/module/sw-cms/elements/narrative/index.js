@@ -53,6 +53,10 @@ Shopware.Service('cmsService').registerCmsElement({
         facets: {
             source: 'static',
             value: null
+        },
+        contextParametersList: {
+            source: 'static',
+            value: null
         }
     }
 });
