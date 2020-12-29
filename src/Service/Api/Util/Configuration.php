@@ -60,10 +60,21 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     public function getRestApiEndpoint() : string
     {
         try{
-            return $this->config[$this->channelId]['apiUrl'];
+            $endpoint = $this->config[$this->channelId]['apiUrl'];
+            if(empty($endpoint))
+            {
+                if($this->getIsDev() || $this->getIsTest())
+                {
+                    return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
+                }
+
+                return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_PRODUCTION);
+            }
+            
+            return $endpoint;
         } catch (\Exception $exception)
         {
-            return "";
+            return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_PRODUCTION);
         }
     }
 

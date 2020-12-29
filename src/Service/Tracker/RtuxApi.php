@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Service\Tracker;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Framework\Struct\Struct;
 
 /**
@@ -202,16 +203,16 @@ class RtuxApi extends Struct
      */
     public function getTrackerUrl(): string
     {
-        return $this->url;
+        return $this->trackerUrl;
     }
 
     /**
-     * @param string $url
+     * @param string | null $url
      * @return self
      */
-    public function setTrackerUrl(string $url): self
+    public function setTrackerUrl(?string $url): self
     {
-        $this->url = $url;
+        $this->trackerUrl = $url;
         return $this;
     }
 
@@ -220,14 +221,23 @@ class RtuxApi extends Struct
      */
     public function getServerUrl(): string
     {
+        if(is_null($this->serverUrl))
+        {
+            $this->serverUrl = str_replace("%%account%%", $this->getAccount(), ConfigurationInterface::RTUX_API_ENDPOINT_PRODUCTION);
+            if($this->isDev())
+            {
+                $this->serverUrl = str_replace("%%account%%", $this->getAccount(), ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
+            }
+        }
+
         return $this->serverUrl;
     }
 
     /**
-     * @param string $serverUrl
+     * @param string | null $serverUrl
      * @return self
      */
-    public function setServerUrl(string $serverUrl): self
+    public function setServerUrl(?string $serverUrl): self
     {
         $this->serverUrl = $serverUrl;
         return $this;

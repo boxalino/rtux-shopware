@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Service\Tracker;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -18,10 +19,7 @@ use GuzzleHttp\Client;
  */
 class RtuxApiHandler
 {
-    public const BOXALINO_API_TRACKING_PRODUCTION="//track.bx-cloud.com/static/bav2.min.js";
-    public const BOXALINO_API_TRACKING_STAGE="//r-st.bx-cloud.com/static/bav2.min.js";
-    public const BOXALINO_API_SERVER_PRODUCTION="//track.bx-cloud.com/track/v2";
-    public const BOXALINO_API_SERVER_STAGE="//r-st.bx-cloud.com/track/v2";
+
     public const RTUX_API_TRACKER_CONFIGURATION_CACHE_KEY = 'rtux_api_tracker_configuration';
     public const RTUX_API_TRACKER_LANGUAGE_CACHE_KEY = 'rtux_api_tracker_language';
 
@@ -95,7 +93,7 @@ class RtuxApiHandler
             $this->trackClient->send(
                 new Request(
                     'POST',
-                    $this->getServerUrl($tracker->isDev(), $params["_bxv"]),
+                    $this->getServerUrl($params["_bxv"], $tracker->isDev()),
                     [
                         'Content-Type' => 'text/plain'
                     ],
@@ -175,10 +173,10 @@ class RtuxApiHandler
     {
         if($isDev)
         {
-            return self::BOXALINO_API_TRACKING_STAGE;
+            return ConfigurationInterface::BOXALINO_API_TRACKING_STAGE;
         }
 
-        return self::BOXALINO_API_TRACKING_PRODUCTION;
+        return ConfigurationInterface::BOXALINO_API_TRACKING_PRODUCTION;
     }
 
     /**
@@ -186,14 +184,14 @@ class RtuxApiHandler
      * @param string $session
      * @return string
      */
-    public function getServerUrl(bool $isDev=false, string $session) : string
+    public function getServerUrl(string $session, bool $isDev=false) : string
     {
         if($isDev)
         {
-            return self::BOXALINO_API_SERVER_STAGE . "?_bxv=" . $session;
+            return ConfigurationInterface::BOXALINO_API_SERVER_STAGE . "?_bxv=" . $session;
         }
 
-        return self::BOXALINO_API_SERVER_PRODUCTION . "?_bxv=" . $session;
+        return ConfigurationInterface::BOXALINO_API_SERVER_PRODUCTION . "?_bxv=" . $session;
     }
 
     /**

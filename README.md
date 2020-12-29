@@ -18,41 +18,31 @@ In order to use the API for generic functionalities (search, autocomplete, recom
 please **continue with the guidelines from the integration repository** https://github.com/boxalino/rtux-integration-shopware
 
 ## Documentation
+Check the public documentation on Framework Integrations 
+https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/349503489/Framework+Integration
+https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/349601793/Shopware+6
 
-The latest documentation is available upon request.
 Additionally, please check the GITHUB wiki page.
 
 ## Setup
 1. Add the plugin to your project via composer
 ``composer require boxalino/rtux-shopware``
 
-2. (obsolete) The Shopware6 plugin has a dependency on the Boxalino API repository (https://github.com/boxalino/rtux-api-php).
-   In order to activate the bundle, add it to the list of project bundles in config/bundles.php
-``Boxalino\RealTimeUserExperienceApi\BoxalinoRealTimeUserExperienceApi::class=>['all'=>true]``
-
-3. Activate the plugin per Shopware use
+2. Activate the plugin per Shopware use
 ``./bin/console plugin:refresh``
 ``./bin/console plugin:install --activate --clearCache BoxalinoRealTimeUserExperience``
   
-4. Log in your Shopware admin and configure the plugin with the configurations provided for your setup
+3. Log in your Shopware admin and configure the plugin with the configurations provided for your setup
 Shopware Admin >> Settings >> System >> Plugins >> Boxalino RTUX Framework for Shopware v6
 
-5. Due to the JS files in the plugin (tracker, Shopware6 CMS blocks, etc), a theme compilation might be required:
+4. Due to the JS files in the plugin (tracker, Shopware6 CMS blocks, etc), a theme compilation might be required:
 ``./psh.phar administration:build `` or ``./bin/build-administration.sh ``
 ``./psh.phar storefront:build`` or `./bin/build-storefront.sh ``
 
-6. In order to kick off your account, a full export is required. 
-More information available https://github.com/boxalino/exporter-shopware6
-For this, please set the exporter configuration per Sales Channel and disable the plugin where it is not in use.
-The Headless channel must have the plugin disabled.
-``./bin/console boxalino:exporter:run full``
-
-7*. If the plugin configurations are not displayed, they can be accessed via direct link:
+5. If the plugin configurations are not displayed, they can be accessed via direct link:
 ``admin#/sw/plugin/settings/BoxalinoRealTimeUserExperience``
 
 All events will use a dedicated log file _./var/log/boxalino-<env>.log_ 
-
-8. Proceed with the integration features available in our guidelines suggestions https://github.com/boxalino/rtux-integration-shopware
 
 ## Contact us!
 
