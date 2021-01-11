@@ -28,10 +28,10 @@ class ApiFacetModel extends ApiFacetModelAbstract
     use SalesChannelContextTrait;
 
     /**
-     * @var Connection 
+     * @var Connection
      */
     protected $connection;
-    
+
     public function __construct(Connection $connection)
     {
         parent::__construct();
@@ -78,7 +78,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
             ->leftJoin("property_group_translation", "property_group_translation", "pgt",
                 "property_group_translation.property_group_id = pgt.property_group_id AND pgt.language_id=:defaultLanguageId")
             ->where("property_group_translation.language_id = :languageId")
-            ->where('property_group_translation.property_group_id = :propertyId')
+            ->andWhere('property_group_translation.property_group_id = :propertyId')
             ->groupBy("property_group_translation.property_group_id")
             ->setParameter("languageId", Uuid::fromHexToBytes($channelSelectedLanguage), ParameterType::BINARY)
             ->setParameter("defaultLanguageId", Uuid::fromHexToBytes($this->getDefaultLanguageId()), ParameterType::BINARY)
