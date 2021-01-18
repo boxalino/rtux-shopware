@@ -102,7 +102,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
             ->select(["LOWER(HEX(property_group_id))"])
             ->from("property_group_translation")
             ->where("language_id = :defaultLanguageId")
-            ->where("CONCAT('$prefix', name) = :propertyName")
+            ->andWhere("CONCAT('$prefix', name) = :propertyName")
             ->setParameter("defaultLanguageId", Uuid::fromHexToBytes($this->getDefaultLanguageId()), ParameterType::STRING)
             ->setParameter("propertyName", $propertyName)
             ->setMaxResults(1);
