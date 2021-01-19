@@ -35,7 +35,12 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     /**
      * @var SalesChannelRepositoryInterface
      */
-    private $categoryRepository;
+    protected $categoryRepository;
+
+    /**
+     * @var \ArrayIterator
+     */
+    protected $apiResponsePageList = null;
 
     public function __construct(
         ApiCallServiceInterface $apiCallService,
@@ -44,6 +49,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     ){
         parent::__construct($apiCallService, $configuration);
         $this->categoryRepository = $repository;
+        $this->apiResponsePageList = new \ArrayIterator();
     }
 
     /**
@@ -91,6 +97,19 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     }
 
     /**
+     * @return \ArrayIterator
+     */
+    public function getApiResponsePageList() : \ArrayIterator
+    {
+        if(is_null($this->apiResponsePageList))
+        {
+            $this->apiResponsePageList = new \ArrayIterator();
+        }
+
+        return $this->apiResponsePageList;
+    }
+
+    /**
      * @param RequestInterface $request
      * @return string
      */
@@ -105,7 +124,8 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
      */
     public function setCmsConfig(array $config)
     {
-        foreach($config as $key=>$configuration)
+        $this->cmsConfig = [];
+        foreach($config as $key => $configuration)
         {
             $this->cmsConfig[$key] = $configuration['value'];
         }
@@ -174,5 +194,24 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
 
         return $this->getApiResponsePage();
     }
+
+    /**
+     * @return SalesChannelRepositoryInterface
+     */
+    public function getCategoryRepository(): SalesChannelRepositoryInterface
+    {
+        return $this->categoryRepository;
+    }
+
+    /**
+     * @param SalesChannelRepositoryInterface $categoryRepository
+     * @return ApiCmsLoader
+     */
+    public function setCategoryRepository(SalesChannelRepositoryInterface $categoryRepository): ApiCmsLoader
+    {
+        $this->categoryRepository = $categoryRepository;
+        return $this;
+    }
+
 
 }

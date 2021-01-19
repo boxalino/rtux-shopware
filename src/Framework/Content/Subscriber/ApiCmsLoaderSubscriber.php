@@ -4,6 +4,7 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Subscriber;
 use Boxalino\RealTimeUserExperience\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\UndefinedPropertyError;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Cms\Aggregate\CmsBlock\CmsBlockEntity;
 use Shopware\Core\Content\Cms\Aggregate\CmsSection\CmsSectionEntity;
@@ -51,7 +52,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
         ApiCmsLoader $apiCmsLoader,
         RequestInterface $requestWrapper,
         LoggerInterface $logger
-    ){
+    ) {
         $this->logger = $logger;
         $this->apiCmsLoader = $apiCmsLoader;
         $this->requestWrapper = $requestWrapper;
@@ -73,34 +74,31 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      *
      * @param CmsPageLoadedEvent $event
      */
-    public function addApiCmsContent(CmsPageLoadedEvent $event) : void
+    public function addApiCmsContent(CmsPageLoadedEvent $event): void
     {
         $this->requestWrapper->setRequest($event->getRequest());
         $this->apiCmsLoader->setRequest($this->requestWrapper);
+        $this->apiCmsLoader->setSalesChannelContext($event->getSalesChannelContext());
+
         /** @var CmsPageEntity $element */
-        foreach($event->getResult() as $element)
-        {
+        foreach ($event->getResult() as $element) {
             /** @var CmsSectionEntity $section */
-            foreach($element->getSections() as $sectionNr => $section)
-            {
+            foreach ($element->getSections() as $sectionNr => $section) {
                 /** @var CmsBlockEntity $block */
-                foreach($section->getBlocks() as $block)
-                {
-                    try{
-                        if($block->getType() == 'narrative')
-                        {
+                foreach ($section->getBlocks() as $block) {
+                    try {
+                        if ($block->getType() == 'narrative') {
                             $slot = $block->getSlots()->first();
-                            $this->apiCmsLoader->setSalesChannelContext($event->getSalesChannelContext());
-                            $this->apiCmsLoader->setCmsConfig($slot->getConfig());
-                            $narrativeResponse = $this->apiCmsLoader->load()->getApiResponsePage();
+                            $configurations = $slot->getConfig();
+                            $apiCmsLoader = $this->getLoader($configurations['widget']['value']);
+                            $apiCmsLoader->setCmsConfig($configurations);
+                            $narrativeResponse = $apiCmsLoader->load()->getApiResponsePage();
                             $block->getSlots()->first()->setData($narrativeResponse);
-                            if($slot->getConfig()['sidebar']['value'])
-                            {
-                                $this->updateSidebar($narrativeResponse, $section, $block);
+                            if ($slot->getConfig()['sidebar']['value']) {
+                                $this->updateSidebar($apiCmsLoader, $narrativeResponse, $section, $block);
                             }
                         }
-                    } catch (\Throwable $exception)
-                    {
+                    } catch (\Throwable $exception) {
                         $this->logger->warning("Boxalino ApiCmsLoaderSubscriber: " . $exception->getMessage() .
                             "\n" . $exception->getTraceAsString()
                         );
@@ -112,15 +110,31 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Reset the ApiCms Loader to allow multiple API requests on a CMS page
+     *
+     * @return ApiCmsLoader
+     */
+    protected function getLoader($widget) : ApiCmsLoader
+    {
+        $apiContext = $this->apiCmsLoader->getApiContext();
+        $apiContext = $apiContext->setRequestDefinition($this->createEmptyFromObject($apiContext->getApiRequest()));
+
+        $loader = $this->createFromApiLoaderObject($this->apiCmsLoader, ["ApiResponsePage"]);
+        $loader->setApiContext($apiContext);
+
+        return $loader;
+    }
+
+    /**
      * @param Struct $data
      * @param CmsSectionEntity $section
      * @param CmsBlockEntity $narrativeBlock
      */
-    protected function updateSidebar(Struct $data, CmsSectionEntity $section, CmsBlockEntity $narrativeBlock) : void
+    protected function updateSidebar(ApiCmsLoader $loader, Struct $data, CmsSectionEntity $section, CmsBlockEntity $narrativeBlock) : void
     {
         if($section->getType() == 'sidebar' && $narrativeBlock->getSectionPosition() == 'main')
         {
-            $slot = $this->createCmsSlotEntity($narrativeBlock, $data);
+            $slot = $this->createCmsSlotEntity($loader, $narrativeBlock, $data);
             $slots = $this->createCmsSlotCollection($slot);
             $sidebarBlock = $this->createCmsBlockEntity($narrativeBlock, $slots, "sidebar", count($section->getBlocks()));
 
@@ -133,12 +147,12 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      * @param Struct $slotData
      * @return CmsSlotEntity
      */
-    protected function createCmsSlotEntity(CmsBlockEntity $blockEntity, Struct $slotData) : CmsSlotEntity
+    protected function createCmsSlotEntity(ApiCmsLoader $loader, CmsBlockEntity $blockEntity, Struct $slotData) : CmsSlotEntity
     {
         /** @var CmsSlotEntity $slot */
         $slot = $this->createFromObject($blockEntity->getSlots()->first(), ['data', '_uniqueIdentifier', '_entityName']);
         $slot->setUniqueIdentifier(uniqid("boxalino_narrative_"));
-        $slot->setData($this->apiCmsLoader->createSectionFrom($slotData, 'left'));
+        $slot->setData($loader->createSectionFrom($slotData, 'left'));
 
         return $slot;
     }

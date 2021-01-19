@@ -78,7 +78,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
             ->leftJoin("property_group_translation", "property_group_translation", "pgt",
                 "property_group_translation.property_group_id = pgt.property_group_id AND pgt.language_id=:defaultLanguageId")
             ->where("property_group_translation.language_id = :languageId")
-            ->where('property_group_translation.property_group_id = :propertyId')
+            ->andWhere('property_group_translation.property_group_id = :propertyId')
             ->groupBy("property_group_translation.property_group_id")
             ->setParameter("languageId", Uuid::fromHexToBytes($channelSelectedLanguage), ParameterType::BINARY)
             ->setParameter("defaultLanguageId", Uuid::fromHexToBytes($this->getDefaultLanguageId()), ParameterType::BINARY)
@@ -102,7 +102,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
             ->select(["LOWER(HEX(property_group_id))"])
             ->from("property_group_translation")
             ->where("language_id = :defaultLanguageId")
-            ->where("CONCAT('$prefix', name) = :propertyName")
+            ->andWhere("CONCAT('$prefix', name) = :propertyName")
             ->setParameter("defaultLanguageId", Uuid::fromHexToBytes($this->getDefaultLanguageId()), ParameterType::STRING)
             ->setParameter("propertyName", $propertyName)
             ->setMaxResults(1);

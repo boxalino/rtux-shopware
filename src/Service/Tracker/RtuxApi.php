@@ -202,7 +202,7 @@ class RtuxApi extends Struct
      */
     public function getTrackerUrl(): string
     {
-        return $this->url;
+        return $this->trackerUrl;
     }
 
     /**
@@ -211,7 +211,7 @@ class RtuxApi extends Struct
      */
     public function setTrackerUrl(string $url): self
     {
-        $this->url = $url;
+        $this->trackerUrl = $url;
         return $this;
     }
 
