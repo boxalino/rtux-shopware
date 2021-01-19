@@ -93,7 +93,6 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                             $apiCmsLoader->setCmsConfig($configurations);
                             $narrativeResponse = $apiCmsLoader->load()->getApiResponsePage();
                             $block->getSlots()->first()->setData($narrativeResponse);
-                            $this->logger->info(json_encode($narrativeResponse->getBlocks()[0]->getTitle()));
                             if ($slot->getConfig()['sidebar']['value']) {
                                 $this->updateSidebar($apiCmsLoader, $narrativeResponse, $section, $block);
                             }
