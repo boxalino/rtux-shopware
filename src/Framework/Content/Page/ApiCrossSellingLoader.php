@@ -250,6 +250,8 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
                 $this->getApiContext()->addContextParametersByType($type, array_values($ids));
             }
         }
+
+        return $this;
     }
 
 }
