@@ -37,7 +37,8 @@
             <name>apiUrl</name>
             <label>REST API Url</label>
             <helpText>REST API Url is https://*domain*.bx-cloud.com/narrative/*account*/api/1 where *domain* is main/r-st
-                depending on your instance context (production or staging); *account* is the account name for the channel
+                depending on your instance context (production or staging); *account* is the account name for the channel.
+                If left empty, r-st is used for dev=true and main for dev=false.
             </helpText>
         </input-field>
         <input-field type="bool">

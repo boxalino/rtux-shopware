@@ -233,22 +233,23 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
     {
         /** @var Request $request */
         $request = $this->getRequest();
+        $mainProductId = 0;
         if($request->getRequest()->attributes->has("mainProductId"))
         {
-            $this->getApiContext()->setProductId($request->getRequest()->attributes->get("mainProductId"));
+            $mainProductId = $request->getRequest()->attributes->get("mainProductId");
+            $this->getApiContext()->setProductId($mainProductId);
         }
         if($this->getApiContext()->useConfiguredProductsAsContextParameters())
         {
+            /** @var  CrossSellingElement $item */
             foreach($crossSellingLoaderResult as $item)
             {
                 $name = $item->getCrossSelling()->getTranslated()['name'];
-                $type = preg_replace('/[^a-z0-9]+/', '_', strtolower($name));
+                $type = preg_replace('/[^a-z0-9]+/', '_', strtolower($name)) . "_" . $mainProductId;
                 $ids = $item->getProducts()->getIds();
-                $this->getApiContext()->addContextParametersByType($type, $ids);
+                $this->getApiContext()->addContextParametersByType($type, array_values($ids));
             }
         }
-
-        return $this;
     }
 
 }
