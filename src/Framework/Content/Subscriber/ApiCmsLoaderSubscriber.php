@@ -80,21 +80,27 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
         $this->apiCmsLoader->setSalesChannelContext($event->getSalesChannelContext());
 
         /** @var CmsPageEntity $element */
-        foreach ($event->getResult() as $element) {
+        foreach ($event->getResult() as $element)
+        {
             /** @var CmsSectionEntity $section */
-            foreach ($element->getSections() as $sectionNr => $section) {
+            foreach ($element->getSections() as $sectionNr => $section)
+            {
                 /** @var CmsBlockEntity $block */
-                foreach ($section->getBlocks() as $block) {
+                foreach ($section->getBlocks() as $block)
+                {
                     try {
-                        if ($block->getType() == 'narrative') {
-                            $slot = $block->getSlots()->first();
-                            $configurations = $slot->getConfig();
-                            $apiCmsLoader = $this->getLoader($configurations['widget']['value']);
-                            $apiCmsLoader->setCmsConfig($configurations);
-                            $narrativeResponse = $apiCmsLoader->load()->getApiResponsePage();
-                            $block->getSlots()->first()->setData($narrativeResponse);
-                            if ($slot->getConfig()['sidebar']['value']) {
-                                $this->updateSidebar($apiCmsLoader, $narrativeResponse, $section, $block);
+                        if ($block->getType() == 'narrative')
+                        {
+                            //avoid making duplicate requests from dynamically created blocks
+                            if(strpos($block->getId(), "boxalino_block_") === false)
+                            {
+                                $slot = $block->getSlots()->first();
+                                $configurations = $slot->getConfig();
+                                $apiCmsLoader = $this->getLoader($configurations['widget']['value']);
+                                $apiCmsLoader->setCmsConfig($configurations);
+                                $narrativeResponse = $apiCmsLoader->load()->getApiResponsePage();
+                                $block->getSlots()->first()->setData($narrativeResponse);
+                                $this->addNewSections($apiCmsLoader, $narrativeResponse, $element, $section, $block, $configurations);
                             }
                         }
                     } catch (\Throwable $exception) {
@@ -125,20 +131,73 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param Struct $data
-     * @param CmsSectionEntity $section
-     * @param CmsBlockEntity $narrativeBlock
+     * @param $narrativeResponse
      */
-    protected function updateSidebar(ApiCmsLoader $loader, Struct $data, CmsSectionEntity $section, CmsBlockEntity $narrativeBlock) : void
-    {
-        if($section->getType() == 'sidebar' && $narrativeBlock->getSectionPosition() == 'main')
+    protected function addNewSections(
+        ApiCmsLoader $apiCmsLoader,
+        Struct $narrativeResponse,
+        CmsPageEntity $element,
+        CmsSectionEntity $section,
+        CmsBlockEntity $narrativeBlock,
+        array $configurations
+    ){
+        if ($configurations['sidebar']['value'])
         {
-            $slot = $this->createCmsSlotEntity($loader, $narrativeBlock, $data);
-            $slots = $this->createCmsSlotCollection($slot);
-            $sidebarBlock = $this->createCmsBlockEntity($narrativeBlock, $slots, "sidebar", count($section->getBlocks()));
-
-            $section->getBlocks()->add($sidebarBlock);
+            if($section->getType() == 'sidebar' && $narrativeBlock->getSectionPosition() == 'main')
+            {
+                $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $narrativeResponse, $section, "left", "sidebar");
+            }
         }
+
+        $sectionPosition = $section->getPosition(); $previousSection=null; $nextSection=null;
+        if($sectionPosition)
+        {
+            foreach($element->getSections() as $sequenceSection)
+            {
+                if($sequenceSection->getPosition() == $sectionPosition-1)
+                {
+                    /** @var CmsSectionEntity $previousSection */
+                    $previousSection = $sequenceSection;
+                    continue;
+                }
+
+                if($sequenceSection->getPosition() == $sectionPosition+1)
+                {
+                    /** @var CmsSectionEntity $nextSection */
+                    $nextSection = $sequenceSection;
+                    continue;
+                }
+            }
+        }
+
+        if($previousSection)
+        {
+            $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $narrativeResponse, $previousSection, "top", "default");
+        }
+
+        if($nextSection)
+        {
+            $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $narrativeResponse, $nextSection, "bottom", "default");
+        }
+    }
+
+    /**
+     * @param ApiCmsLoader $apiCmsLoader
+     * @param CmsBlockEntity $narrativeBlock
+     * @param Struct $narrativeResponse
+     * @param CmsSectionEntity $section
+     * @param string $position
+     * @param string $sectionPosition
+     */
+    protected function addSlotToSectionByPosition(ApiCmsLoader $apiCmsLoader, CmsBlockEntity $narrativeBlock, Struct $narrativeResponse, CmsSectionEntity $section, string $position, string $sectionPosition = "default")
+    {
+        $slot = $this->createCmsSlotEntity($apiCmsLoader, $narrativeBlock, $narrativeResponse, $position);
+        $slots = $this->createCmsSlotCollection($slot);
+        $newBlock = $this->createCmsBlockEntity($narrativeBlock, $slots, $sectionPosition, count($section->getBlocks()));
+
+        $section->getBlocks()->add($newBlock);
+
+        return;
     }
 
     /**
@@ -146,12 +205,12 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      * @param Struct $slotData
      * @return CmsSlotEntity
      */
-    protected function createCmsSlotEntity(ApiCmsLoader $loader, CmsBlockEntity $blockEntity, Struct $slotData) : CmsSlotEntity
+    protected function createCmsSlotEntity(ApiCmsLoader $loader, CmsBlockEntity $blockEntity, Struct $slotData, string $position) : CmsSlotEntity
     {
         /** @var CmsSlotEntity $slot */
         $slot = $this->createFromObject($blockEntity->getSlots()->first(), ['data', '_uniqueIdentifier', '_entityName']);
         $slot->setUniqueIdentifier(uniqid("boxalino_narrative_"));
-        $slot->setData($loader->createSectionFrom($slotData, 'left'));
+        $slot->setData($loader->createSectionFrom($slotData, $position));
 
         return $slot;
     }
@@ -179,6 +238,27 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     {
         /** @var CmsBlockEntity $block */
         $block = $this->createFromObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
+        $block->setSectionPosition($sectionPosition);
+        $block->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
+        $block->setSectionId(uniqid());
+        $block->setId(uniqid("boxalino_block_"));
+        $block->setPosition($position);
+        $block->setSlots($slots);
+
+        return $block;
+    }
+
+    /**
+     * @param CmsBlockEntity $originalBlock
+     * @param CmsSlotCollection $slots
+     * @param string $sectionPosition
+     * @param int $position
+     * @return CmsBlockEntity
+     */
+    protected function createCmsSectionEntity(CmsSectionEntity $originalBlock, CmsSlotCollection $slots, string $sectionPosition, int $position = 0) : CmsBlockEntity
+    {
+        /** @var CmsSectionEntity $section */
+        $section = $this->createFromObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
         $block->setSectionPosition($sectionPosition);
         $block->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
         $block->setSectionId(uniqid());

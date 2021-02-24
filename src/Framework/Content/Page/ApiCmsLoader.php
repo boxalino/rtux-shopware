@@ -176,7 +176,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
      *
      * @param Struct $apiCmsModel
      * @param string $position
-     * @return Struct
+     * @return Struct | null
      */
     public function createSectionFrom(Struct $apiCmsModel, string $position) : ?Struct
     {
@@ -192,7 +192,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
             return $segmentNarrativeBlock;
         }
 
-        return $this->getApiResponsePage();
+        return null;
     }
 
     /**
