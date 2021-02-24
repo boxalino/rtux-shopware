@@ -21,10 +21,14 @@
 {% if navigationId is null %}
     {% set navigationId = page.navigationId %}
 {% endif %}
+{% set category = element.data.category %}
+{% if category is null %}
+    {% set category = page.category %}
+{% endif %}
 {% block boxalino_narrative_content %}
     {% for bxblock in blocks %}
         {% set narrativeContent = {'block' : bxblock, 'groupBy' : groupBy, 'variantUuid': variantUuid,
-            'totalHitCount': totalHitCount, 'navigationId': navigationId
+            'totalHitCount': totalHitCount, 'navigationId': navigationId, 'category': category
         } %}
         {% sw_include bxblock.template with narrativeContent %}
     {% endfor %}
