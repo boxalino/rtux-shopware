@@ -85,7 +85,7 @@ class RequestTransformer extends ApiRequestTransformer
             }
             $this->requestDefinition->addHeaderParameters(
                 $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_HEADER)
-                    ->add($parameter, $value)
+                    ->add($parameter, rawurldecode($value))
             );
         }
     }
