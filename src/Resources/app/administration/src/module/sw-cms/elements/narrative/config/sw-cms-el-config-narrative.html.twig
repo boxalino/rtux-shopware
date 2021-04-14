@@ -42,14 +42,14 @@
         {% block sw_cms_element_narrative_config_returnFields %}
             <sw-field type="text" v-model="element.config.returnFields.value"
                       label="Returned Fields (divided by comma (,))"
-                      placeholder="id, products_title, discountedPrice, products_image, ..">
+                      placeholder="id, title, discountedPrice, image, ..">
             </sw-field>
         {% endblock %}
 
         {% block sw_cms_element_narrative_config_filters %}
             <sw-field type="text" v-model="element.config.filters.value"
                       label="Filters (list, divided by comma (,))"
-                      placeholder="products_visibility=20">
+                      placeholder="visibility=20">
             </sw-field>
         {% endblock %}
 

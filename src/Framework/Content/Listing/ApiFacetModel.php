@@ -65,9 +65,9 @@ class ApiFacetModel extends ApiFacetModelAbstract
         $propertyId = $this->getPropertyIdByFieldName($propertyName);
         if(!$propertyId)
         {
-            if(strpos($propertyName, AccessorFacetModelInterface::BOXALINO_STORE_FACET_PREFIX)===0)
+            if(strpos($propertyName, $this->getFacetPrefix())===0)
             {
-                $propertyName = substr($propertyName, strlen(AccessorFacetModelInterface::BOXALINO_STORE_FACET_PREFIX), strlen($propertyName));
+                $propertyName = substr($propertyName, strlen($this->getFacetPrefix()), strlen($propertyName));
             }
             return ucwords(str_replace("_", " ", $propertyName));
         }
@@ -97,12 +97,11 @@ class ApiFacetModel extends ApiFacetModelAbstract
      */
     protected function getPropertyIdByFieldName(string $propertyName)
     {
-        $prefix = AccessorFacetModelInterface::BOXALINO_STORE_FACET_PREFIX;
         $propertyIdQuery = $this->connection->createQueryBuilder()
             ->select(["LOWER(HEX(property_group_id))"])
             ->from("property_group_translation")
             ->where("language_id = :defaultLanguageId")
-            ->andWhere("CONCAT('$prefix', name) = :propertyName")
+            ->andWhere("name = :propertyName")
             ->setParameter("defaultLanguageId", Uuid::fromHexToBytes($this->getDefaultLanguageId()), ParameterType::STRING)
             ->setParameter("propertyName", $propertyName)
             ->setMaxResults(1);
@@ -126,6 +125,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
                 ->where('id = :channelId')
                 ->setParameter("channelId", Uuid::fromHexToBytes($this->getSalesChannelContext()->getSalesChannel()->getId()), ParameterType::STRING)
                 ->setMaxResults(1);
+
             $this->defaultLanguageId = $query->execute()->fetchColumn();
         }
 

@@ -57,7 +57,7 @@ trait ContextTrait
     public function getVisibilityFilter(RequestInterface $request) : ParameterInterface
     {
         return $this->getParameterFactory()->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
-            ->addRange("products_visibility", $this->getContextVisibility()[0],1000);
+            ->addRange("visibility", $this->getContextVisibility()[0],1000);
     }
 
     /**
@@ -75,7 +75,7 @@ trait ContextTrait
     public function getActiveFilter(RequestInterface $request) : ParameterInterface
     {
         return $this->getParameterFactory()->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FILTER)
-            ->add("products_active", [1]);
+            ->add("status", [1]);
     }
 
     /**
