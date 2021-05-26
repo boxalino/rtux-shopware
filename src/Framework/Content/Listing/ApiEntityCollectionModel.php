@@ -82,6 +82,29 @@ class ApiEntityCollectionModel extends ApiEntityCollectionModelAbstract
     }
 
     /**
+     * @param \ArrayIterator $blocks
+     * @param string $hitAccessor
+     * @param string $idField
+     */
+    public function setHitIds(\ArrayIterator $blocks, string $hitAccessor, string $idField = "id")
+    {
+        $ids = array_map(function(AccessorInterface $block) use ($hitAccessor, $idField) {
+            if(property_exists($block, $hitAccessor))
+            {
+                $value = $block->get($hitAccessor)->get($idField);
+                if(is_array($value))
+                {
+                    return $value[0];
+                }
+
+                return $value;
+            }
+        }, $blocks->getArrayCopy());
+
+        $this->hitIds = $ids;
+    }
+
+    /**
      * @param null | AccessorInterface $context
      * @return AccessorModelInterface
      */
@@ -92,5 +115,6 @@ class ApiEntityCollectionModel extends ApiEntityCollectionModelAbstract
 
         return $this;
     }
+    
 
 }
