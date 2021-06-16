@@ -4,7 +4,7 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiEntityCollectionModelAbstract;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiEntityCollectionModel as RtuxApiEntityCollection;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Cms\DataResolver\CriteriaCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -22,7 +22,7 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
  *
  * @package Boxalino\RealTimeUserExperience\Framework\Content\Listing
  */
-class ApiEntityCollectionModel extends ApiEntityCollectionModelAbstract
+class ApiEntityCollectionModel extends RtuxApiEntityCollection
     implements AccessorModelInterface
 {
     use SalesChannelContextTrait;
@@ -36,6 +36,12 @@ class ApiEntityCollectionModel extends ApiEntityCollectionModelAbstract
      * @var null | EntitySearchResult
      */
     protected $collection = null;
+
+    /**
+     * @var null | EntitySearchResult
+     */
+    protected $collectionByIds = null;
+
 
     public function __construct(
         SalesChannelRepositoryInterface $productRepository
@@ -64,6 +70,9 @@ class ApiEntityCollectionModel extends ApiEntityCollectionModelAbstract
     }
 
     /**
+     * Retrieve the product returned by the API response based on the hit field
+     * If the product is not available in the collection - load the collection for the individual items (grouped by ID)
+     *
      * @param string $id
      */
     public function getItem(string $id)
@@ -82,26 +91,42 @@ class ApiEntityCollectionModel extends ApiEntityCollectionModelAbstract
     }
 
     /**
-     * @param \ArrayIterator $blocks
-     * @param string $hitAccessor
-     * @param string $idField
+     * @param string $id
+     * @return mixed|null
      */
-    public function setHitIds(\ArrayIterator $blocks, string $hitAccessor, string $idField = "id")
+    public function getItemById(string $id)
     {
-        $ids = array_map(function(AccessorInterface $block) use ($hitAccessor, $idField) {
-            if(property_exists($block, $hitAccessor))
-            {
-                $value = $block->get($hitAccessor)->get($idField);
-                if(is_array($value))
-                {
-                    return $value[0];
-                }
+        if(is_null($this->collectionByIds))
+        {
+            $this->getCollectionByIds();
+        }
 
-                return $value;
-            }
-        }, $blocks->getArrayCopy());
+        if(in_array($id, $this->collectionByIds->getIds()))
+        {
+            return $this->collectionByIds->get($id);
+        }
 
-        $this->hitIds = $ids;
+        return false;
+    }
+
+    /**
+     * Accessing collection of products based on the hits
+     *
+     * @return EntitySearchResult
+     * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
+     */
+    public function getCollectionByIds() : EntitySearchResult
+    {
+        if(is_null($this->collectionByIds))
+        {
+            $criteria = new Criteria($this->getIds());
+            $this->collectionByIds = $this->productRepository->search(
+                $criteria,
+                $this->getSalesChannelContext()
+            );
+        }
+
+        return $this->collectionByIds;
     }
 
     /**
@@ -115,6 +140,6 @@ class ApiEntityCollectionModel extends ApiEntityCollectionModelAbstract
 
         return $this;
     }
-    
+
 
 }
