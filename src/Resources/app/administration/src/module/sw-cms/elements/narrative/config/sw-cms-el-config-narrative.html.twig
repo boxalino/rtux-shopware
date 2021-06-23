@@ -76,6 +76,12 @@
             </sw-field>
         {% endblock %}
 
+        {% block sw_cms_element_narrative_config_sorting %}
+            <sw-field type="text" v-model="element.config.sort.value"
+                      label="Sorting field (by default - the Boxalino score)">
+            </sw-field>
+        {% endblock %}
+
         {% block sw_cms_element_narrative_config_contextParametersList %}
             <sw-field type="text" v-model="element.config.contextParametersList.value"
                       label="Context Parameters (list, divided by comma (,))">

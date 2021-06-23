@@ -54,6 +54,10 @@ Shopware.Service('cmsService').registerCmsElement({
             source: 'static',
             value: null
         },
+        sort: {
+            source: 'static',
+            value: null
+        },
         contextParametersList: {
             source: 'static',
             value: null
