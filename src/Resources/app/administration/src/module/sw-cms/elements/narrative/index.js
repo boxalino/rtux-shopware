@@ -18,6 +18,10 @@ Shopware.Service('cmsService').registerCmsElement({
             source: 'static',
             value: false
         },
+        addStoreFilterableProperties: {
+            source: 'static',
+            value: false
+        },
         hitCount: {
             source: 'static',
             value: 1,

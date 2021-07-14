@@ -2,6 +2,7 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
+use Boxalino\RealTimeUserExperienceApi\Framework\ApiPropertyTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
@@ -26,6 +27,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
     implements AccessorFacetModelInterface
 {
     use SalesChannelContextTrait;
+    use ApiPropertyTrait;
 
     /**
      * @var Connection
@@ -51,7 +53,6 @@ class ApiFacetModel extends ApiFacetModelAbstract
         return parent::addAccessorContext($context);
     }
 
-
     /**
      * Accessing translation for the property name from DB
      *
@@ -69,6 +70,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
             {
                 $propertyName = substr($propertyName, strlen($this->getFacetPrefix()), strlen($propertyName));
             }
+
             return ucwords(str_replace("_", " ", $propertyName));
         }
 
@@ -97,11 +99,12 @@ class ApiFacetModel extends ApiFacetModelAbstract
      */
     protected function getPropertyIdByFieldName(string $propertyName)
     {
+        $condition = $this->getPropertySQLReplaceCondition("name");
         $propertyIdQuery = $this->connection->createQueryBuilder()
             ->select(["LOWER(HEX(property_group_id))"])
             ->from("property_group_translation")
             ->where("language_id = :defaultLanguageId")
-            ->andWhere("name = :propertyName")
+            ->andWhere("$condition = :propertyName")
             ->setParameter("defaultLanguageId", Uuid::fromHexToBytes($this->getDefaultLanguageId()), ParameterType::STRING)
             ->setParameter("propertyName", $propertyName)
             ->setMaxResults(1);
@@ -131,5 +134,6 @@ class ApiFacetModel extends ApiFacetModelAbstract
 
         return $this->defaultLanguageId;
     }
+
 
 }

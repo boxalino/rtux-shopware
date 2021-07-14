@@ -34,6 +34,7 @@
                  class="Boxalino\RealTimeUserExperience\Framework\Request\CmsContextAbstract"
                  parent="boxalino.api.request.context.cms"
                  abstract="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
         </service>
     </services>
 

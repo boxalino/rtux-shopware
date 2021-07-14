@@ -53,7 +53,11 @@ class RtuxApiSubscriber implements EventSubscriberInterface
             {
                 return;
             }
-            $context->addExtension("rtuxApi", $this->rtuxApiHandler->getRtuxApi($context));
+            
+            $rtuxApi = $this->rtuxApiHandler->getRtuxApi($context);
+            $rtuxApi->setMasterNavigationId($event->getSalesChannelContext()->getSalesChannel()->getNavigationCategoryId());
+            
+            $context->addExtension("rtuxApi", $rtuxApi);
         } catch (\Throwable $exception)
         {
             $this->logger->warning($exception->getMessage());

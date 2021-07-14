@@ -59,6 +59,9 @@ class RtuxApi extends Struct
      * @var string | null
      */
     protected $customerContext;
+    
+    /** @var string | null */
+    protected $masterNavigationId = null;
 
     /**
      * Tracker constructor.
@@ -259,6 +262,22 @@ class RtuxApi extends Struct
     {
         $this->customerContext = $customerContext;
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMasterNavigationId(): ?string
+    {
+        return $this->masterNavigationId;
+    }
+
+    /**
+     * @param string|null $masterNavigationId
+     */
+    public function setMasterNavigationId(?string $masterNavigationId): void
+    {
+        $this->masterNavigationId = $masterNavigationId;
     }
 
 }

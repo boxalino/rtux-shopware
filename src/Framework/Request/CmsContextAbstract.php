@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
+use Boxalino\RealTimeUserExperience\Framework\FilterablePropertyTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ListingContextInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface;
+use Doctrine\DBAL\Connection;
 
 /**
  * Boxalino Cms Request handler
@@ -18,6 +22,55 @@ abstract class CmsContextAbstract
     implements ShopwareApiContextInterface, ListingContextInterface
 {
     use ContextTrait;
+    use FilterablePropertyTrait;
+
+    /**
+     * CmsContextAbstract constructor.
+     *
+     * @param RequestTransformerInterface $requestTransformer
+     * @param ParameterFactoryInterface $parameterFactory
+     * @param Connection $connection
+     */
+    public function __construct(
+        RequestTransformerInterface $requestTransformer,
+        ParameterFactoryInterface $parameterFactory,
+        Connection $connection
+    ) {
+        parent::__construct($requestTransformer, $parameterFactory);
+        $this->connection = $connection;
+    }
+
+    /**
+     * Adding a new step to set all filterable properties to request
+     *
+     * @param RequestInterface $request
+     * @return RequestDefinitionInterface
+     */
+    public function get(RequestInterface $request) : RequestDefinitionInterface
+    {
+        parent::get($request);
+        $this->addStoreFilterableProperties($request);
+
+        return $this->getApiRequest();
+    }
+
+    /**
+     * @param $request
+     */
+    public function addStoreFilterableProperties($request) : void
+    {
+        if($this->getProperty("addStoreFilterableProperties"))
+        {
+            $storeFilterableProperties = $this->getStoreFilterablePropertiesByRequest($request);
+            foreach ($storeFilterableProperties as $propertyName) {
+                $this->getApiRequest()
+                    ->addFacets(
+                        $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
+                            ->add(html_entity_decode($propertyName), -1, 1)
+                    );
+            }
+        }
+    }
 
     /**
      * @param RequestInterface $request
@@ -55,7 +108,7 @@ abstract class CmsContextAbstract
                 {
                     $values = array_map("html_entity_decode",  explode("|", $params[1]));
                 }
-                
+
                 if(is_array($values))
                 {
                     $this->getApiRequest()->addParameters(
@@ -111,4 +164,5 @@ abstract class CmsContextAbstract
         return [];
     }
 
+    
 }

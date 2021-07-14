@@ -15,6 +15,7 @@
                 window.controllerName = '{{ controllerName|lower }}';
                 window.actionName = '{{ controllerAction|lower }}';
                 window.activeNavigationId = '{{ page.header.navigation.active.id }}';
+                window.masterNavigationId = '{{ rtuxApi.getMasterNavigationId() }}';
                 window.currentCurrency = '{{ page.header.activeCurrency.translated.shortName }}';
                 window._bxq = window._bxq || [];
                 window.preferentialLog = '{{ rtuxApi.getCustomerContext() }}';

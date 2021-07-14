@@ -16,6 +16,14 @@
             </sw-field>
         {% endblock %}
 
+        {% block sw_cms_element_narrative_config_addStoreFilterableProperties %}
+            <sw-field type="switch"
+                      bordered
+                      label="Add store filterable properties to API request"
+                      v-model="element.config.addStoreFilterableProperties.value">
+            </sw-field>
+        {% endblock %}
+
         {% block sw_cms_element_narrative_config_hitCount %}
             <sw-field  type="text" v-model="element.config.hitCount.value"
                        label="Nr of returned products*"

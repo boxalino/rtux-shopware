@@ -104,7 +104,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                             }
                         }
                     } catch (\Throwable $exception) {
-                        $this->logger->warning("Boxalino ApiCmsLoaderSubscriber: " . $exception->getMessage() .
+                        $this->logger->debug("Boxalino ApiCmsLoaderSubscriber: " . $exception->getMessage() .
                             "\n" . $exception->getTraceAsString()
                         );
                         continue;
