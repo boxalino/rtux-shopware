@@ -3,6 +3,9 @@ namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ListingContextInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\SearchContextInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface;
+use Doctrine\DBAL\Connection;
 use PhpParser\Error;
 
 /**
@@ -17,5 +20,15 @@ abstract class SearchContextAbstract
 {
     use ContextTrait;
     use RequestParametersTrait;
+    use ListingContextFilterablePropertiesTrait;
+    
+    public function __construct(
+        RequestTransformerInterface $requestTransformer,
+        ParameterFactoryInterface $parameterFactory,
+        Connection $connection
+    ){
+        parent::__construct($requestTransformer, $parameterFactory);
+        $this->connection = $connection;
+    }
 
 }

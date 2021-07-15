@@ -24,11 +24,13 @@
                  class="Boxalino\RealTimeUserExperience\Framework\Request\ListingContextAbstract"
                  parent="boxalino.api.request.context.listing"
                  abstract="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
         </service>
         <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\SearchContextInterface"
                  class="Boxalino\RealTimeUserExperience\Framework\Request\SearchContextAbstract"
                  parent="boxalino.api.request.context.search"
                  abstract="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
         </service>
         <service id="boxalino.shopware.request.context.cms"
                  class="Boxalino\RealTimeUserExperience\Framework\Request\CmsContextAbstract"
