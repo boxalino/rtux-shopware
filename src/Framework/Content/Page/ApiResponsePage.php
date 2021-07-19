@@ -104,6 +104,11 @@ class ApiResponsePage extends Page
     protected $seoBreadcrumbs;
 
     /**
+     * @var string | null
+     */
+    protected $currency;
+
+    /**
      * @return \ArrayIterator
      */
     public function getBlocks() : \ArrayIterator
@@ -426,4 +431,24 @@ class ApiResponsePage extends Page
         $this->seoBreadcrumbs = $seoBreadcrumbs;
         return $this;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param string|null $currency
+     * @return ApiResponseViewInterface
+     */
+    public function setCurrency(?string $currency): ApiResponseViewInterface
+    {
+        $this->currency = $currency;
+        return $this;
+    }
+    
+    
 }

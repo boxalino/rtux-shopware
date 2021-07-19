@@ -21,6 +21,9 @@
 {% if navigationId is null %}
     {% set navigationId = page.navigationId %}
 {% endif %}
+{% if currencySymbol is null %}
+    {% set currencySymbol = element.data.currency is defined ? element.data.currency : page.getCurrency() %}
+{% endif %}
 {% set sectionMobileBehaviorClass = 'cms-section-sidebar-mobile-wrap'%}
 {% set layout = 'boxed' %}
 

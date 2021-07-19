@@ -99,6 +99,11 @@ class ApiCmsModel extends Struct
      * @var CategoryEntity | null
      */
     protected $category;
+    
+    /**
+     * @var string | null
+     */
+    protected $currency;
 
     /**
      * @return \ArrayIterator
@@ -405,6 +410,24 @@ class ApiCmsModel extends Struct
         $this->category = $category;
         return $this;
     }
-    
+
+    /**
+     * @return string|null
+     */
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param string|null $currency
+     * @return ApiResponseViewInterface
+     */
+    public function setCurrency(?string $currency): ApiResponseViewInterface
+    {
+        $this->currency = $currency;
+        return $this;
+    }
+
 
 }

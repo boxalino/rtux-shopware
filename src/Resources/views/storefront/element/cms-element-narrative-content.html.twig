@@ -25,10 +25,13 @@
 {% if category is null %}
     {% set category = page.category %}
 {% endif %}
+{% if currencySymbol is null %}
+    {% set currencySymbol = element.data.currency is defined ? element.data.currency : page.getCurrency() %}
+{% endif %}
 {% block boxalino_narrative_content %}
     {% for bxblock in blocks %}
         {% set narrativeContent = {'block' : bxblock, 'groupBy' : groupBy, 'variantUuid': variantUuid,
-            'totalHitCount': totalHitCount, 'navigationId': navigationId, 'category': category
+            'totalHitCount': totalHitCount, 'navigationId': navigationId, 'category': category, 'currencySymbol':currencySymbol
         } %}
         {% sw_include bxblock.template with narrativeContent %}
     {% endfor %}

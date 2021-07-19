@@ -61,6 +61,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
         parent::load();
         $this->getApiResponsePage()->setNavigationId($this->getNavigationId($this->getRequest()));
         $this->getApiResponsePage()->setCategory($this->loadCategory());
+        $this->getApiResponsePage()->setCurrency($this->getSalesChannelContext()->getSalesChannel()->getCurrency()->getIsoCode());
 
         return $this;
     }

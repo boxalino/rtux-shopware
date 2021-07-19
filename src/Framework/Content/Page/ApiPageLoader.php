@@ -58,6 +58,7 @@ class ApiPageLoader extends ApiPageLoaderAbstract
         {
             $page = $this->genericLoader->load($this->getRequest()->getRequest(), $this->getSalesChannelContext());
             $this->apiResponsePage = ApiResponsePage::createFrom($page);
+            $this->apiResponsePage->setCurrency($this->getSalesChannelContext()->getCurrency()->getIsoCode());
         }
 
         return $this->apiResponsePage;
