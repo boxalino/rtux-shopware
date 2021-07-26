@@ -2,6 +2,8 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiCmsModelInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\BlockInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Shopware\Core\Content\Category\CategoryEntity;
 use Shopware\Core\Framework\Struct\Struct;
@@ -99,7 +101,7 @@ class ApiCmsModel extends Struct
      * @var CategoryEntity | null
      */
     protected $category;
-    
+
     /**
      * @var string | null
      */
@@ -429,5 +431,22 @@ class ApiCmsModel extends Struct
         return $this;
     }
 
+    /**
+     * Load the API response elements
+     * (ex: collections, data, etc)
+     */
+    public function load(): void
+    {
+        $layers = ["getBlocks", "getLeft", "getTop", "getBottom"];
+        foreach($layers as $layer)
+        {
+            /** @var BlockInterface | AccessorInterface $block */
+            foreach($this->$layer() as $block)
+            {
+                $block->load();
+            }
+        }
+    }
 
+    
 }

@@ -98,9 +98,9 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                                 $configurations = $slot->getConfig();
                                 $apiCmsLoader = $this->getLoader($configurations['widget']['value']);
                                 $apiCmsLoader->setCmsConfig($configurations);
-                                $narrativeResponse = $apiCmsLoader->load()->getApiResponsePage();
-                                $block->getSlots()->first()->setData($narrativeResponse);
-                                $this->addNewSections($apiCmsLoader, $narrativeResponse, $element, $section, $block, $configurations);
+                                $apiCmsLoader->load();
+                                $this->addApiResponseToSections($apiCmsLoader, $element, $section, $block, $configurations);
+                                $block->getSlots()->first()->setData($apiCmsLoader->getApiResponsePage());
                             }
                         }
                     } catch (\Throwable $exception) {
@@ -133,9 +133,8 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     /**
      * @param $narrativeResponse
      */
-    protected function addNewSections(
+    protected function addApiResponseToSections(
         ApiCmsLoader $apiCmsLoader,
-        Struct $narrativeResponse,
         CmsPageEntity $element,
         CmsSectionEntity $section,
         CmsBlockEntity $narrativeBlock,
@@ -145,7 +144,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
         {
             if($section->getType() == 'sidebar' && $narrativeBlock->getSectionPosition() == 'main')
             {
-                $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $narrativeResponse, $section, "left", "sidebar");
+                $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $section, "left", "sidebar");
             }
         }
 
@@ -172,26 +171,25 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
 
         if($previousSection)
         {
-            $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $narrativeResponse, $previousSection, "top", "default");
+            $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $previousSection, "top", "default");
         }
 
         if($nextSection)
         {
-            $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $narrativeResponse, $nextSection, "bottom", "default");
+            $this->addSlotToSectionByPosition($apiCmsLoader, $narrativeBlock, $nextSection, "bottom", "default");
         }
     }
 
     /**
      * @param ApiCmsLoader $apiCmsLoader
      * @param CmsBlockEntity $narrativeBlock
-     * @param Struct $narrativeResponse
      * @param CmsSectionEntity $section
      * @param string $position
      * @param string $sectionPosition
      */
-    protected function addSlotToSectionByPosition(ApiCmsLoader $apiCmsLoader, CmsBlockEntity $narrativeBlock, Struct $narrativeResponse, CmsSectionEntity $section, string $position, string $sectionPosition = "default")
+    protected function addSlotToSectionByPosition(ApiCmsLoader $apiCmsLoader, CmsBlockEntity $narrativeBlock, CmsSectionEntity $section, string $position, string $sectionPosition = "default")
     {
-        $slot = $this->createCmsSlotEntity($apiCmsLoader, $narrativeBlock, $narrativeResponse, $position);
+        $slot = $this->createCmsSlotEntity($apiCmsLoader, $narrativeBlock, $position);
         $slots = $this->createCmsSlotCollection($slot);
         $newBlock = $this->createCmsBlockEntity($narrativeBlock, $slots, $sectionPosition, count($section->getBlocks()));
 
@@ -205,12 +203,23 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      * @param Struct $slotData
      * @return CmsSlotEntity
      */
-    protected function createCmsSlotEntity(ApiCmsLoader $loader, CmsBlockEntity $blockEntity, Struct $slotData, string $position) : CmsSlotEntity
+    protected function createCmsSlotEntity(ApiCmsLoader $loader, CmsBlockEntity $blockEntity, string $position) : CmsSlotEntity
     {
         /** @var CmsSlotEntity $slot */
         $slot = $this->createFromObject($blockEntity->getSlots()->first(), ['data', '_uniqueIdentifier', '_entityName']);
         $slot->setUniqueIdentifier(uniqid("boxalino_narrative_"));
+        $slotData = $loader->getApiResponsePage();
         $slot->setData($loader->createSectionFrom($slotData, $position));
+
+        try{
+            $setterFunction = "set".ucfirst($position);
+            $loader->getApiResponsePage()->$setterFunction(new \ArrayIterator());
+        } catch (\Throwable $exception)
+        {
+            $this->logger->debug("Boxalino ApiCmsLoaderSubscriber content removed from $position: " . $exception->getMessage() .
+                "\n" . $exception->getTraceAsString()
+            );
+        }
 
         return $slot;
     }

@@ -100,7 +100,7 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
             /** @var Block $block */
             if(property_exists($block, "model")
                 && $block->getModel() instanceof ApiEntityCollectionModel
-                && property_exists($block, "productsCollection")
+                && property_exists($block, "bxHits")
             ){
                 $index++;
                 $name = $block->getName(); if(is_array($name)) { $name = $name[0];}

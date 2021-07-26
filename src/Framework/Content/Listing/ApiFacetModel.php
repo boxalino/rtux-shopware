@@ -41,6 +41,20 @@ class ApiFacetModel extends ApiFacetModelAbstract
     }
 
     /**
+     * Preparing element for API preview (ex: pwa context)
+     */
+    public function load(): void
+    {
+        $this->_loadAccessors();
+        $this->loadPropertiesToObject(
+            $this,
+            ["salesChannelContext", "contextId", "defaultSalesChannelLanguageId"],
+            ["getLabel", "addSelectedFacet", "getByPosition", "_loadAccessors", "getFacetsPrefix"],
+            true
+        );
+    }
+
+    /**
      * Sets the facets
      * Sets the accesor handler to be able to run toObject construct
      *

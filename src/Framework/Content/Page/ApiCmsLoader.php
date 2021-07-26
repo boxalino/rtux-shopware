@@ -42,6 +42,11 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
      */
     protected $apiResponsePageList = null;
 
+    /**
+     * @var string
+     */
+    protected $storeApiEndpoint = "store-api";
+
     public function __construct(
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
@@ -59,9 +64,16 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     {
         $this->addProperties();
         parent::load();
+        
         $this->getApiResponsePage()->setNavigationId($this->getNavigationId($this->getRequest()));
         $this->getApiResponsePage()->setCategory($this->loadCategory());
         $this->getApiResponsePage()->setCurrency($this->getSalesChannelContext()->getSalesChannel()->getCurrency()->getIsoCode());
+
+        /** if it`s a store-api request - load the content of the blocks */
+        if($this->isStoreApiRequest())
+        {
+            $this->getApiResponsePage()->load();
+        }
 
         return $this;
     }
@@ -181,10 +193,11 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
      */
     public function createSectionFrom(Struct $apiCmsModel, string $position) : ?Struct
     {
-        if(in_array($position, $this->apiCallService->getApiResponse()->getResponseSegments()) && $apiCmsModel instanceof ApiCmsModelInterface)
+        $layoutSegments = $this->apiCallService->getApiResponse()->getResponseSegments();
+        if(in_array($position, $layoutSegments) && $apiCmsModel instanceof ApiCmsModelInterface)
         {
             /** @var ApiCmsModelInterface | Struct $segmentNarrativeBlock */
-            $segmentNarrativeBlock = $this->createFromObject($apiCmsModel, ['blocks', $position]);
+            $segmentNarrativeBlock = $this->createFromObject($apiCmsModel, array_merge(['blocks'], $layoutSegments));
             $getterFunction = "get".ucfirst($position);
             $setterFunction = "set".ucfirst($position);
             $segmentNarrativeBlock->setBlocks($apiCmsModel->$getterFunction());
@@ -211,6 +224,38 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     public function setCategoryRepository(SalesChannelRepositoryInterface $categoryRepository): ApiCmsLoader
     {
         $this->categoryRepository = $categoryRepository;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStoreApiRequest() : bool
+    {
+        $userUrl = $this->getRequest()->getUserUrl();
+        if(strpos($userUrl, $this->getStoreApiEndpoint()) > -1)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStoreApiEndpoint(): string
+    {
+        return $this->storeApiEndpoint;
+    }
+
+    /**
+     * @param string $storeApiEndpoint
+     * @return ApiCmsLoader
+     */
+    public function setStoreApiEndpoint(string $storeApiEndpoint): ApiCmsLoader
+    {
+        $this->storeApiEndpoint = $storeApiEndpoint;
         return $this;
     }
 

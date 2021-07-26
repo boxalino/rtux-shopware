@@ -46,6 +46,7 @@ class ApiEntityCollectionModel extends RtuxApiEntityCollection
     public function __construct(
         SalesChannelRepositoryInterface $productRepository
     ){
+        $this->apiCollection = new \ArrayIterator();
         $this->productRepository = $productRepository;
     }
 
@@ -127,6 +128,29 @@ class ApiEntityCollectionModel extends RtuxApiEntityCollection
         }
 
         return $this->collectionByIds;
+    }
+
+
+    /**
+     * @return EntitySearchResult
+     */
+    public function getLoadedCollection() : EntitySearchResult
+    {
+        return $this->getCollection();
+    }
+
+    /**
+     * Preparing element for API preview (ex: pwa context)
+     * The protected properties are not public
+     */
+    public function load(): void
+    {
+        $this->loadPropertiesToObject(
+            $this,
+            ["salesChannelContext", "contextId", "defaultSalesChannelLanguageId"],
+            ["getItemById", "getItem", "getCollectionById", "getCollection", "getApiCollection"],
+            true
+        );
     }
 
     /**

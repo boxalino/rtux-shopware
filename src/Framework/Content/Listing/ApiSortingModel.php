@@ -37,4 +37,5 @@ class ApiSortingModel extends ApiSortingModelAbstract
         return ApiSortingModelInterface::SORT_ASCENDING;
     }
 
+
 }
