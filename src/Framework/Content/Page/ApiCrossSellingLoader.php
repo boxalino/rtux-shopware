@@ -109,6 +109,11 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
                     $index, $name, $type, (bool) $index==1
                 );
                 $productCollection = $this->getCrossSellCollectionByType($type);
+                if(is_null($productCollection))
+                {
+                    continue;
+                }
+
                 if($productCollection->count() > 0)
                 {
                     /** @var CrossSellingElement $element */
@@ -197,7 +202,13 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
                 $type = $block->getType(); if(is_array($type)) { $type = $type[0];}
                 $this->productIdsByType->offsetSet($type, $hitIds);
             }
-            $this->crossSellingResponseCollection = $this->productRepository->search(new Criteria($productIds), $this->getSalesChannelContext());
+            if(count($productIds))
+            {
+                $this->crossSellingResponseCollection = $this->productRepository->search(
+                    new Criteria($productIds),
+                    $this->getSalesChannelContext()
+                );
+            }
         }
 
         return $this->crossSellingResponseCollection;
@@ -207,11 +218,16 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
      * Filters the main $crossSellingResponseCollection by the product IDs segments of the widget
      *
      * @param string $type
-     * @return EntityCollection
+     * @return EntityCollection | null
      */
-    protected function getCrossSellCollectionByType(string $type) : ProductCollection
+    protected function getCrossSellCollectionByType(string $type) : ?ProductCollection
     {
         $ids = $this->productIdsByType->offsetGet($type);
+        if(empty($ids))
+        {
+            return null;
+        }
+
         return $this->crossSellingResponseCollection->filter(
             function(ProductEntity $element) use ($ids)
             {
