@@ -18,7 +18,7 @@ trait CreateFromTrait
      * @param array $excludeProperties
      * @return Struct
      */
-    public function createFromObject(Struct $object, array $excludeProperties) : Struct
+    public function createFromStructObject(Struct $object, array $excludeProperties) : Struct
     {
         try {
             $new = (new \ReflectionClass(get_class($object)))

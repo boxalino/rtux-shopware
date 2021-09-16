@@ -197,7 +197,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
         if(in_array($position, $layoutSegments) && $apiCmsModel instanceof ApiCmsModelInterface)
         {
             /** @var ApiCmsModelInterface | Struct $segmentNarrativeBlock */
-            $segmentNarrativeBlock = $this->createFromObject($apiCmsModel, array_merge(['blocks'], $layoutSegments));
+            $segmentNarrativeBlock = $this->createFromStructObject($apiCmsModel, array_merge(['blocks'], $layoutSegments));
             $getterFunction = "get".ucfirst($position);
             $setterFunction = "set".ucfirst($position);
             $segmentNarrativeBlock->setBlocks($apiCmsModel->$getterFunction());

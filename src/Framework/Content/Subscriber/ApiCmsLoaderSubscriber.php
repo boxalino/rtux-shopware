@@ -206,7 +206,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     protected function createCmsSlotEntity(ApiCmsLoader $loader, CmsBlockEntity $blockEntity, string $position) : CmsSlotEntity
     {
         /** @var CmsSlotEntity $slot */
-        $slot = $this->createFromObject($blockEntity->getSlots()->first(), ['data', '_uniqueIdentifier', '_entityName']);
+        $slot = $this->createFromStructObject($blockEntity->getSlots()->first(), ['data', '_uniqueIdentifier', '_entityName']);
         $slot->setUniqueIdentifier(uniqid("boxalino_narrative_"));
         $slotData = $loader->getApiResponsePage();
         $slot->setData($loader->createSectionFrom($slotData, $position));
@@ -246,7 +246,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     protected function createCmsBlockEntity(CmsBlockEntity $originalBlock, CmsSlotCollection $slots, string $sectionPosition, int $position = 0) : CmsBlockEntity
     {
         /** @var CmsBlockEntity $block */
-        $block = $this->createFromObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
+        $block = $this->createFromStructObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
         $block->setSectionPosition($sectionPosition);
         $block->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
         $block->setSectionId(uniqid());
@@ -267,7 +267,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     protected function createCmsSectionEntity(CmsSectionEntity $originalBlock, CmsSlotCollection $slots, string $sectionPosition, int $position = 0) : CmsBlockEntity
     {
         /** @var CmsSectionEntity $section */
-        $section = $this->createFromObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
+        $section = $this->createFromStructObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
         $block->setSectionPosition($sectionPosition);
         $block->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
         $block->setSectionId(uniqid());
