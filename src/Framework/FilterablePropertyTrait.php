@@ -56,11 +56,13 @@ trait FilterablePropertyTrait
         $query->select(["$field"])
             ->from("property_group", 'pg')
             ->leftJoin("pg", "property_group_translation", "pgt",
-                "pg.id = pgt.property_group_id AND pgt.language_id=:defaultLanguageId"
+                "pg.id = pgt.property_group_id"
             )
+            ->leftJoin("pg", "sales_channel", "sc", "sc.id=:contextId")
             ->andWhere("pg.filterable = 1")
+            ->andWhere("pgt.language_id=sc.language_id")
             ->addGroupBy('pg.id')
-            ->setParameter('defaultLanguageId', Uuid::fromHexToBytes($this->getDefaultSalesChannelLanguageId()), ParameterType::BINARY);
+            ->setParameter('contextId', Uuid::fromHexToBytes($this->getContextId()), ParameterType::BINARY);
 
         return $query;
     }
@@ -68,7 +70,7 @@ trait FilterablePropertyTrait
     /**
      * @return string
      */
-    abstract function getDefaultSalesChannelLanguageId() : string;
+    abstract function getContextId() : string;
 
 
 }
