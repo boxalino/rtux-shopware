@@ -42,13 +42,6 @@ trait SalesChannelContextTrait
         return $this->getSalesChannelContext()->getSalesChannel()->getId();
     }
 
-    /**
-     * @return string
-     */
-    public function getDefaultSalesChannelLanguageId() : string
-    {
-        return $this->getSalesChannelContext()->getSalesChannel()->getLanguageId();
-    }
-    
-    
+
+
 }
