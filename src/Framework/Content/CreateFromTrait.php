@@ -27,6 +27,7 @@ trait CreateFromTrait
             throw new \InvalidArgumentException($exception->getMessage());
         }
 
+        $functions = get_class_methods($object);
         foreach ($object->getVars() as $property => $value)
         {
             if(is_null($value) || in_array($property, $excludeProperties))
@@ -34,7 +35,10 @@ trait CreateFromTrait
                 continue;
             }
             $functionName = "set".ucfirst($property);
-            $new->$functionName($value);
+            if(in_array($functionName, $functions))
+            {
+                $new->$functionName($value);
+            }
         }
 
         return $new;
