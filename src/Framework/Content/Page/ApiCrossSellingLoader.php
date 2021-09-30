@@ -6,7 +6,6 @@ use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectio
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
@@ -17,9 +16,8 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
-use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Shopware\Storefront\Page\Product\CrossSelling\CrossSellingElement;
-use Shopware\Storefront\Page\Product\CrossSelling\CrossSellingLoaderResult;
+use Shopware\Core\Content\Product\SalesChannel\CrossSelling\CrossSellingElementCollection;
+use Shopware\Core\Content\Product\SalesChannel\CrossSelling\CrossSellingElement;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -75,10 +73,10 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
     }
 
     /**
-     * @return CrossSellingLoaderResult
+     * @return CrossSellingElementCollection
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getResult(CrossSellingLoaderResult $crossSellingLoaderResult) : CrossSellingLoaderResult
+    public function getResult(CrossSellingElementCollection $crossSellingLoaderResult) : CrossSellingElementCollection
     {
         $this->setRequestInterfaceContext($crossSellingLoaderResult);
         try{
@@ -89,7 +87,7 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
         }
 
         $this->setCrossSellingResponseCollection();
-        $result = new CrossSellingLoaderResult(); $index = 0;
+        $result = new CrossSellingElementCollection(); $index = 0;
         foreach ($this->apiCallService->getApiResponse()->getBlocks() as $block)
         {
             /**
@@ -242,10 +240,10 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
     /**
      * Set required request elements on the $apiContextInterface (instanceof ItemContextAbstract)
      *
-     * @param CrossSellingLoaderResult $crossSellingLoaderResult
+     * @param CrossSellingElementCollection $crossSellingLoaderResult
      * @return self
      */
-    public function setRequestInterfaceContext(CrossSellingLoaderResult $crossSellingLoaderResult) : self
+    public function setRequestInterfaceContext(CrossSellingElementCollection $crossSellingLoaderResult) : self
     {
         /** @var Request $request */
         $request = $this->getRequest();

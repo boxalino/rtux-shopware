@@ -6,6 +6,7 @@ use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Shopware\Core\Checkout\Order\Aggregate\OrderLineItem\OrderLineItemEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextServiceInterface;
+use Shopware\Core\System\SalesChannel\Context\SalesChannelContextServiceParameters;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -108,9 +109,11 @@ class OrderTracker implements EventSubscriberInterface
     protected function getSalesChannelContext(string $channelId, string $languageId) : SalesChannelContext
     {
         return $this->salesChannelContextService->get(
-            $channelId,
-            "boxalino-rtux-api-tracker",
-            $languageId
+            new SalesChannelContextServiceParameters(
+                $channelId,
+                "boxalino-rtux-api-tracker",
+                $languageId
+            )
         );
     }
 
