@@ -26,9 +26,9 @@ trait SalesChannelContextTrait
 
     /**
      * @param SalesChannelContext $salesChannelContext
-     * @return self
+     * @return mixed
      */
-    public function setSalesChannelContext(SalesChannelContext $salesChannelContext): self
+    public function setSalesChannelContext(SalesChannelContext $salesChannelContext)
     {
         $this->salesChannelContext = $salesChannelContext;
         return $this;

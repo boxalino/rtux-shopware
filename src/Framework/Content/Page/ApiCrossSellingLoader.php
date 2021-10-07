@@ -37,19 +37,19 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
     /**
      * @var SalesChannelRepositoryInterface
      */
-    private $productRepository;
+    protected $productRepository;
 
     /**
      * Product ids grouped by the widget response they belong to
      *
      * @var \ArrayIterator
      */
-    private $productIdsByType;
+    protected $productIdsByType;
 
     /**
      * @var null | EntitySearchResult
      */
-    private $crossSellingResponseCollection = null;
+    protected $crossSellingResponseCollection = null;
 
 
     public function __construct(
@@ -135,7 +135,6 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
 
         return $crossSellingLoaderResult;
     }
-
 
     /**
      * Creates a cross-selling item to be added to the cross-selling loader result

@@ -3,6 +3,7 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Subscriber;
 
 use Boxalino\RealTimeUserExperience\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Cms\Aggregate\CmsBlock\CmsBlockEntity;
@@ -122,7 +123,10 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     protected function getLoader($widget) : ApiCmsLoader
     {
         $apiContext = $this->apiCmsLoader->getApiContext();
-        $apiContext = $apiContext->setRequestDefinition($this->createEmptyFromObject($apiContext->getApiRequest()));
+
+        /** @var  RequestDefinitionInterface $requestDefinition */
+        $requestDefinition = $this->createEmptyFromObject($apiContext->getApiRequest());
+        $apiContext = $apiContext->setRequestDefinition($requestDefinition);
 
         $loader = $this->createFromApiLoaderObject($this->apiCmsLoader, ["ApiResponsePage"]);
         $loader->setApiContext($apiContext);
@@ -194,8 +198,6 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
         $newBlock = $this->createCmsBlockEntity($narrativeBlock, $slots, $sectionPosition, count($section->getBlocks()));
 
         $section->getBlocks()->add($newBlock);
-
-        return;
     }
 
     /**
@@ -268,14 +270,15 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
     {
         /** @var CmsSectionEntity $section */
         $section = $this->createFromStructObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
-        $block->setSectionPosition($sectionPosition);
-        $block->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
-        $block->setSectionId(uniqid());
-        $block->setId(uniqid("boxalino_block_"));
-        $block->setPosition($position);
-        $block->setSlots($slots);
+        $section->setSectionPosition($sectionPosition);
+        $section->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
+        $section->setSectionId(uniqid());
+        $section->setId(uniqid("boxalino_block_"));
+        $section->setPosition($position);
+        $section->setSlots($slots);
 
-        return $block;
+        return $section;
     }
+
 
 }
