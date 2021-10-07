@@ -259,26 +259,5 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
         return $block;
     }
 
-    /**
-     * @param CmsBlockEntity $originalBlock
-     * @param CmsSlotCollection $slots
-     * @param string $sectionPosition
-     * @param int $position
-     * @return CmsBlockEntity
-     */
-    protected function createCmsSectionEntity(CmsSectionEntity $originalBlock, CmsSlotCollection $slots, string $sectionPosition, int $position = 0) : CmsBlockEntity
-    {
-        /** @var CmsSectionEntity $section */
-        $section = $this->createFromStructObject($originalBlock, ['data', '_uniqueIdentifier', 'sectionId', 'id', '_entityName']);
-        $section->setSectionPosition($sectionPosition);
-        $section->setUniqueIdentifier(uniqid("boxalino_{$sectionPosition}_"));
-        $section->setSectionId(uniqid());
-        $section->setId(uniqid("boxalino_block_"));
-        $section->setPosition($position);
-        $section->setSlots($slots);
-
-        return $section;
-    }
-
 
 }
