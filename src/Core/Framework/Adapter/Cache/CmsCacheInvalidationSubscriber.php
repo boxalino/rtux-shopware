@@ -25,20 +25,18 @@ class CmsCacheInvalidationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ApiCmsEvent::class => [
-                ['invalidateCategoryRouteByCategoryIds', 1000],
-            ],
+            ApiCmsEvent::class => 'invalidateCategoryRouteByCategoryId'
         ];
     }
 
     /**
      * @param ApiCmsEvent $event
      */
-    public function invalidateCategoryRouteByCategoryIds(ApiCmsEvent $event): void
+    public function invalidateCategoryRouteByCategoryId(ApiCmsEvent $event): void
     {
         // invalidates the category route cache when a category got the content loaded via Boxalino API
         $this->logger->invalidate(
-            array_map([CachedCategoryRoute::class, 'buildName'], [$event->getId()])
+            [CachedCategoryRoute::buildName($event->getId())]
         );
     }
 

@@ -137,10 +137,10 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      */
     protected function dispatchEvent() : void
     {
-        $event = new ApiCmsEvent(
-            $this->requestWrapper->getParam("navigationId"),
-            $this->apiCmsLoader->getSalesChannelContext()->getContext()
-        );
+        $salesChannel = $this->apiCmsLoader->getSalesChannelContext();
+        $categoryId = $this->requestWrapper->getParam("navigationId") ?? $salesChannel->getSalesChannel()->getNavigationCategoryId();
+
+        $event = new ApiCmsEvent($categoryId, $salesChannel->getContext());
 
         $this->dispatcher->dispatch($event);
     }

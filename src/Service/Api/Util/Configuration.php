@@ -51,6 +51,18 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function isApiEnabled() : bool
+    {
+        try{
+            return (bool)$this->config[$this->channelId]['status'];
+        } catch (\Exception $exception)
+        {
+            return false;
+        }
+    }
 
     /**
      * The API endpoint depends on the testing conditionals and on the data index
