@@ -33,6 +33,8 @@
         {% set narrativeContent = {'block' : bxblock, 'groupBy' : groupBy, 'variantUuid': variantUuid,
             'totalHitCount': totalHitCount, 'navigationId': navigationId, 'category': category, 'currencySymbol':currencySymbol
         } %}
-        {% sw_include bxblock.template with narrativeContent %}
+        {% if bxblock.get("template") is not empty %}
+            {% sw_include bxblock.template with narrativeContent %}
+        {% endif %}
     {% endfor %}
 {% endblock %}

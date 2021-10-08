@@ -1,6 +1,7 @@
 <?php
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Subscriber;
 
+use Boxalino\RealTimeUserExperience\Core\Content\Cms\Event\ApiCmsEvent;
 use Boxalino\RealTimeUserExperience\Framework\Content\CreateFromTrait;
 use Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCmsLoader;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
@@ -12,8 +13,14 @@ use Shopware\Core\Content\Cms\Aggregate\CmsSlot\CmsSlotCollection;
 use Shopware\Core\Content\Cms\Aggregate\CmsSlot\CmsSlotEntity;
 use Shopware\Core\Content\Cms\CmsPageEntity;
 use Shopware\Core\Content\Cms\Events\CmsPageLoadedEvent;
+use Shopware\Core\Framework\Routing\KernelListenerPriorities;
 use Shopware\Core\Framework\Struct\Struct;
+use Shopware\Core\PlatformRequest;
+use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class ApiCmsLoaderSubscriber
@@ -47,15 +54,22 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
      */
     private $requestWrapper;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
 
     public function __construct(
         ApiCmsLoader $apiCmsLoader,
         RequestInterface $requestWrapper,
+        EventDispatcherInterface $dispatcher,
         LoggerInterface $logger
     ) {
         $this->logger = $logger;
         $this->apiCmsLoader = $apiCmsLoader;
         $this->requestWrapper = $requestWrapper;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -67,6 +81,7 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
             CmsPageLoadedEvent::class => 'addApiCmsContent'
         ];
     }
+
 
     /**
      * Adds API CMS content as configured
@@ -102,6 +117,8 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                                 $apiCmsLoader->load();
                                 $this->addApiResponseToSections($apiCmsLoader, $element, $section, $block, $configurations);
                                 $block->getSlots()->first()->setData($apiCmsLoader->getApiResponsePage());
+
+                                $this->dispatchEvent();
                             }
                         }
                     } catch (\Throwable $exception) {
@@ -113,6 +130,19 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
                 }
             }
         }
+    }
+
+    /**
+     * Dispatches an event in order to trigger the CMS cache invalidation for the API content
+     */
+    protected function dispatchEvent() : void
+    {
+        $event = new ApiCmsEvent(
+            $this->requestWrapper->getParam("navigationId"),
+            $this->apiCmsLoader->getSalesChannelContext()->getContext()
+        );
+
+        $this->dispatcher->dispatch($event);
     }
 
     /**
@@ -198,6 +228,8 @@ class ApiCmsLoaderSubscriber implements EventSubscriberInterface
         $newBlock = $this->createCmsBlockEntity($narrativeBlock, $slots, $sectionPosition, count($section->getBlocks()));
 
         $section->getBlocks()->add($newBlock);
+
+        return;
     }
 
     /**
