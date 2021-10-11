@@ -9,8 +9,9 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 
-class NavigationCacheStateSubscriber implements EventSubscriberInterface
+abstract class NavigationCacheStateSubscriber implements EventSubscriberInterface
 {
+
     public const STATE_BOXALINO_API = 'cms-block-navigation-boxalino-api';
 
     /**
@@ -43,20 +44,30 @@ class NavigationCacheStateSubscriber implements EventSubscriberInterface
      */
     public function addApiStateOnNavigation(ControllerEvent $event): void
     {
-        $request = $event->getRequest();
-
-        if ($request->attributes->has(PlatformRequest::ATTRIBUTE_SALES_CHANNEL_CONTEXT_OBJECT)
-            && $request->attributes->has("navigationId"))
+        if ($this->checkIfAddState($event))
         {
+            $request = $event->getRequest();
 
             /** @var SalesChannelContext $context */
             $context = $request->attributes->get(PlatformRequest::ATTRIBUTE_SALES_CHANNEL_CONTEXT_OBJECT);
             if( $this->apiConfiguration->setContextId($context->getSalesChannelId())->isApiEnabled())
             {
-                $context->addState(self::STATE_BOXALINO_API);
+                $context->addState($this->getCacheState());
             }
         }
     }
+
+
+    /**
+     * @param ControllerEvent $event
+     * @return bool
+     */
+    abstract function checkIfAddState(ControllerEvent $event) : bool;
+
+    /**
+     * @return string
+     */
+    abstract function getCacheState() : string;
 
 
 }
