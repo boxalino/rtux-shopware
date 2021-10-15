@@ -21,8 +21,7 @@
         <!-- Shopware6 cross-selling loader extension with API call -->
         <service id="boxalino.shopware.content.page.crossselling"
                  class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCrossSellingLoader"
-                 parent="boxalino.api.content.loader" shared="false">
-            <argument type="service" id="sales_channel.product.repository"/>
+                 parent="boxalino.shopware.content.page.crossselling.generic" shared="false">
         </service>
 
         <!-- Shopware6 collection EntitySearchResult service (used in layout block definition) -->
@@ -40,6 +39,20 @@
             <call method="setFacetPrefix">
                 <argument type="constant">Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface::BOXALINO_STORE_FACET_PREFIX</argument>
             </call>
+        </service>
+
+        <!-- Shopware6 cross-selling AJAX loader extension with API call -->
+        <service id="boxalino.shopware.content.page.crossselling.generic"
+                 class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiGenericCrossSellingLoader"
+                 parent="boxalino.api.content.loader" shared="false" abstract="false">
+            <argument type="service" id="sales_channel.product.repository"/>
+        </service>
+
+        <!-- Shopware6 cross-selling AJAX loader extension with API call -->
+        <service id="boxalino.shopware.content.page.crossselling.ajax"
+                 class="Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCrossSellingLoaderAjax"
+                 parent="boxalino.shopware.content.page.crossselling.generic" shared="false">
+            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\CrossSelling\ProductCrossSellingRoute"/>
         </service>
 
     </services>

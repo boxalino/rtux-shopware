@@ -2,7 +2,6 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ItemContextInterface;
-use PhpParser\Error;
 
 /**
  * Item context request
@@ -19,5 +18,29 @@ abstract class ItemContextAbstract
     implements ItemContextInterface, ShopwareApiContextInterface
 {
     use ContextTrait;
+
+    /**
+     * @var bool
+     */
+    protected $isAjax = false;
+
+    /**
+     * @return bool
+     */
+    public function isAjax(): bool
+    {
+        return $this->isAjax;
+    }
+
+    /**
+     * @param bool $isAjax
+     * @return ItemContextInterface
+     */
+    public function setIsAjax(bool $isAjax): ItemContextInterface
+    {
+        $this->isAjax = $isAjax;
+        return $this;
+    }
+
 
 }

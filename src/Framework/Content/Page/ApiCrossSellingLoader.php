@@ -3,22 +3,16 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Page;
 
 use Boxalino\RealTimeUserExperience\Framework\Content\BxAttributeElement;
 use Boxalino\RealTimeUserExperience\Framework\Content\Listing\ApiEntityCollectionModel;
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderAbstract;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Page\ApiLoaderInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCallServiceInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Product\Aggregate\ProductCrossSelling\ProductCrossSellingEntity;
 use Shopware\Core\Content\Product\ProductCollection;
-use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
-use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
 use Shopware\Core\Content\Product\SalesChannel\CrossSelling\CrossSellingElementCollection;
 use Shopware\Core\Content\Product\SalesChannel\CrossSelling\CrossSellingElement;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ApiCrossSellingLoader
@@ -28,112 +22,110 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
-class ApiCrossSellingLoader extends ApiLoaderAbstract
+class ApiCrossSellingLoader extends ApiGenericCrossSellingLoader
     implements ApiLoaderInterface
 {
 
-    use ApiLoaderTrait;
-
     /**
-     * @var SalesChannelRepositoryInterface
+     * @var null | CrossSellingElementCollection
      */
-    protected $productRepository;
+    protected $crossellingResultCollection = null;
 
     /**
-     * Product ids grouped by the widget response they belong to
+     * Used for the non-ajax PDP content load
      *
-     * @var \ArrayIterator
-     */
-    protected $productIdsByType;
-
-    /**
-     * @var null | EntitySearchResult
-     */
-    protected $crossSellingResponseCollection = null;
-
-
-    public function __construct(
-        ApiCallServiceInterface $apiCallService,
-        ConfigurationInterface $configuration,
-        SalesChannelRepositoryInterface $productRepository
-    ){
-        parent::__construct($apiCallService, $configuration);
-        $this->productRepository = $productRepository;
-        $this->productIdsByType = new \ArrayIterator();
-    }
-
-    public function load() : ApiLoaderInterface
-    {
-        return $this;
-    }
-
-    public function getApiResponsePage(): ?ApiResponseViewInterface
-    {
-        return null;
-    }
-
-    /**
      * @return CrossSellingElementCollection
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getResult(CrossSellingElementCollection $crossSellingLoaderResult) : CrossSellingElementCollection
+    public function getResult(CrossSellingElementCollection $crossSellingLoaderResult): CrossSellingElementCollection
     {
-        $this->setRequestInterfaceContext($crossSellingLoaderResult);
-        try{
-            $this->call();
-        } catch (\Throwable $exception)
+        /** if the PDP recommendations are to be loaded via AJAX - empty the product crossellings collection */
+        if ($this->getApiContext()->isAjax())
         {
+            return new CrossSellingElementCollection();
+        }
+
+        $this->addItemContextOnApiContext();
+        $this->updateApiContextByCrosssellingCollection($crossSellingLoaderResult);
+        try {
+            $this->call();
+        } catch (\Throwable $exception) {
             return $crossSellingLoaderResult;
         }
 
-        $this->setCrossSellingResponseCollection();
-        $result = new CrossSellingElementCollection(); $index = 0;
-        foreach ($this->apiCallService->getApiResponse()->getBlocks() as $block)
+        $this->prepareCrossSellingResponseCollection();
+        $result = $this->getCrossellingResultByApiResponse();
+        if ($result->count() > 0) {
+            return $result;
+        }
+
+        return $crossSellingLoaderResult;
+    }
+
+    /**
+     * Create the SW6.* Crossselling collections (version-dependent)
+     * (The products have all been priorly loaded in a generic collection to optimize the process)
+     *
+     * @return CrossSellingElementCollection
+     */
+    protected function getCrossellingResultByApiResponse(): CrossSellingElementCollection
+    {
+        if(is_null($this->crossellingResultCollection))
         {
+            $this->prepareCrossellingResultByApiResponse();
+        }
+
+        return $this->crossellingResultCollection;
+    }
+
+    /**
+     * Initializing the crosselling result collection
+     */
+    protected function prepareCrossellingResultByApiResponse(): void
+    {
+        $this->crossellingResultCollection = new CrossSellingElementCollection();
+        $index = 0;
+        foreach ($this->apiCallService->getApiResponse()->getBlocks() as $block) {
             /**
              * the logic on validating the child block
              * if the cross-selling narrative is properly structured - the ProductsCollection and Model with Entities
              * will be valid content
              */
             /** @var Block $block */
-            if(property_exists($block, "model")
+            if (property_exists($block, "model")
                 && $block->getModel() instanceof ApiEntityCollectionModel
                 && property_exists($block, "bxHits")
-            ){
+            ) {
                 $index++;
-                $name = $block->getName(); if(is_array($name)) { $name = $name[0];}
-                $type = $block->getType(); if(is_array($type)) { $type = $type[0];}
+                $name = $block->getName();
+                if (is_array($name)) {
+                    $name = $name[0];
+                }
+                $type = $block->getType();
+                if (is_array($type)) {
+                    $type = $type[0];
+                }
                 $crossSelling = $this->createCrossSellingEntity(
-                    $index, $name, $type, (bool) $index==1
+                    $index, $name, $type, (bool)$index == 1
                 );
                 $productCollection = $this->getCrossSellCollectionByType($type);
-                if(is_null($productCollection))
-                {
+                if (is_null($productCollection)) {
                     continue;
                 }
 
-                if($productCollection->count() > 0)
-                {
+                if ($productCollection->count() > 0) {
                     /** @var CrossSellingElement $element */
                     $element = $this->loadCrossSellingElement($crossSelling, $productCollection);
-                    try{
+                    try {
                         $element->addExtension("bxAttributes", new BxAttributeElement($block->getBxAttributes()));
-                    } catch (\Throwable $exception)
-                    {
+                    } catch (\Throwable $exception) {
                         $element->addExtension("bxAttributes", new BxAttributeElement());
                     }
 
-                    $result->add($element);
+                    $this->crossellingResultCollection->add($element);
                 }
             }
         }
-
-        if($result->count() > 0)
-        {
-            return $result;
-        }
-
-        return $crossSellingLoaderResult;
     }
 
     /**
@@ -176,95 +168,21 @@ class ApiCrossSellingLoader extends ApiLoaderAbstract
     }
 
     /**
-     * Creates a single product collection with all product IDs which are part of the response
-     *
-     * the reason is because using productRepository to create new collections for each  response cross-selling type
-     * was triggering the sales_channel.product.loaded event which was very time-consuming (Shopware)
-     *
-     * $crossSellingResponseCollection is later filter to create individual widget cross-selling response elements
-     *
-     * @return EntitySearchResult|null
-     * @throws \Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException
+     * @return ApiLoaderInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function setCrossSellingResponseCollection()
+    public function load(): ApiLoaderInterface
     {
-        if(is_null($this->crossSellingResponseCollection))
-        {
-            $blocks = $this->apiCallService->getApiResponse()->getBlocks();
-            $productIds = [];
-            foreach($blocks as $block)
-            {
-                $hitIds = $block->getModel()->getHitIds();
-                $productIds = array_merge($productIds, $hitIds);
-                $type = $block->getType(); if(is_array($type)) { $type = $type[0];}
-                $this->productIdsByType->offsetSet($type, $hitIds);
-            }
-            if(count($productIds))
-            {
-                $this->crossSellingResponseCollection = $this->productRepository->search(
-                    new Criteria($productIds),
-                    $this->getSalesChannelContext()
-                );
-            }
-        }
-
-        return $this->crossSellingResponseCollection;
-    }
-
-    /**
-     * Filters the main $crossSellingResponseCollection by the product IDs segments of the widget
-     *
-     * @param string $type
-     * @return EntityCollection | null
-     */
-    protected function getCrossSellCollectionByType(string $type) : ?ProductCollection
-    {
-        $ids = $this->productIdsByType->offsetGet($type);
-        if(empty($ids))
-        {
-            return null;
-        }
-
-        return $this->crossSellingResponseCollection->filter(
-            function(ProductEntity $element) use ($ids)
-            {
-                if(in_array($element->getId(), $ids))
-                {
-                    return $element;
-                }
-            }
-        )->getEntities();
-    }
-
-    /**
-     * Set required request elements on the $apiContextInterface (instanceof ItemContextAbstract)
-     *
-     * @param CrossSellingElementCollection $crossSellingLoaderResult
-     * @return self
-     */
-    public function setRequestInterfaceContext(CrossSellingElementCollection $crossSellingLoaderResult) : self
-    {
-        /** @var Request $request */
-        $request = $this->getRequest();
-        $mainProductId = 0;
-        if($request->getRequest()->attributes->has("mainProductId"))
-        {
-            $mainProductId = $request->getRequest()->attributes->get("mainProductId");
-            $this->getApiContext()->setProductId($mainProductId);
-        }
-        if($this->getApiContext()->useConfiguredProductsAsContextParameters())
-        {
-            /** @var  CrossSellingElement $item */
-            foreach($crossSellingLoaderResult as $item)
-            {
-                $name = $item->getCrossSelling()->getTranslated()['name'];
-                $type = preg_replace('/[^a-z0-9]+/', '_', strtolower($name)) . "_" . $mainProductId;
-                $ids = $item->getProducts()->getIds();
-                $this->getApiContext()->addContextParametersByType($type, array_values($ids));
-            }
-        }
-
         return $this;
     }
 
+    /**
+     * @return ApiResponseViewInterface|null
+     */
+    public function getApiResponsePage(): ?ApiResponseViewInterface
+    {
+        return null;
+    }
+    
+    
 }
