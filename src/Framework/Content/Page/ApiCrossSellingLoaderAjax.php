@@ -105,7 +105,7 @@ class ApiCrossSellingLoaderAjax extends ApiGenericCrossSellingLoader
                 }
                 $productCollection = $this->getCrossSellCollectionByType($type);
                 if (is_null($productCollection)) {
-                    $blocks->offsetUnset($order);
+                    $this->getApiResponse()->getBlocks()->offsetUnset($order);
                     continue;
                 }
 
