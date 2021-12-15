@@ -95,10 +95,6 @@ class ApiCrossSellingLoaderAjax extends ApiGenericCrossSellingLoader
                 && $block->getModel() instanceof ApiEntityCollectionModel
                 && property_exists($block, "bxHits")
             ) {
-                $name = $block->getName();
-                if (is_array($name)) {
-                    $name = $name[0];
-                }
                 $type = $block->getType();
                 if (is_array($type)) {
                     $type = $type[0];

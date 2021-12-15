@@ -13,6 +13,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaI
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Storefront\Page\GenericPageLoader;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 /**
  * Class AutocompletePageLoader
@@ -35,15 +36,22 @@ class ApiPageLoader extends ApiPageLoaderAbstract
      */
     protected $eventDispatcher;
 
+    /**
+     * @var SystemConfigService
+     */
+    protected $systemConfigService;
+
     public function __construct(
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
         EventDispatcherInterface $eventDispatcher,
-        GenericPageLoader $genericLoader
+        GenericPageLoader $genericLoader,
+        SystemConfigService $systemConfigService
     ) {
         parent::__construct($apiCallService, $configuration);
         $this->eventDispatcher = $eventDispatcher;
         $this->genericLoader = $genericLoader;
+        $this->systemConfigService = $systemConfigService;
     }
 
     /**
@@ -74,5 +82,6 @@ class ApiPageLoader extends ApiPageLoaderAbstract
             new ApiPageLoadedEvent($page, $this->getSalesChannelContext(), $request->getRequest())
         );
     }
+
 
 }

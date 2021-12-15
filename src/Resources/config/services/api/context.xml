@@ -9,6 +9,7 @@
         <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface"
                  class="Boxalino\RealTimeUserExperience\Framework\Request\RequestTransformer"
                  parent="boxalino.api.request.transformer">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
         <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ItemContextInterface"
                  class="Boxalino\RealTimeUserExperience\Framework\Request\ItemContextAbstract"

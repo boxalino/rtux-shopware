@@ -2,6 +2,7 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiSortingModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCookieSubscriber;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
@@ -15,6 +16,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\SalesChannelRequest;
 use Boxalino\RealTimeUserExperienceApi\Framework\Request\RequestTransformerAbstract as ApiRequestTransformer;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 /**
  * Class RequestTransformer
@@ -35,6 +37,22 @@ class RequestTransformer extends ApiRequestTransformer
      * @var array
      */
     protected $requestParameters = [];
+
+    /**
+     * @var SystemConfigService
+     */
+    protected $systemConfigService;
+
+    public function __construct(
+        ParameterFactoryInterface $parameterFactory,
+        ConfigurationInterface $configuration,
+        ApiSortingModelInterface $sortingModel,
+        LoggerInterface $logger,
+        SystemConfigService $systemConfigService
+    ){
+        parent::__construct($parameterFactory, $configuration, $sortingModel, $logger);
+        $this->systemConfigService = $systemConfigService;
+    }
 
     /**
      * Sets context parameters (credentials, server, etc)

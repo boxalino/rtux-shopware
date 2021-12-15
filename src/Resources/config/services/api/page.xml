@@ -9,6 +9,7 @@
                  parent="boxalino.api.content.loader.page" shared="false">
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
 
         <!-- Generic CMS loader extension with API call -->

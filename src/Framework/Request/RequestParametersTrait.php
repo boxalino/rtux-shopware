@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
+use Shopware\Core\System\SystemConfig\SystemConfigService;
+
 /**
  * Trait RequestParametersTrait
  *
@@ -54,7 +56,20 @@ trait RequestParametersTrait
      */
     public function getDefaultLimitValue() : int
     {
-        return 24;
+        try{
+            $limit = 24;
+            $context = $this->getSalesChannelContext();
+            if($this->systemConfigService instanceof SystemConfigService)
+            {
+                $limit = $this->systemConfigService->getInt('core.listing.productsPerPage', $context->getSalesChannelId());
+            }
+
+            return $limit <= 0 ? 24 : $limit;
+        } catch (\Throwable $exception)
+        {
+            return 24;
+        }
     }
+
 
 }
