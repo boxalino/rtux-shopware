@@ -3,6 +3,7 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Subscriber;
 
 use Boxalino\RealTimeUserExperience\Framework\Content\Page\ApiCrossSellingLoader;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
+use Shopware\Core\Content\Product\SalesChannel\CrossSelling\CrossSellingElementCollection;
 use Shopware\Storefront\Page\Product\ProductPageLoadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -62,12 +63,22 @@ class ApiCrossSellingLoaderSubscriber implements EventSubscriberInterface
         $request->attributes->set("mainProductId", $page->getProduct()->getId());
         $this->requestWrapper->setRequest($request);
 
-        $this->apiCrossSellingLoader->setRequest($this->requestWrapper)
-            ->setSalesChannelContext($event->getSalesChannelContext())
-            ->load();
+        try{
+            $this->apiCrossSellingLoader->setRequest($this->requestWrapper)
+                ->setSalesChannelContext($event->getSalesChannelContext())
+                ->load();
 
-        $result = $this->apiCrossSellingLoader->getResult($page->getCrossSellings());
-        $page->setCrossSellings($result);
+            $result = $this->apiCrossSellingLoader->getResult($page->getCrossSellings());
+            $page->setCrossSellings($result);
+        } catch (\Throwable $exception)
+        {
+            //if there is an exception due to $page->getCrossSellings() and PDP content is loaded via AJAX
+            if($this->apiCrossSellingLoader->getApiContext()->isAjax())
+            {
+                $page->setCrossSellings(new CrossSellingElementCollection());
+            }
+        }
+
     }
 
 }
