@@ -44,6 +44,14 @@ trait FilterablePropertyTrait
     }
 
     /**
+     * @return array
+     */
+    public function getFilterablePropertyNames() : array
+    {
+        return $this->getFilterablePropertyGroupNames();
+    }
+
+    /**
      * Query to access all filterable properties from the setup
      * And the name (as exported to Boxalino)
      *

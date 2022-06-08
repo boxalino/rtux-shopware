@@ -50,7 +50,7 @@ abstract class NavigationCacheStateSubscriber implements EventSubscriberInterfac
 
             /** @var SalesChannelContext $context */
             $context = $request->attributes->get(PlatformRequest::ATTRIBUTE_SALES_CHANNEL_CONTEXT_OBJECT);
-            if( $this->apiConfiguration->setContextId($context->getSalesChannelId())->isApiEnabled())
+            if($this->apiConfiguration->setContextId($context->getSalesChannelId())->isApiEnabled())
             {
                 $context->addState($this->getCacheState());
             }

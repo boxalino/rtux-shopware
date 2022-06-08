@@ -74,7 +74,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
             $endpoint = $this->config[$this->channelId]['apiUrl'];
             if(empty($endpoint))
             {
-                if($this->getIsDev())
+                if($this->getIsDev() || $this->getIsTest())
                 {
                     return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
                 }
@@ -85,7 +85,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
             return $endpoint;
         } catch (\Exception $exception)
         {
-            return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_PRODUCTION);
+            return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
         }
     }
 

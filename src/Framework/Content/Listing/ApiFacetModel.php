@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
+use Boxalino\RealTimeUserExperience\Framework\FilterablePropertyTrait;
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
 use Boxalino\RealTimeUserExperienceApi\Framework\ApiPropertyTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface;
@@ -27,12 +28,18 @@ class ApiFacetModel extends ApiFacetModelAbstract
     implements AccessorFacetModelInterface
 {
     use SalesChannelContextTrait;
-    use ApiPropertyTrait;
+    use FilterablePropertyTrait;
 
     /**
      * @var Connection
      */
     protected $connection;
+
+    /**
+     * @var array
+     */
+    protected $filterableProperties = [];
+
 
     public function __construct(Connection $connection)
     {
@@ -49,9 +56,28 @@ class ApiFacetModel extends ApiFacetModelAbstract
         $this->loadPropertiesToObject(
             $this,
             ["salesChannelContext", "contextId", "defaultSalesChannelLanguageId"],
-            ["getLabel", "addSelectedFacet", "getByPosition", "_loadAccessors", "getFacetsPrefix"],
+            ["getLabel", "addSelectedFacet", "getByPosition", "_loadAccessors", "getFacetsPrefix", "getValue", "facetRequiresPrefix"],
             true
         );
+    }
+
+    /**
+     * @param $facet
+     * @return bool
+     */
+    protected function facetRequiresPrefix($facet) : bool
+    {
+        if(empty($this->filterableProperties))
+        {
+            $this->filterableProperties = $this->getFilterablePropertyNames();
+        }
+
+        if(in_array($facet->getField(), $this->filterableProperties))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     /**
