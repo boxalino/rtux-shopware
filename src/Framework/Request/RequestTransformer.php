@@ -2,6 +2,7 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
+use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiSortingModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCookieSubscriber;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
@@ -15,6 +16,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\PlatformRequest;
 use Shopware\Core\SalesChannelRequest;
 use Boxalino\RealTimeUserExperienceApi\Framework\Request\RequestTransformerAbstract as ApiRequestTransformer;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 /**
  * Class RequestTransformer
@@ -52,7 +54,10 @@ class RequestTransformer extends ApiRequestTransformer
             );
         }
 
-        return parent::transform($request);
+        parent::transform($request);
+        $this->requestDefinition->setLanguage($this->getLanguage());
+
+        return $this->requestDefinition;
     }
 
     /**
@@ -112,6 +117,16 @@ class RequestTransformer extends ApiRequestTransformer
         }
 
         return $this->getSalesChannelContext()->getCustomer()->getId();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage() : string
+    {
+        return $this->configuration->getLanguageCode(
+            $this->getSalesChannelContext()->getContext()->getLanguageId()
+        );
     }
 
 }
