@@ -38,7 +38,7 @@
                  public="true">
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <call method="setFacetPrefix">
-                <argument type="constant">Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface::BOXALINO_SYSTEM_FACET_PREFIX</argument>
+                <argument type="constant">Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface::BOXALINO_STORE_FACET_PREFIX</argument>
             </call>
         </service>
 
