@@ -232,10 +232,15 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
      */
     public function isStoreApiRequest() : bool
     {
-        $userUrl = $this->getRequest()->getUserUrl();
-        if(strpos($userUrl, $this->getStoreApiEndpoint()) > -1)
+        try{
+            $userUrl = $this->getRequest()->getUserUrl();
+            if(strpos($userUrl, $this->getStoreApiEndpoint()) > -1)
+            {
+                return true;
+            }
+        } catch (\Throwable $exception)
         {
-            return true;
+            return false;
         }
 
         return false;

@@ -81,33 +81,33 @@ class Request implements RequestInterface
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getClientIp(): string
+    public function getClientIp(): ?string
     {
         return $this->request->getClientIp();
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getUserAgent(): string
+    public function getUserAgent(): ?string
     {
         return $this->request->headers->get('user-agent');
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getUserReferer(): string
+    public function getUserReferer(): ?string
     {
         return $this->request->headers->get('referer') ?? $this->getUserUrl();
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getUserUrl(): string
+    public function getUserUrl(): ?string
     {
         return $this->request->getUri();
     }
