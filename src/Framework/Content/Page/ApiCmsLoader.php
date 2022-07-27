@@ -26,6 +26,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
 {
     use CreateFromTrait;
     use ApiLoaderTrait;
+    use StoreApiTrait;
 
     /**
      * @var array
@@ -41,11 +42,6 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
      * @var \ArrayIterator
      */
     protected $apiResponsePageList = null;
-
-    /**
-     * @var string
-     */
-    protected $storeApiEndpoint = "store-api";
 
     public function __construct(
         ApiCallServiceInterface $apiCallService,
@@ -64,7 +60,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     {
         $this->addProperties();
         parent::load();
-        
+
         $this->getApiResponsePage()->setNavigationId($this->getNavigationId($this->getRequest()));
         $this->getApiResponsePage()->setCategory($this->loadCategory());
         $this->getApiResponsePage()->setCurrency($this->getSalesChannelContext()->getSalesChannel()->getCurrency()->getIsoCode());
@@ -224,43 +220,6 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     public function setCategoryRepository(SalesChannelRepositoryInterface $categoryRepository): ApiCmsLoader
     {
         $this->categoryRepository = $categoryRepository;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isStoreApiRequest() : bool
-    {
-        try{
-            $userUrl = $this->getRequest()->getUserUrl();
-            if(strpos($userUrl, $this->getStoreApiEndpoint()) > -1)
-            {
-                return true;
-            }
-        } catch (\Throwable $exception)
-        {
-            return false;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStoreApiEndpoint(): string
-    {
-        return $this->storeApiEndpoint;
-    }
-
-    /**
-     * @param string $storeApiEndpoint
-     * @return ApiCmsLoader
-     */
-    public function setStoreApiEndpoint(string $storeApiEndpoint): ApiCmsLoader
-    {
-        $this->storeApiEndpoint = $storeApiEndpoint;
         return $this;
     }
 

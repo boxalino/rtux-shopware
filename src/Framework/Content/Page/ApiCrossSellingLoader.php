@@ -26,6 +26,8 @@ class ApiCrossSellingLoader extends ApiGenericCrossSellingLoader
     implements ApiLoaderInterface
 {
 
+    use StoreApiTrait;
+
     /**
      * @var null | CrossSellingElementCollection
      */
@@ -42,7 +44,10 @@ class ApiCrossSellingLoader extends ApiGenericCrossSellingLoader
         /** if the PDP recommendations are to be loaded via AJAX - empty the product crossellings collection */
         if ($this->getApiContext()->isAjax())
         {
-            return new CrossSellingElementCollection();
+            if(!$this->isStoreApiRequest())
+            {
+                return new CrossSellingElementCollection();
+            }
         }
 
         $this->addItemContextOnApiContext();
