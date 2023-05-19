@@ -226,14 +226,24 @@ class RtuxApi extends Struct
     {
         if(is_null($this->serverUrl))
         {
-            $this->serverUrl = str_replace("%%account%%", $this->getAccount(), ConfigurationInterface::RTUX_API_ENDPOINT_PRODUCTION);
-            if($this->isDev())
-            {
-                $this->serverUrl = str_replace("%%account%%", $this->getAccount(), ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
-            }
+            $this->serverUrl = str_replace("%%account%%", $this->getAccount(), $this->_getEndpoint());
         }
 
         return $this->serverUrl;
+    }
+
+    /**
+     * On FE requests, only the alternative domain is used
+     * @return string
+     */
+    protected function _getEndpoint() : string
+    {
+        if($this->isDev() || $this->isTest())
+        {
+            return str_replace("%%domain%%", ConfigurationInterface::RTUX_API_DOMAIN_ALTERNATIVE, ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
+        }
+
+        return str_replace("%%domain%%", ConfigurationInterface::RTUX_API_DOMAIN_ALTERNATIVE, ConfigurationInterface::RTUX_API_ENDPOINT_PRODUCTION);
     }
 
     /**

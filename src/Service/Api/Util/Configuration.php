@@ -74,18 +74,13 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
             $endpoint = $this->config[$this->channelId]['apiUrl'];
             if(empty($endpoint))
             {
-                if($this->getIsDev() || $this->getIsTest())
-                {
-                    return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
-                }
-
-                return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_PRODUCTION);
+                return str_replace("%%account%%", $this->getUsername(), $this->getEndpointByDomain());
             }
             
             return $endpoint;
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
-            return str_replace("%%account%%", $this->getUsername(), ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
+            return str_replace("%%account%%", $this->getUsername(), $this->getEndpointByDomain());
         }
     }
 
@@ -96,7 +91,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     {
         try{
             return $this->config[$this->channelId]['account'];
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             return "";
         }
@@ -109,7 +104,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     {
         try{
             return $this->config[$this->channelId]['apiKey'];
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             return "";
         }
@@ -122,7 +117,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     {
         try{
             return $this->config[$this->channelId]['apiSecret'];
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             return "";
         }
@@ -135,7 +130,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     {
         try{
             return (bool)$this->config[$this->channelId]['devIndex'];
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             return false;
         }
@@ -148,10 +143,27 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
     {
         try{
             return (bool)$this->config[$this->channelId]['test'];
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             return false;
         }
     }
+
+    /**
+     * On server-side requests, only the bx-cloud is used
+     * On frontend-side requests, only the alternative domain is used
+     * @param string|null $domain
+     * @return string
+     */
+    public function getEndpointByDomain(?string $domain = ConfigurationInterface::RTUX_API_DOMAIN_MAIN) : string
+    {
+        if($this->getIsDev() || $this->getIsTest())
+        {
+            return str_replace("%%domain%%", $domain,ConfigurationInterface::RTUX_API_ENDPOINT_STAGE);
+        }
+
+        return str_replace("%%domain%%", $domain, ConfigurationInterface::RTUX_API_ENDPOINT_PRODUCTION);
+    }
+
 
 }
