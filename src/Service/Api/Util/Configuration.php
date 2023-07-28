@@ -76,7 +76,7 @@ class Configuration extends \Boxalino\RealTimeUserExperience\Service\Util\Config
             {
                 return str_replace("%%account%%", $this->getUsername(), $this->getEndpointByDomain());
             }
-            
+
             return $endpoint;
         } catch (\Throwable $exception)
         {

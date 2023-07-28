@@ -23,6 +23,7 @@ abstract class CmsContextAbstract
 {
     use ContextTrait;
     use FilterablePropertyTrait;
+    use RequestParametersTrait;
 
     /**
      * CmsContextAbstract constructor.
@@ -164,5 +165,5 @@ abstract class CmsContextAbstract
         return [];
     }
 
-    
+
 }

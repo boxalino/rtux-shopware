@@ -27,4 +27,5 @@ export default class RtuxApiTrackerEvent
     setFinalPriceSelector(selector) {
         this.finalPriceSelector = selector;
     }
+
 }

@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Framework\Request;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 /**
@@ -69,6 +70,31 @@ trait RequestParametersTrait
         {
             return 24;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlockViewModeParameter() : string
+    {
+        return "style";
+    }
+
+    /**
+     * @return array
+     */
+    public function getSystemParameters() : array
+    {
+        return [
+            $this->getPageLimitParameter(),
+            $this->getPageNumberParameter(),
+            $this->getBlockViewModeParameter(),
+            $this->getSearchParameter(),
+            $this->getSortParameter(),
+            $this->getSystemContextParameter(),
+            RequestDefinitionInterface::BOXALINO_API_REQUEST_INSPECT_FLAG,
+            RequestDefinitionInterface::BOXALINO_API_WIDGET_INSPECT_FLAG
+        ];
     }
 
 

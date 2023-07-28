@@ -62,7 +62,8 @@ class RtuxApiHandler
     {
         $trackerConfiguration = $this->getConfigurationFromCache($salesChannelContext);
         $tracker = new RtuxApi($trackerConfiguration);
-        $tracker->setTrackerUrl($this->getTrackerUrl($tracker->isDev()))
+        $tracker->setTrackerUrl($this->getTrackerUrl($tracker->isDev(), $tracker->isTest()))
+            ->setRtiUrl($this->getRtiUrl($tracker->isDev(), $tracker->isTest()))
             ->setCustomerContext($this->getEncodedCustomer($salesChannelContext));
 
         return $tracker;
@@ -128,7 +129,11 @@ class RtuxApiHandler
             "serverUrl" =>  $configurations['apiUrl'] ?? null,
             "apiServerKey" => $configurations['apiServerKey'] ?? null,
             "apiSecret" => $configurations['apiSecret'] ?? null,
+            "gdprCemv" => $configurations['gdprCemv'] ?? null,
+            "gdprCems" => $configurations['gdprCems'] ?? null,
             "isActive" => (bool) $configurations['trackerActive'] ?? false,
+            "isRti" => (bool) $configurations['rtiActive'] ?? false,
+            "isGdpr" => (bool) $configurations['gdprActive'] ?? false,
             "isTest" => (bool) $configurations['test'] ?? false,
             "isDev" => (bool)$configurations['devIndex'] ?? false
         ];
@@ -167,16 +172,32 @@ class RtuxApiHandler
 
     /**
      * @param bool $isDev
+     * @param bool $isTest
      * @return string
      */
-    public function getTrackerUrl(bool $isDev=false) : string
+    public function getTrackerUrl(bool $isDev=false, bool $isTest=false) : string
     {
-        if($isDev)
+        if($isDev || $isTest)
         {
             return ConfigurationInterface::BOXALINO_API_TRACKING_STAGE;
         }
 
         return ConfigurationInterface::BOXALINO_API_TRACKING_PRODUCTION;
+    }
+
+    /**
+     * @param bool $isDev
+     * @param bool $isTest
+     * @return string
+     */
+    public function getRtiUrl(bool $isDev=false, bool $isTest=false) : string
+    {
+        if($isDev || $isTest)
+        {
+            return ConfigurationInterface::BOXALINO_API_RTI_STAGE;
+        }
+
+        return ConfigurationInterface::BOXALINO_API_RTI_PRODUCTION;
     }
 
     /**

@@ -6,7 +6,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInter
 use Shopware\Storefront\Page\Page;
 
 /**
- * Class AutocompletePageLoader
+ * Class ApiResponsePage
  *
  * @package Boxalino\RealTimeUserExperience\Framework\Content\Page
  */
@@ -449,6 +449,6 @@ class ApiResponsePage extends Page
         $this->currency = $currency;
         return $this;
     }
-    
-    
+
+
 }

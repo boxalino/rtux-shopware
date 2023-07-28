@@ -38,6 +38,26 @@ class RtuxApi extends Struct
     /**
      * @var bool
      */
+    protected $isRti = false;
+
+    /**
+     * @var bool
+     */
+    protected $isGdpr = false;
+
+    /**
+     * @var string | null
+     */
+    protected $gdprCemv;
+
+    /**
+     * @var string | null
+     */
+    protected $gdprCems;
+
+    /**
+     * @var bool
+     */
     protected $isTest = false;
 
     /**
@@ -49,6 +69,11 @@ class RtuxApi extends Struct
      * @var string
      */
     protected $trackerUrl;
+
+    /**
+     * @var string
+     */
+    protected $rtiUrl;
 
     /**
      * @var string
@@ -168,6 +193,42 @@ class RtuxApi extends Struct
     /**
      * @return bool
      */
+    public function isRti(): bool
+    {
+        return $this->isRti;
+    }
+
+    /**
+     * @param bool $isRti
+     * @return self
+     */
+    public function setIsRti(bool $isRti): self
+    {
+        $this->isRti = $isRti;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGdpr(): bool
+    {
+        return $this->isGdpr;
+    }
+
+    /**
+     * @param bool $isGdpr
+     * @return self
+     */
+    public function setIsGdpr(bool $isGdpr): self
+    {
+        $this->isGdpr = $isGdpr;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
     public function isTest(): bool
     {
         return $this->isTest;
@@ -222,6 +283,24 @@ class RtuxApi extends Struct
     /**
      * @return string
      */
+    public function getRtiUrl(): string
+    {
+        return $this->rtiUrl;
+    }
+
+    /**
+     * @param string | null $url
+     * @return self
+     */
+    public function setRtiUrl(?string $url): self
+    {
+        $this->rtiUrl = $url;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getServerUrl(): string
     {
         if(is_null($this->serverUrl))
@@ -259,6 +338,38 @@ class RtuxApi extends Struct
     /**
      * @return string|null
      */
+    public function getGdprCemv(): ?string
+    {
+        return $this->gdprCemv;
+    }
+
+    /**
+     * @param string|null $gdprCemv
+     */
+    public function setGdprCemv(?string $gdprCemv): void
+    {
+        $this->gdprCemv = $gdprCemv;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGdprCems(): ?string
+    {
+        return $this->gdprCems;
+    }
+
+    /**
+     * @param string|null $gdprCems
+     */
+    public function setGdprCems(?string $gdprCems): void
+    {
+        $this->gdprCems = $gdprCems;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getCustomerContext(): ?string
     {
         return $this->customerContext;
@@ -289,5 +400,6 @@ class RtuxApi extends Struct
     {
         $this->masterNavigationId = $masterNavigationId;
     }
+
 
 }

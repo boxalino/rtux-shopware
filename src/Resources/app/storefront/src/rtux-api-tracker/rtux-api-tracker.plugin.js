@@ -8,17 +8,27 @@ import ViewItemEvent from './events/view-item.event';
 import ViewSearchEvent from './events/view-search.event';
 import ViewNavigationEvent from './events/view-navigation.event';
 
+/**
+ * RtuxApiTrackerPlugin
+ * Manages the Tracker API integration via trackable events, mapped to SW6 setup
+ */
 export default class RtuxApiTrackerPlugin extends Plugin
 {
     init() {
-        window.bxqCallback();
+        if(window.rtuxApiTrackerActive) {
+            bxq(['setAccount', window.rtuxAccount]);
+            bxq(['trackPageView']);
+            if(window.rtuxApiTrackerDebug) {
+                bxq(['debugCookie', true]);
+            }
 
-        this.controllerName = window.controllerName;
-        this.actionName = window.actionName;
-        this.events = [];
+            this.controllerName = window.controllerName;
+            this.actionName = window.actionName;
+            this.events = [];
 
-        this.registerDefaultEvents();
-        this.handleEvents();
+            this.registerDefaultEvents();
+            this.handleEvents();
+        }
     }
 
     handleEvents() {

@@ -45,12 +45,15 @@
             <name>test</name>
             <defaultValue>0</defaultValue>
             <label>Test mode</label>
-            <helpText>The request will use test=false by default; The test property refers to the Boxalino Optimization configurations used (narratives, scenario, facets, etc)</helpText>
+            <helpText>The request will use test=false by default;
+                The test property refers to the Boxalino Optimization configurations used (narratives, scenario, facets, etc).
+                When enabled, the API request is in mode test:true
+            </helpText>
         </input-field>
         <input-field type="text">
             <name>apiServerKey</name>
-            <label>JS API Server Key</label>
-            <helpText>The API server key which can be used for JS events (does not require a secret)</helpText>
+            <label>JS API Key</label>
+            <helpText>This API key does not require an API secret. It is used for JS / client-side API calls (ex: autocomplete)</helpText>
         </input-field>
     </card>
     <card>
@@ -60,7 +63,17 @@
             <name>trackerActive</name>
             <defaultValue>0</defaultValue>
             <label>Enable Tracker</label>
-            <helpText>Is the JavaScript tracker enabled?</helpText>
+            <helpText>Enabling the JS tracker is allowing Boxalino real-time access to customer actions (clicks, views, scrolling, etc)</helpText>
+        </input-field>
+    </card>
+    <card>
+        <title>RTI (Real Time Injections)</title>
+        <title lang="de-DE">Tracker</title>
+        <input-field type="bool">
+            <name>rtiActive</name>
+            <defaultValue>0</defaultValue>
+            <label>Enable RTI</label>
+            <helpText>Enabling the real-time injections will allow Boxalino to dynamically inject content on the web.</helpText>
         </input-field>
     </card>
 </config>

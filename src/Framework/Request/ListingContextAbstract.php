@@ -21,6 +21,8 @@ abstract class ListingContextAbstract
 {
     use ContextTrait;
     use ListingContextFilterablePropertiesTrait;
+    use RequestParametersTrait;
+
 
     public function __construct(
         RequestTransformerInterface $requestTransformer,
@@ -31,5 +33,5 @@ abstract class ListingContextAbstract
         $this->connection = $connection;
     }
 
-    
+
 }
