@@ -3,12 +3,9 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
 use Boxalino\RealTimeUserExperience\Framework\FilterablePropertyTrait;
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
-use Boxalino\RealTimeUserExperienceApi\Framework\ApiPropertyTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ResponseHydratorTrait;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandlerInterface;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiFacetModelAbstract;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
