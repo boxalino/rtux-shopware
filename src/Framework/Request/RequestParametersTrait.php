@@ -91,7 +91,6 @@ trait RequestParametersTrait
             $this->getBlockViewModeParameter(),
             $this->getSearchParameter(),
             $this->getSortParameter(),
-            $this->getSystemContextParameter(),
             RequestDefinitionInterface::BOXALINO_API_REQUEST_INSPECT_FLAG,
             RequestDefinitionInterface::BOXALINO_API_WIDGET_INSPECT_FLAG
         ];

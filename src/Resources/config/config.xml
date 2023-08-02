@@ -68,7 +68,7 @@
     </card>
     <card>
         <title>RTI (Real Time Injections)</title>
-        <title lang="de-DE">Tracker</title>
+        <title lang="de-DE">RTI</title>
         <input-field type="bool">
             <name>rtiActive</name>
             <defaultValue>0</defaultValue>

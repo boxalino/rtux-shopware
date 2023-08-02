@@ -4,7 +4,6 @@ namespace Boxalino\RealTimeUserExperience\Framework;
 use Boxalino\RealTimeUserExperienceApi\Framework\ApiPropertyTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Shopware\Core\Defaults;
@@ -40,7 +39,7 @@ trait FilterablePropertyTrait
      */
     public function getFilterablePropertyGroupNames() : array
     {
-        return $this->getFilterablePropertyGroupSQL()->execute()->fetchAll(FetchMode::COLUMN);
+        return $this->getFilterablePropertyGroupSQL()->executeQuery()->fetchFirstColumn();
     }
 
     /**

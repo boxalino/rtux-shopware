@@ -12,7 +12,7 @@ use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
-use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository;
 use Shopware\Core\Content\Product\SalesChannel\CrossSelling\CrossSellingElementCollection;
 use Shopware\Core\Content\Product\SalesChannel\CrossSelling\CrossSellingElement;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +32,7 @@ abstract class ApiGenericCrossSellingLoader extends ApiLoaderAbstract
     use ApiLoaderTrait;
 
     /**
-     * @var SalesChannelRepositoryInterface
+     * @var SalesChannelRepository
      */
     protected $productRepository;
 
@@ -51,7 +51,7 @@ abstract class ApiGenericCrossSellingLoader extends ApiLoaderAbstract
     public function __construct(
         ApiCallServiceInterface         $apiCallService,
         ConfigurationInterface          $configuration,
-        SalesChannelRepositoryInterface $productRepository
+        SalesChannelRepository $productRepository
     ){
         parent::__construct($apiCallService, $configuration);
         $this->productRepository = $productRepository;

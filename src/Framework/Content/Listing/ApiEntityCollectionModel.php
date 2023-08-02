@@ -10,7 +10,7 @@ use Shopware\Core\Content\Cms\DataResolver\CriteriaCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
-use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 /**
@@ -28,7 +28,7 @@ class ApiEntityCollectionModel extends RtuxApiEntityCollection
     use SalesChannelContextTrait;
 
     /**
-     * @var SalesChannelRepositoryInterface
+     * @var SalesChannelRepository
      */
     private $productRepository;
 
@@ -44,7 +44,7 @@ class ApiEntityCollectionModel extends RtuxApiEntityCollection
 
 
     public function __construct(
-        SalesChannelRepositoryInterface $productRepository
+        SalesChannelRepository $productRepository
     ){
         $this->apiCollection = new \ArrayIterator();
         $this->productRepository = $productRepository;

@@ -11,7 +11,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Category\Exception\CategoryNotFoundException;
 use Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
-use Shopware\Storefront\Page\GenericPageLoader;
+use Shopware\Storefront\Page\GenericPageLoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
@@ -27,7 +27,7 @@ class ApiPageLoader extends ApiPageLoaderAbstract
     use RequestParametersTrait;
 
     /**
-     * @var GenericPageLoader
+     * @var GenericPageLoaderInterface
      */
     protected $genericLoader;
 
@@ -45,7 +45,7 @@ class ApiPageLoader extends ApiPageLoaderAbstract
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
         EventDispatcherInterface $eventDispatcher,
-        GenericPageLoader $genericLoader,
+        GenericPageLoaderInterface $genericLoader,
         SystemConfigService $systemConfigService
     ) {
         parent::__construct($apiCallService, $configuration);

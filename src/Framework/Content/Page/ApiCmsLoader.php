@@ -13,7 +13,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use Shopware\Core\Content\Category\CategoryEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Struct\Struct;
-use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository;
 
 /**
  * Class ApiCmsLoader
@@ -34,7 +34,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     protected $cmsConfig = [];
 
     /**
-     * @var SalesChannelRepositoryInterface
+     * @var SalesChannelRepository
      */
     protected $categoryRepository;
 
@@ -46,7 +46,7 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     public function __construct(
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
-        SalesChannelRepositoryInterface $repository
+        SalesChannelRepository $repository
     ){
         parent::__construct($apiCallService, $configuration);
         $this->categoryRepository = $repository;
@@ -206,18 +206,18 @@ class ApiCmsLoader extends ApiBaseLoaderAbstract
     }
 
     /**
-     * @return SalesChannelRepositoryInterface
+     * @return SalesChannelRepository
      */
-    public function getCategoryRepository(): SalesChannelRepositoryInterface
+    public function getCategoryRepository(): SalesChannelRepository
     {
         return $this->categoryRepository;
     }
 
     /**
-     * @param SalesChannelRepositoryInterface $categoryRepository
+     * @param SalesChannelRepository $categoryRepository
      * @return ApiCmsLoader
      */
-    public function setCategoryRepository(SalesChannelRepositoryInterface $categoryRepository): ApiCmsLoader
+    public function setCategoryRepository(SalesChannelRepository $categoryRepository): ApiCmsLoader
     {
         $this->categoryRepository = $categoryRepository;
         return $this;

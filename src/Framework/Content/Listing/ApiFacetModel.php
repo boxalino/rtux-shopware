@@ -3,12 +3,9 @@ namespace Boxalino\RealTimeUserExperience\Framework\Content\Listing;
 
 use Boxalino\RealTimeUserExperience\Framework\FilterablePropertyTrait;
 use Boxalino\RealTimeUserExperience\Framework\SalesChannelContextTrait;
-use Boxalino\RealTimeUserExperienceApi\Framework\ApiPropertyTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ResponseHydratorTrait;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandlerInterface;
 use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiFacetModelAbstract;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
@@ -127,7 +124,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
             ->setParameter("propertyId", Uuid::fromHexToBytes($propertyId), ParameterType::BINARY)
             ->setMaxResults(1);
 
-        return $query->execute()->fetchColumn();
+        return $query->executeQuery()->fetchOne();
     }
 
     /**
@@ -149,7 +146,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
             ->setParameter("propertyName", $propertyName)
             ->setMaxResults(1);
 
-        return $propertyIdQuery->execute()->fetchColumn();
+        return $propertyIdQuery->executeQuery()->fetchOne();
     }
 
     /**
@@ -169,7 +166,7 @@ class ApiFacetModel extends ApiFacetModelAbstract
                 ->setParameter("channelId", Uuid::fromHexToBytes($this->getSalesChannelContext()->getSalesChannel()->getId()), ParameterType::STRING)
                 ->setMaxResults(1);
 
-            $this->defaultLanguageId = $query->execute()->fetchColumn();
+            $this->defaultLanguageId = $query->executeQuery()->fetchOne();
         }
 
         return $this->defaultLanguageId;

@@ -13,7 +13,7 @@ use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Product\SalesChannel\CrossSelling\AbstractProductCrossSellingRoute;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepositoryInterface;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -33,7 +33,7 @@ class ApiCrossSellingLoaderAjax extends ApiGenericCrossSellingLoader
     public function __construct(
         ApiCallServiceInterface $apiCallService,
         ConfigurationInterface $configuration,
-        SalesChannelRepositoryInterface $productRepository,
+        SalesChannelRepository $productRepository,
         AbstractProductCrossSellingRoute $crossSellingRoute
     )
     {

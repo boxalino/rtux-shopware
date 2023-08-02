@@ -133,7 +133,6 @@ class RtuxApiHandler
             "gdprCems" => $configurations['gdprCems'] ?? null,
             "isActive" => (bool) $configurations['trackerActive'] ?? false,
             "isRti" => (bool) $configurations['rtiActive'] ?? false,
-            "isGdpr" => (bool) $configurations['gdprActive'] ?? false,
             "isTest" => (bool) $configurations['test'] ?? false,
             "isDev" => (bool)$configurations['devIndex'] ?? false
         ];

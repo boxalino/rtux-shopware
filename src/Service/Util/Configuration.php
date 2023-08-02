@@ -81,7 +81,7 @@ class Configuration
             ->andWhere('language.id = :languageId')
             ->setParameter('languageId', Uuid::fromHexToBytes($languageId), ParameterType::BINARY);
 
-        $code = $query->execute()->fetchColumn();
+        $code = $query->executeQuery()->fetchOne();
 
         return substr($code, 0, 2);
     }
