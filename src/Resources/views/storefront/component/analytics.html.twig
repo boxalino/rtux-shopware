@@ -12,7 +12,7 @@
             <script>
                 window.rtuxApiTrackerActive = true;
                 window.rtuxAccount = '{{ rtuxApi.getAccount() }}';
-                window.rtuxApiTrackerDebug = {{ rtuxApi.isTest() }};
+                window.rtuxApiTrackerDebug = {{ rtuxApi.isTest()|json_encode() }};
                 window.controllerName = '{{ controllerName|lower }}';
                 window.actionName = '{{ controllerAction|lower }}';
                 window.activeNavigationId = '{{ page.header.navigation.active.id }}';
@@ -21,6 +21,8 @@
                 window._bxq = window._bxq || [];
 
                 function bxq(arguments) { _bxq.push(arguments); }
+                bxq(['setAccount', '{{ rtuxApi.getAccount() }}']);
+                bxq(['trackPageView']);
             </script>
             <script async src="{{ rtuxApi.getTrackerUrl() }}"></script>
         {% endblock %}

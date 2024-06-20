@@ -16,8 +16,6 @@ export default class RtuxApiTrackerPlugin extends Plugin
 {
     init() {
         if(window.rtuxApiTrackerActive) {
-            bxq(['setAccount', window.rtuxAccount]);
-            bxq(['trackPageView']);
             if(window.rtuxApiTrackerDebug) {
                 bxq(['debugCookie', true]);
             }
