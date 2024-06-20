@@ -3,7 +3,7 @@
     "type": "shopware-platform-plugin",
     "description": "Boxalino Real Time User Experience (RTUX) Framework",
     "license": "MIT",
-    "version": "3.4.9",
+    "version": "3.4.10",
     "authors": [
         {
             "name": "Boxalino AG",
@@ -17,14 +17,14 @@
             "custom/plugins/BoxalinoRealTimeUserExperience": ["boxalino/rtux-shopware", "vendor/package"]
         },
         "shopware-plugin-class": "Boxalino\\RealTimeUserExperience\\BoxalinoRealTimeUserExperience",
-        "copyright": "Boxalino AG, 2023",
+        "copyright": "Boxalino AG, 2024",
         "label": {
             "de-DE": "Boxalino RTUX Framework für Shopware v6",
             "en-GB": "Boxalino RTUX Framework for Shopware v6"
         }
     },
     "require": {
-        "php": "^7.4.3 || ^8.0",
+        "php": "^7.2 || ^8.0",
         "boxalino/rtux-api-php": "~3.3.33",
         "symfony/service-contracts": "^1.1 || ^2 || ^3.1",
         "doctrine/dbal": "~2.10 || ^3.6"
