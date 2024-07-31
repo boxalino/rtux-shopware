@@ -23,6 +23,11 @@ class ApiCmsModel extends Struct
     protected $blocks;
 
     /**
+     * @var \ArrayIterator
+     */
+    protected $correlations;
+
+    /**
      * @var string
      */
     protected $requestId;
@@ -123,6 +128,24 @@ class ApiCmsModel extends Struct
     {
         $this->blocks = $blocks;
         return $this;
+    }
+
+    /**
+     * @param \ArrayIterator $correlations
+     * @return $this
+     */
+    public function setCorrelations(\ArrayIterator $correlations) : ApiResponseViewInterface
+    {
+        $this->correlations = $correlations;
+        return $this;
+    }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getCorrelations() : \ArrayIterator
+    {
+        return $this->correlations ?? new \ArrayIterator();
     }
 
     /**
@@ -448,5 +471,5 @@ class ApiCmsModel extends Struct
         }
     }
 
-    
+
 }

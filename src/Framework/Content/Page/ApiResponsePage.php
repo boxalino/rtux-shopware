@@ -109,6 +109,11 @@ class ApiResponsePage extends Page
     protected $currency;
 
     /**
+     * @var \ArrayIterator
+     */
+    protected $correlations;
+
+    /**
      * @return \ArrayIterator
      */
     public function getBlocks() : \ArrayIterator
@@ -448,6 +453,24 @@ class ApiResponsePage extends Page
     {
         $this->currency = $currency;
         return $this;
+    }
+
+    /**
+     * @param \ArrayIterator $correlations
+     * @return $this
+     */
+    public function setCorrelations(\ArrayIterator $correlations) : ApiResponseViewInterface
+    {
+        $this->correlations = $correlations;
+        return $this;
+    }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getCorrelations() : \ArrayIterator
+    {
+        return $this->correlations ?? new \ArrayIterator();
     }
 
 

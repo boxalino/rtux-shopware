@@ -3,7 +3,7 @@
     "type": "shopware-platform-plugin",
     "description": "Boxalino Real Time User Experience (RTUX) Framework",
     "license": "MIT",
-    "version": "3.4.10",
+    "version": "3.4.11",
     "authors": [
         {
             "name": "Boxalino AG",
@@ -25,7 +25,7 @@
     },
     "require": {
         "php": "^7.2 || ^8.0",
-        "boxalino/rtux-api-php": "~3.3.33",
+        "boxalino/rtux-api-php": "~3.3.34",
         "symfony/service-contracts": "^1.1 || ^2 || ^3.1",
         "doctrine/dbal": "~2.10 || ^3.6"
     },
