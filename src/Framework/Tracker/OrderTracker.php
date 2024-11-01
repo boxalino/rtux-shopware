@@ -2,6 +2,8 @@
 namespace Boxalino\RealTimeUserExperience\Framework\Tracker;
 
 use Boxalino\RealTimeUserExperience\Service\Tracker\RtuxApiHandler;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCookieSubscriber;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Shopware\Core\Checkout\Order\Aggregate\OrderLineItem\OrderLineItemEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
@@ -9,6 +11,7 @@ use Shopware\Core\System\SalesChannel\Context\SalesChannelContextServiceInterfac
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextServiceParameters;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 
 /**
@@ -32,12 +35,26 @@ class OrderTracker implements EventSubscriberInterface
      */
     protected $salesChannelContextService;
 
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         SalesChannelContextServiceInterface $salesChannelContextService,
-        RtuxApiHandler $rtuxApiHandler
+        RtuxApiHandler $rtuxApiHandler,
+        RequestStack $requestStack,
+        LoggerInterface $logger
     ){
         $this->salesChannelContextService = $salesChannelContextService;
         $this->rtuxApiHandler = $rtuxApiHandler;
+        $this->requestStack = $requestStack;
+        $this->logger = $logger;
     }
 
     /**
@@ -65,7 +82,7 @@ class OrderTracker implements EventSubscriberInterface
             );
         } catch (\Throwable $exception)
         {
-            //do nothing
+            $this->logger->error("Boxalino API PURCHASE TRACKER error: " . $exception->getMessage());
         }
     }
 
@@ -98,7 +115,32 @@ class OrderTracker implements EventSubscriberInterface
         /** the count is added later because the vouchers are set as order line items as well */
         $eventParameters['n'] = $productsCount;
 
+        list($cemv, $cems) = $this->getCemvCemsCookies();
+        if(is_null($cemv) || is_null($cems))
+        {
+            $this->logger->notice("Boxalino API TRACKER PURCHASE: CEMS:$cems or CEMV:$cemv cookies are not available for tracking on order ID {$order->getId()}");
+            return $eventParameters;
+        }
+        $eventParameters['_bxs'] = $cems;
+        $eventParameters['_bxv'] = $cemv;
+
         return $eventParameters;
+    }
+
+    /**
+     * @return array|null[]
+     */
+    protected function getCemvCemsCookies() : array
+    {
+        $request = $this->requestStack->getMainRequest();
+        if ($request === null) {
+            return [null, null];
+        }
+
+        return [
+            $request->cookies->get(ApiCookieSubscriber::BOXALINO_API_COOKIE_VISITOR, null),
+            $request->cookies->get(ApiCookieSubscriber::BOXALINO_API_COOKIE_SESSION, null)
+        ];
     }
 
     /**

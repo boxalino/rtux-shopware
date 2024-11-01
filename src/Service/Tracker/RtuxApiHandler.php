@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperience\Service\Tracker;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\ApiCookieSubscriber;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\ConfigurationInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Boxalino\RealTimeUserExperience\Service\Util\Configuration;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -87,14 +89,25 @@ class RtuxApiHandler
         $params['_ev'] = $event;
         $params['_t'] = round(microtime(true) * 1000);
         $params['_ln'] = $this->getLanguageCodeFromCache($salesChannelContext->getSalesChannel()->getLanguageId());
-        $params['_bxs'] = $_COOKIE["cems"];
-        $params['_bxv'] = $_COOKIE["cemv"];
+        if(!isset($params["_bxs"]))
+        {
+            $params['_bxs'] = $_COOKIE[ApiCookieSubscriber::BOXALINO_API_COOKIE_SESSION];
+        }
+        if(!isset($params["_bxv"]))
+        {
+            $params['_bxv'] = $_COOKIE[ApiCookieSubscriber::BOXALINO_API_COOKIE_VISITOR];
+        }
 
         try {
+            $profileId = $params['_bxv'];
+            if(is_null($profileId))
+            {
+                $profileId = Uuid::uuid4()->toString();
+            }
             $this->trackClient->send(
                 new Request(
                     'POST',
-                    $this->getServerUrl($params["_bxv"], $tracker->isDev()),
+                    $this->getServerUrl($profileId, $tracker->isDev()),
                     [
                         'Content-Type' => 'text/plain'
                     ],
