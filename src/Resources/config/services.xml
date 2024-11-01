@@ -42,6 +42,8 @@
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService"/>
             <argument type="service" id="boxalino.shopware.rtux.handler"/>
+            <argument type="service" id="Symfony\Component\HttpFoundation\RequestStack"/>
+            <argument type="service" id="monolog.logger.boxalino"/>
         </service>
     </services>
 
