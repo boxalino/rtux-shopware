@@ -102,6 +102,7 @@ class RtuxApiHandler
             $profileId = $params['_bxv'];
             if(is_null($profileId))
             {
+                $this->logger->notice("Boxalino API Tracker $event delivered without cemv/cems cookie value, on a random profileId");
                 $profileId = Uuid::uuid4()->toString();
             }
             $this->trackClient->send(
